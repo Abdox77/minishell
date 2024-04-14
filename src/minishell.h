@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/14 21:03:53 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/04/15 00:12:07 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,32 @@ struct s_cmd
     t_redir     redir;
 };
 
+typedef struct s_env
+{
+	char			*key;
+	char			*value;
+    // char            *oper;
+	struct s_env	*next;
+}				t_env;
+
+typedef struct s_env_var {
+    char *tmp_key;
+    char *tmp_val;
+    int i;
+    int j;
+    int rem;
+} t_var;
+
+typedef struct s_exec
+{
+	t_env	*env;
+	char	*tmp;
+	char	**envp;
+	int		o_in;
+	int		o_out;
+}	t_exec;
+
+
 //=====================INIT=====================
 t_token     *init_token(void);
 t_token     *set_pipe_head(void);
@@ -123,6 +149,21 @@ void    minishell_loop(void);
 //=====================CLEANUP=====================
 void    free_strs(char **strs);
 void    ft_error(char *error_message, int exit_code);
+
+//=====================ENV=====================
+void	ft_write(char *str, int fd, int new_line);
+void copy_key(char **env, t_var *var);
+t_env *parse_env(char **env);
+void print_env(t_env *head);
+void    append_node(t_env **head, char *key, char *value);
+t_env   *create_node(char *key, char *value);
+char	**env_to_envp(t_exec *exec);
+
+//=====================BUILTINS=====================
+int	    pwd(void);
+void	envv(t_env *env);
+void free_env_node(t_env **env, char *arg);
+int unset(t_env **env, char **cmd);
 
 
 #endif

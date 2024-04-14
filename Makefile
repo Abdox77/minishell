@@ -9,6 +9,12 @@ SRC = 	src/minishell.c \
 		src/utils_2.c \
 		src/here_doc.c \
 		src/cleanup.c \
+		src/get_env.c \
+		src/linked_list_helper.c \
+		builtins/env.c \
+		builtins/pwd.c \
+		builtins/unset.c \
+		src/env_to_envp.c \
 
 OBJ = $(SRC:.c=.o)
 RM = rm -rf
