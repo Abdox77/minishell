@@ -1,0 +1,15 @@
+                         __ PIPELINE__
+                     ___/              \____
+                    /                       \
+            COMMAND                    __ PIPELINE _
+          /        \                  /             \
+    ARGUMENTS   REDIRECTIONS      COMMAND         _ COMMAND __
+        |          |     |           |           /            \
+       cat        <<     >       ARGUMENTS    ARGUMENTS   REDIRECTIONS
+                   |     |         |   |      |   |   |        |
+                 "..."  file      wc  -c      tr  -d " "       >
+                                                               |
+                                                             file2
+
+to block a signal we can simply add it to the signal mask, this will surely be helpful when handling terminal special char 'CNTRL C' .... , we'll be using the function sigaction that acts as a signal handler.
+
