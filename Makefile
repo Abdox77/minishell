@@ -12,7 +12,7 @@ SRC = 	src/minishell.c \
 
 OBJ = $(SRC:.c=.o)
 RM = rm -rf
-LIB = ./libft/libft.a -lreadline
+LIBFT = ./libft/libft.a
 LIBFT_DIR = libft
 NAME = minishell
 
@@ -25,7 +25,7 @@ $(LIBFT):
 	make -C $(LIBFT_DIR) 
 
 $(NAME) : $(LIBFT) $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) $(LIB) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) -lreadline -o $(NAME)
 
 clean :
 	$(RM) $(OBJ)
