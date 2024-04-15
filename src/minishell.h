@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/15 15:38:56 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/04/15 16:55:38 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,18 +129,18 @@ t_redir     *new_cmd_redir (REDIR_MODE mode, char *file_name);
 t_token     *new_token(TOKEN type);
 
 /*=====================LEXER=====================*/
-void        lexer(t_token *token, char **line);
-void        handle_command(t_token *token, char **line);
-void        handle_quotes(t_token *token, char ** line);
-void        handle_redirection(t_token *token, char **line);
-void        handle_input(t_token *token, char **line);
-void        handle_output(t_token *token, char **line);
+void        lexer(t_token **token, char **line);
+void        handle_command(t_token **token, char **line);
+void        handle_quotes(t_token **token, char ** line);
+void        handle_redirection(t_token **token, char **line);
+void        handle_input(t_token **token, char **line);
+void        handle_output(t_token **token, char **line);
 
 
 /*=====================LEXER_UTILS=====================*/
 char	    **split(char *str, char *charset);
 char        **add_arg(char **args, char *arg);
-void        add_redirection(t_token *token, REDIR_MODE mode, char *file_name);
+void        add_redirection(t_token **token, REDIR_MODE mode, char *file_name);
 t_cmd       *new_cmd(void);
 
 

@@ -6,25 +6,25 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 11:12:42 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/15 15:51:49 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/04/15 17:17:56 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void add_redirection(t_token *token, REDIR_MODE mode, char *file_name)
+void add_redirection(t_token **token, REDIR_MODE mode, char *file_name)
 {
 	t_redir *tmp;
 
-	if (!token->cmd->redir)
+	if (!(*token)->cmd->redir)
 	{	
-		token->cmd->redir = new_cmd_redir(mode, file_name);
-		if (!token->cmd->redir)
+		(*token)->cmd->redir = new_cmd_redir(mode, file_name);
+		if (!(*token)->cmd->redir)
 			ft_error("REDIR creation failed and returned null\n", EXIT_FAILURE);
 	}
 	else
 	{
-		tmp = token->cmd->redir;
+		tmp = (*token)->cmd->redir;
 		while(tmp->next)
 			tmp = tmp->next;
 		tmp = new_cmd_redir(mode, file_name);
@@ -33,10 +33,10 @@ void add_redirection(t_token *token, REDIR_MODE mode, char *file_name)
 	}
 }
 
-void handle_input(t_token *token, char **line)
+void handle_input(t_token **token, char **line)
 {
     int 		len;
-    char 		c;
+    char 		quote;
     char 		*file_name;
     REDIR_MODE 	mode;
 
@@ -53,9 +53,9 @@ void handle_input(t_token *token, char **line)
         ++(*line);
     if (is_quote(**line) == true)
     {
-        c = **line;
+        quote = **line;
         (*line)++;
-        while ((*line)[len] && (*line)[len] != c)
+        while ((*line)[len] && (*line)[len] != quote)
             ++len;
         if (!*line[len])
             ft_error("Syntax Error unclosed quote\n", 126); // okay maybe use free here => to do later
@@ -72,13 +72,12 @@ void handle_input(t_token *token, char **line)
         (*line) += len;
     }
     add_redirection(token, mode, file_name);
-    printf("hello : %s\n", token->cmd->redir->file_name);
 }
 
-void handle_output(t_token *token, char **line)
+void handle_output(t_token **token, char **line)
 {
     int			len;
-    char		c;
+    char		quote;
     char 		*file_name;
     REDIR_MODE 	mode;
 
@@ -96,9 +95,9 @@ void handle_output(t_token *token, char **line)
         ++(*line);
     if (**line == '\'' || **line == '"')
     {
-        c = **line;
+        quote = **line;
         (*line)++;
-        while ((*line)[len] && (*line)[len] != c)
+        while ((*line)[len] && (*line)[len] != quote)
             ++len;
         if (!*line[len])
             ft_error("Syntax Error unclosed quote\n", 126); // okay maybe use free here => to do later
@@ -115,20 +114,35 @@ void handle_output(t_token *token, char **line)
         (*line) += len;
     }
     add_redirection(token, mode, file_name);
-    printf("OUTFILE\n");
 }
 
-void handle_redirection(t_token *token, char **line)
+void handle_redirection(t_token **token, char **line)
 {
-    if (!*line || !**line || !token || !token->cmd)
+    if (!*line || !**line || !(*token) || !(*token)->cmd)
         ft_error("WHAT HAPPENED ?\n", EXIT_FAILURE); // not possible for line to be null
 	else if (**line == '<')
         handle_input(token, line);
     else
         handle_output(token, line);
-    t_redir *tmp;
+}
+
+/*
+
+ 	t_redir *tmp;
 
     tmp = token->cmd->redir;
     for(;tmp->next;)
+    {
+    	if (tmp->mode == INFILE)
+    		printf("type is infile\n");
+    	else if (tmp->mode == HEREDOC)
+    		printf("type is HEREDOC\n");
+    	else if (tmp->mode == TRUNC)
+    		printf("type is TRUNC\n");
+    	else if (tmp->mode == APPEND)
+    		printf("type is APPEND\n");
     	printf("redir to file namre : %s\n", tmp->file_name);
-}
+    	tmp = tmp->next;
+    }
+
+*/

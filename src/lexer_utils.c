@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 15:14:16 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/15 15:41:27 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/04/15 17:19:42 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 char **add_arg(char **args, char *arg)
 {
-    printf("adding arg %s\n", arg);
     int i;
     int len;
     char **new_args;
@@ -26,8 +25,9 @@ char **add_arg(char **args, char *arg)
     while (args[++i])
         new_args[i] = ft_strdup(args[i]);
     new_args[i] = ft_strdup(arg);
+    printf("arg is %s\n", new_args[i]);
     new_args[i + 1] = NULL;
-    return new_args;
+    return (new_args);
 }
 
 t_cmd *new_cmd(void)
@@ -41,7 +41,7 @@ t_cmd *new_cmd(void)
     return (cmd);
 }
 
-void handle_quotes(t_token *token, char ** line)
+void handle_quotes(t_token **token, char ** line)
 {
     char    c;
     int     len;
@@ -51,40 +51,39 @@ void handle_quotes(t_token *token, char ** line)
     (*line)++;
     while ((*line)[len] && (*line)[len] != c)
         ++len;
-    if (!token->cmd->args)
+    if (!(*token)->cmd->args)
     {
-        token->cmd->args = malloc(sizeof(char *) * 2);
-        token->cmd->args[0] = ft_substr((*line), 0, len);
-        token->cmd->args[1] = NULL;
+        (*token)->cmd->args = malloc(sizeof(char *) * 2);
+        (*token)->cmd->args[0] = ft_substr((*line), 0, len);
+        (*token)->cmd->args[1] = NULL;
         (*line) += len + 1;
     }
     else if (len)
     {
-        token->cmd->args = add_arg(token->cmd->args, ft_substr(*line, 0, len));
+        (*token)->cmd->args = add_arg((*token)->cmd->args, ft_substr(*line, 0, len));
         (*line) += len + 1; 
     }
 }
 
-void  handle_command(t_token *token, char **line)
+void  handle_command(t_token **token, char **line)
 {
     int     len;
 
     if (!token)
     {
-        token = new_token(CMD);
-        token->cmd = new_cmd();
+            printf("not token\n");
+            (*token) = new_token(CMD);
     }
     len = 0;
     while (**line && is_space(**line) == true)
         ++(*line);
     while ((*line)[len] && is_special_char((*line)[len]) == false)
         ++len;
-    if (!token->cmd)
-        token->cmd = new_cmd();
-    token->cmd->cmd = ft_substr(*line, 0, len);
+    if (!(*token)->cmd)
+        (*token)->cmd = new_cmd();
+    (*token)->type = CMD;
+    (*token)->cmd->cmd = ft_substr(*line, 0, len);
     (*line) += len;
-    if (!token->cmd->cmd)
-        return;
     if ((**line))
     {
         while (**line && is_redirection_char(**line) == false  && **line != '|')
@@ -94,25 +93,20 @@ void  handle_command(t_token *token, char **line)
             len = 0;
             while ((*line)[len] && is_special_char((*line)[len]) == false)
                 ++len;
-            if (!token->cmd->args && len)
+            if (!(*token)->cmd->args && len)
             {
-                token->cmd->args = malloc(sizeof(char *) * 2);
-                token->cmd->args[0] = ft_substr(*line, 0, len);
-                token->cmd->args[1] = NULL;
+                (*token)->cmd->args = malloc(sizeof(char *) * 2);
+                (*token)->cmd->args[0] = ft_substr(*line, 0, len);
+                (*token)->cmd->args[1] = NULL;
                 (*line) += len;
             }
-            else if (token->cmd->args && len)
+            else if ((*token)->cmd->args && len)
             {
-                token->cmd->args =  add_arg(token->cmd->args, ft_substr(*line, 0, len));
+                (*token)->cmd->args =  add_arg((*token)->cmd->args, ft_substr(*line, 0, len));
                 (*line) += len;
             }
             else if (is_quote(**line) == true)
                 handle_quotes(token, line);
-        }
-        if (token->cmd->args)
-        {
-            for (int i = 0;token->cmd->args[i]; i++)
-                printf("args[%d] : %s\n", i, token->cmd->args[i]);
         }
     }
 }
