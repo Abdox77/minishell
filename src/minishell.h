@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/15 12:33:27 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/04/15 13:46:30 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "../libft/libft.h"
+# include <linux/limits.h>
 
 /*==========================MACROS============================*/
 
@@ -174,8 +175,10 @@ t_env       *create_node(char *key, char *value);
 
 int	        pwd(void);
 int         unset(t_env **env, char **cmd);
-void	   envv(t_env *env);
+void        envv(t_env *env);
 void        free_env_node(t_env **env, char *arg);
+int         n_exists(char *arg);
+int         echo(char **arg);
 
 
 #endif
