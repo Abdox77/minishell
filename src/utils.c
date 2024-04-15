@@ -3,14 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 09:13:22 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/15 15:42:56 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/04/15 16:28:32 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+
 
 int strs_len(char **args)
 {
@@ -22,4 +24,23 @@ int strs_len(char **args)
     while(args[i])
         i++;
     return (i);
+}
+
+
+int	ft_strcmp(const char *s1, const char *s2)
+{
+    int i;
+	unsigned char	*p1;
+	unsigned char	*p2;
+
+    i = 0;
+	p1 = (unsigned char *)s1;
+	p2 = (unsigned char *)s2;
+	while (p1[i] && p2[i] && (p1[i] == p2[i]))
+		i++;
+	if (p1[i] > p2[i])
+		return (1);
+	else if (p1[i] < p2[i])
+		return (-1);
+	return (0);
 }
