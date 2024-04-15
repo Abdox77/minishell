@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/15 13:46:30 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/04/15 15:24:48 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,41 +126,31 @@ t_token     *init_token(void);
 t_token     *set_pipe_head(void);
 t_token     *new_token(TOKEN type);
 t_redir     *new_cmd_redir (REDIR_MODE mode, char *file_name);
+t_token     *new_token(TOKEN type);
 
 /*=====================LEXER=====================*/
-void lexer(t_token *token, char **line);
+void        lexer(t_token *token, char **line);
+void        handle_command(t_token *token, char **line);
+void        handle_quotes(t_token *token, char ** line);
+void        handle_redirection(t_token *token, char **line, REDIR_MODE type);
+void        handle_input(t_token *token, char **line);
+void        handle_output(t_token *token, char **line);
 
 
 /*=====================LEXER_UTILS=====================*/
 char	    **split(char *str, char *charset);
 char        **add_arg(char **args, char *arg);
-void        handle_quotes(t_token *token, char ** line);
-void        handle_command(t_token *token, char **line);
+void        add_redirection(t_token *token, REDIR_MODE mode, char *file_name);
 t_cmd       *new_cmd(void);
+
+
+/*=====================UTILS========================*/
+int         strs_len(char **args);
 t_bool      is_space(char c);
 t_bool      is_quote(char c);
 t_bool      is_special_char(char c);
 t_bool      is_redirection_char(char c);
-t_token     *new_token(TOKEN type);
 
-
-void        handle_redirection(t_token *token, char **line, REDIR_MODE type);
-void        handle_input(t_token *token, char **line);
-void        handle_output(t_token *token, char **line);
-void        add_redirection(t_token *token, REDIR_MODE mode, char *file_name);
-
-/*=====================UTILS========================*/
-int         strs_len(char **args);
-
-
-
-/*=====================MINISHELL=====================*/
-void        minishell_loop(void);
-
-
-/*=====================CLEANUP=====================*/
-void        free_strs(char **strs);
-void        ft_error(char *error_message, int exit_code);
 
 /*=====================ENV=====================*/
 char	   **env_to_envp(t_exec *exec);
@@ -171,14 +161,19 @@ void        append_node(t_env **head, char *key, char *value);
 t_env       *parse_env(char **env);
 t_env       *create_node(char *key, char *value);
 
+
 /*=====================BUILTINS=====================*/
-
 int	        pwd(void);
-int         unset(t_env **env, char **cmd);
-void        envv(t_env *env);
-void        free_env_node(t_env **env, char *arg);
-int         n_exists(char *arg);
 int         echo(char **arg);
+int         unset(t_env **env, char **cmd);
+void        ft_env(t_env *env);
 
+
+/*=====================MINISHELL=====================*/
+void        minishell_loop(void);
+
+/*=====================CLEANUP=====================*/
+void        free_strs(char **strs);
+void        ft_error(char *error_message, int exit_code);
 
 #endif

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 08:13:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/15 00:13:17 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/04/15 15:24:15 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../src/minishell.h"
 
-void	envv(t_env *env)
+void	ft_env(t_env *env)
 {
 	t_env	*tmp;
 

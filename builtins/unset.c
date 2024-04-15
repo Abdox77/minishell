@@ -6,13 +6,13 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 08:13:26 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/15 12:30:25 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/04/15 15:24:25 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../src/minishell.h"
 
-void free_env_node(t_env **env, char *arg)
+static void free_env_node(t_env **env, char *arg)
 {
     t_env   *tmp;
     t_env   *prev;

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 08:11:05 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/15 13:45:43 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/04/15 15:24:32 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../src/minishell.h"
 
-int	n_exists(char *arg)
+static int	n_exists(char *arg)
 {
 	int	i;
 
