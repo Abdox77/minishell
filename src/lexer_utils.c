@@ -6,54 +6,12 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 15:14:16 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/14 23:08:27 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/04/15 11:37:07 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void handle_redirection(t_token *token, char **line, REDIR_MODE type)
-{
-    char c;
-    int i;
-    int len;
-
-    i = 0;
-    len = 0;
-    if (!line)
-        return; // not possible for line to be null
-    if (type == INFILE)
-    {
-        ++line;
-        if ((**line) == '<')
-        {
-            token->cmd->redir.type = HEREDOC;
-            ++(*line);
-        }
-        else
-            token->cmd->redir.type = INFILE;
-        while ((**line) && ((**line)== ' ' || (**line) == '\t'))
-            ++(*line);
-        if (**line == '\'' || **line == '"')
-        {
-            c = **line;
-            (*line)++;
-            while ((*line)[len] && (*line)[len] != c)
-                ++len;
-            token->cmd->redir.file = ft_substr(*line, 0, len);
-            (*line)+= len + 1;
-        }
-        else
-        {
-            while ((*line)[len] && (*line)[len] != ' ' && (*line)[len] != '\t' && (*line)[len] != '<' && (*line)[len] != '>' && (*line)[len] != '|')
-                ++len;
-            token->cmd->redir.file = ft_substr(*line, 0, len);
-            (*line) += len + 1;
-        }
-    }
-    else
-        printf("OUTFILE\n");
-}
 
 char **add_arg(char **args, char *arg)
 {
@@ -80,10 +38,6 @@ t_cmd *new_cmd(void)
     if (!cmd)
         return NULL;
     memset(cmd, 0, sizeof(t_cmd));
-    cmd->cmd = NULL;
-    cmd->args = NULL;
-    cmd->redir.type = STD_OUT;
-    cmd->redir.file = NULL;
     return (cmd);
 }
 

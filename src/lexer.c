@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:22:59 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/14 21:15:08 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/04/15 11:42:52 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void lexer(t_token *token, char **line)
 {
-    if (!*line || !**line)
+    if (!line || !*line || !**line)
         return;
     if (**line == '<')
         handle_redirection(token, line, INFILE);
