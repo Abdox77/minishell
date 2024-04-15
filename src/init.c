@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 01:45:18 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/15 11:49:53 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/04/15 15:40:13 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,23 +23,22 @@ t_token *new_token(TOKEN type)
     token->type = type;
     if (type== CMD)
         token->cmd = new_cmd();
-    token->value = NULL;
-    token->l_token = NULL;
-    token->r_token = NULL;
     return (token);
 }
-
 
 t_redir *new_cmd_redir (REDIR_MODE mode, char *file_name)
 {
     t_redir *new;
 
+    if (!file_name)
+        ft_error("file_name is NULL\n", EXIT_FAILURE);
     new = malloc (sizeof(t_redir));
     if (!new)
         ft_error("not new redir\n", EXIT_FAILURE);
     new->mode = mode;
-    new->file_name = file_name;
+    new->file_name = ft_strdup(file_name);
     new->next = NULL;
+    free(file_name);
     return (new);
 }
 
@@ -51,5 +50,6 @@ t_token     *set_pipe_head(void)
     if (!head)
         return (NULL);
     head->type = PIPE;
+    memset(head , 0, sizeof(t_token));
     return (head);
 }

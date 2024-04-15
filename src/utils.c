@@ -6,13 +6,11 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 09:13:22 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/15 15:17:28 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/04/15 15:42:56 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-
 
 int strs_len(char **args)
 {

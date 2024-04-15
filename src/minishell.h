@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/15 15:24:48 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/04/15 15:38:56 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,7 @@ t_token     *new_token(TOKEN type);
 void        lexer(t_token *token, char **line);
 void        handle_command(t_token *token, char **line);
 void        handle_quotes(t_token *token, char ** line);
-void        handle_redirection(t_token *token, char **line, REDIR_MODE type);
+void        handle_redirection(t_token *token, char **line);
 void        handle_input(t_token *token, char **line);
 void        handle_output(t_token *token, char **line);
 

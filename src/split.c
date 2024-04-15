@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   _split.c                                           :+:      :+:    :+:   */
+/*   split.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 08:30:54 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/13 17:23:49 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/04/15 15:35:58 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	check_seperator(char c, char *charset)
+static int	check_seperator(char c, char *charset)
 {
 	int	i;
 
@@ -26,7 +26,7 @@ int	check_seperator(char c, char *charset)
 	return (0);
 }
 
-int	count(char *str, char *charset)
+static int	count(char *str, char *charset)
 {
 	int	i;
 	int	count;
@@ -45,7 +45,7 @@ int	count(char *str, char *charset)
 	return (count);
 }
 
-int	segment_len(char *s, char *charset)
+static int	segment_len(char *s, char *charset)
 {
 	int	len;
 
@@ -55,7 +55,7 @@ int	segment_len(char *s, char *charset)
 	return (len);
 }
 
-char	*ft_segdup(char *s, char *charset)
+static char	*ft_segdup(char *s, char *charset)
 {
 	int		i;
 	int		len;

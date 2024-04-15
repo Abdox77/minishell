@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 15:14:16 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/15 11:37:07 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/04/15 15:41:27 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,6 @@ t_cmd *new_cmd(void)
     memset(cmd, 0, sizeof(t_cmd));
     return (cmd);
 }
-
-
 
 void handle_quotes(t_token *token, char ** line)
 {
