@@ -16,6 +16,7 @@ SRC = 	src/minishell.c \
 		builtins/pwd.c \
 		builtins/unset.c \
 		src/env_to_envp.c \
+		builtins/cd.c \
 
 OBJ = $(SRC:.c=.o)
 RM = rm -rf

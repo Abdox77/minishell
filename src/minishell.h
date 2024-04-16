@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/15 16:55:38 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/04/16 08:52:17 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,6 +150,7 @@ t_bool      is_space(char c);
 t_bool      is_quote(char c);
 t_bool      is_special_char(char c);
 t_bool      is_redirection_char(char c);
+int         ft_strcmp(const char *s1, const char *s2);
 
 
 /*=====================ENV=====================*/
@@ -167,6 +168,8 @@ int	        pwd(void);
 int         echo(char **arg);
 int         unset(t_env **env, char **cmd);
 void        ft_env(t_env *env);
+int         cd(char **arg, t_exec *exec);
+
 
 
 /*=====================MINISHELL=====================*/
