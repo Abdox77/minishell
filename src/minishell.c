@@ -6,35 +6,32 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/15 17:24:29 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/04/16 21:18:02 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int globe = 5;
 void display(t_token *token)
 {
     if (!token)
-    {   
-        
-        return;}
+        return;
     if (token->type == PIPE)
-    {
         printf ("\t\t\t\t\t\tthis is a PIPE\t\t\t\t\t\t\n");
-        globe--;
-    }
+
     else if (token->type == CMD)
     {
         for(int i = 0; i < 5; i++)
             printf("\t");
-        printf("%s\n", token->cmd->cmd);
+        printf("this is the command  : %s\n", token->cmd->cmd);
         printf ("args ===>             ");
-        for (int i = 0; token->cmd->args[i]; i++)
-           printf("\t %s", token->cmd->args[i]);
-        printf("\n");
+        if (token->cmd->args)
+        {
+            for (int i = 0; token->cmd->args[i]; i++)
+                   printf("\t %s", token->cmd->args[i]);
+            printf("\n\n\n\n\n");
+        }
         t_redir *tmp;
-
         tmp = token->cmd->redir;
         if (tmp)
         {   
@@ -75,13 +72,11 @@ void    minishell_loop(void)
         line = readline(GREEN"minishell$ " "\033[35m");
         if (!line)
             break;
-        // args = split(line, " \t");
-        head_tokens = set_pipe_head();
         tmp = head_tokens;
-        lexer(&tmp , &line);
+        lexer(&(tmp) , &line);
         display(head_tokens);
-        free(head_tokens);
         head_tokens = set_pipe_head();
+
     }
 }
 

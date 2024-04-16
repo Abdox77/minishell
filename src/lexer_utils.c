@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 15:14:16 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/15 17:19:42 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/04/16 21:24:46 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void  handle_command(t_token **token, char **line)
 {
     int     len;
 
-    if (!token)
+    if (!token || !*token)
     {
             printf("not token\n");
             (*token) = new_token(CMD);
@@ -79,8 +79,6 @@ void  handle_command(t_token **token, char **line)
         ++(*line);
     while ((*line)[len] && is_special_char((*line)[len]) == false)
         ++len;
-    if (!(*token)->cmd)
-        (*token)->cmd = new_cmd();
     (*token)->type = CMD;
     (*token)->cmd->cmd = ft_substr(*line, 0, len);
     (*line) += len;

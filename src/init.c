@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 01:45:18 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/15 15:40:13 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/04/16 21:06:42 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ t_token     *set_pipe_head(void)
     head = new_token(PIPE);
     if (!head)
         return (NULL);
-    head->type = PIPE;
     memset(head , 0, sizeof(t_token));
+    head->type = PIPE;
     return (head);
 }
