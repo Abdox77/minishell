@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/17 18:46:46 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/04/17 21:05:03 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,8 @@ void    minishell_loop(void)
         line = readline(GREEN"minishell$ " "\033[35m");
         if (!line)
             break;
+        if (line)
+		    add_history(line);
         tmp = head_tokens;
         lexer(&(tmp) , &line);
         display(head_tokens);
