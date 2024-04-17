@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:22:59 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/16 21:21:51 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/04/17 18:37:55 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,18 @@
 
 void manage_command(t_token **token, char **line)
 {
-    if (is_redirection_char(**line) == true)
-        handle_redirection(token, line);
-    else if (**line != '|')
-        handle_command(token, line);
+    if (!*token)
+        printf("not token in manage commands\n");
+    if (*line && **line == '|')
+    {
+        ++(*line);
+        while(*line && is_space(**line) == true)
+            ++(*line);
+        (*token)->r_token = set_pipe_head();
+        if (!(*token)->r_token)
+            printf("failed to create head of token\n");
+        lexer(&((*token)->r_token), line);
+    }
 }
 
 void handle_pipe(t_token **token, char **line)
@@ -34,9 +42,10 @@ void lexer(t_token **token, char **line)
     if (!line || !*line || !**line)
         return;
     if (**line == '|')
-        handle_pipe(&((*token)->r_token), line);
+        handle_pipe(token, line);
     else
         manage_command(&((*token)->l_token), line);
-    if (*line)
+    /*if (*line)
         lexer(token, line);
+*/
 }

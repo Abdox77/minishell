@@ -6,56 +6,49 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/16 21:18:02 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/04/17 18:46:46 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int i = 0;
+
+static void display_cmd(t_token *token)
+{
+    printf("THIS IS A CMD NUMBER : %d\n", i);
+    PRINTF("\t\tCMD IS =======>  : %s\n", token->cmd->cmd);
+    if (token->cmd->args)
+    {
+        PRINTF("\t\t ARGS ARE =======>  : \n");
+            for (int j = 0; toke->cmd->args[j]; j++)
+                printf ("arg[%d] : %s\n", j, token->cmd->args[j]);
+    }
+    /*
+        to test later 
+
+    if (token->cmd->redir)
+    {
+        
+
+    }*/
+}
+
+static void display_pipe(t_token *token)
+{
+    ++i;
+    printf("THIS IS A PIPE NUMBER : %d\n", i);
+}
+
 
 void display(t_token *token)
 {
     if (!token)
         return;
     if (token->type == PIPE)
-        printf ("\t\t\t\t\t\tthis is a PIPE\t\t\t\t\t\t\n");
-
+        display_pipe(token);
     else if (token->type == CMD)
-    {
-        for(int i = 0; i < 5; i++)
-            printf("\t");
-        printf("this is the command  : %s\n", token->cmd->cmd);
-        printf ("args ===>             ");
-        if (token->cmd->args)
-        {
-            for (int i = 0; token->cmd->args[i]; i++)
-                   printf("\t %s", token->cmd->args[i]);
-            printf("\n\n\n\n\n");
-        }
-        t_redir *tmp;
-        tmp = token->cmd->redir;
-        if (tmp)
-        {   
-            printf("yes tmp\n");    
-            for(;tmp;)
-            {
-                if (tmp->mode == INFILE)
-                    printf("type is infile\n");
-                else if (tmp->mode == HEREDOC)
-                    printf("type is HEREDOC\n");
-                else if (tmp->mode == TRUNC)
-                    printf("type is TRUNC\n");
-                else if (tmp->mode == APPEND)
-                    printf("type is APPEND\n");
-                printf("redir to file namre : %s\n", tmp->file_name);
-                    tmp = tmp->next;
-            }
-                printf("\n");
-            }
-        }
-        else
-            printf("not redirection wtf\n");
-    display(token->r_token);
-    display(token->l_token);
+        display_cmd(token);
 }
 
 void    minishell_loop(void)
