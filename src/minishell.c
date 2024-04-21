@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/17 21:05:03 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/04/21 06:55:21 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,15 @@ int i = 0;
 static void display_cmd(t_token *token)
 {
     printf("THIS IS A CMD NUMBER : %d\n", i);
-    PRINTF("\t\tCMD IS =======>  : %s\n", token->cmd->cmd);
-    if (token->cmd->args)
+    if (token && token->cmd)
     {
-        PRINTF("\t\t ARGS ARE =======>  : \n");
-            for (int j = 0; toke->cmd->args[j]; j++)
-                printf ("arg[%d] : %s\n", j, token->cmd->args[j]);
+         printf("\t\tCMD IS =======>  : %s\n", token->cmd->cmd);
+        if (token->cmd->args)
+        {
+            printf("\t\t ARGS ARE =======>  : \n");
+                for (int j = 0; token->cmd->args[j]; j++)
+                    printf ("\t\t\targ[%d] : %s\n", j, token->cmd->args[j]);
+        }
     }
     /*
         to test later 
@@ -34,11 +37,11 @@ static void display_cmd(t_token *token)
     }*/
 }
 
-static void display_pipe(t_token *token)
-{
-    ++i;
-    printf("THIS IS A PIPE NUMBER : %d\n", i);
-}
+// static void display_pipe(t_token *token)
+// {
+//     ++i;
+//     printf("THIS IS A PIPE NUMBER : %d\n", i);
+// }
 
 
 void display(t_token *token)
@@ -46,9 +49,15 @@ void display(t_token *token)
     if (!token)
         return;
     if (token->type == PIPE)
-        display_pipe(token);
+    {
+        printf("pipe\n");
+        display_cmd(token->l_token);
+        display(token->r_token);
+    }
+        // display_pipe(token);
     else if (token->type == CMD)
         display_cmd(token);
+    display(token->r_token);
 }
 
 void    minishell_loop(void)
@@ -68,10 +77,14 @@ void    minishell_loop(void)
         if (line)
 		    add_history(line);
         tmp = head_tokens;
-        lexer(&(tmp) , &line);
+        lexer(&(tmp), &line);
         display(head_tokens);
+        if (*line)
+            printf("line is %s\n", line);
+        else
+            printf("line is empty\n");
         head_tokens = set_pipe_head();
-
+        
     }
 }
 

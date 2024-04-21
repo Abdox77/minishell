@@ -34,6 +34,7 @@ $(LIBFT):
 
 $(NAME) : $(LIBFT) $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) -lreadline -o $(NAME)
+	$(RM) $(OBJ)
 
 clean :
 	$(RM) $(OBJ)

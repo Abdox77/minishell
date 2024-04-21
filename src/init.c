@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 01:45:18 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/16 21:06:42 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/04/21 06:48:47 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ t_token     *set_pipe_head(void)
 {
     t_token *head;
 
+    printf("got here in set_pipe\n");
     head = new_token(PIPE);
     if (!head)
         return (NULL);
