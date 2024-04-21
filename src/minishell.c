@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/21 06:55:21 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/04/21 16:34:40 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void display(t_token *token)
         // display_pipe(token);
     else if (token->type == CMD)
         display_cmd(token);
-    display(token->r_token);
+    // display(token->r_token);
 }
 
 void    minishell_loop(void)

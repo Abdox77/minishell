@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 08:11:48 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/21 06:30:10 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/04/21 16:42:12 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,21 +26,66 @@ static int	check_key(t_env *env, char *key)
 	return (0);
 }
 
-char	*get_value(t_env *env, char *key)
+// Helper function to check the key in the environment list and return its value
+static char *get_value(t_env *env, const char *key)
 {
-	t_env	*tmp;
-
-	if (!env || !key)
-		return (NULL);
-	tmp = env;
-	while (tmp)
+    t_env *tmp = env;
+    while (tmp)
 	{
-		if (!ft_strcmp(tmp->key, key))
-			return (tmp->value);
-		tmp = tmp->next;
-	}
-	return (NULL);
+        if (ft_strcmp(tmp->key, key) == 0)
+            return tmp->value;
+        tmp = tmp->next;
+    }
+    return NULL;
 }
+
+// Helper function to update the value of a key in the environment list
+static void set_value(t_env *env, const char *key, const char *value)
+{
+    t_env *tmp = env;
+    while (tmp)
+	{
+        if (ft_strcmp(tmp->key, key) == 0)
+		{
+            // Free the old value and set the new value
+            // free(tmp->value);
+            tmp->value = ft_strdup(value);
+            return;
+        }
+        tmp = tmp->next;
+    }
+	return;
+    // If the key does not exist, create a new node
+    // t_env *new_node = (t_env *)malloc(sizeof(t_env));
+    // if (!new_node) {
+    //     perror("malloc");
+    //     return;
+    // }
+    // new_node->key = strdup(key);
+    // new_node->value = strdup(value);
+    // new_node->next = env->next;
+    // env->next = new_node;
+}
+
+// Function to update PWD and OLDPWD after changing the directory
+static void update_pwd_and_oldpwd(t_exec *exec)
+{
+    if (!exec || !exec->env)
+        return;
+    char *tmp_pwd = get_value(exec->env, "PWD");     // Find and save the current PWD value in tmp_pwd
+    if (!tmp_pwd)
+        return;         // if PWD does not exist in the list, return without doing anything
+    char new_pwd[1024];
+    if (getcwd(new_pwd, sizeof(new_pwd)) == NULL)
+	{
+        perror("getcwd");
+        return;
+    }
+    set_value(exec->env, "PWD", new_pwd);
+    set_value(exec->env, "OLDPWD", tmp_pwd);
+}
+
+
 
 int cd(char **arg, t_exec *exec)
 {
@@ -61,12 +106,34 @@ int cd(char **arg, t_exec *exec)
 				(perror(GREEN"minishell$ " "\033[35m"));
 				return (0);
 			}
+			update_pwd_and_oldpwd(exec);
+			
 		}
 	}
-	else if (chdir(arg[1]) == -1)
+	else
 	{
-		(perror(GREEN"minishell$ " "\033[35m"));
-		return (0);
+		if (chdir(arg[1]) == -1)
+		{
+			(perror(GREEN"minishell$ " "\033[35m"));
+			return (0);
+		}
+		update_pwd_and_oldpwd(exec);
 	}
 	return (1);
 }
+
+// static char	*get_value(t_env *env, char *key)
+// {
+// 	t_env	*tmp;
+
+// 	if (!env || !key)
+// 		return (NULL);
+// 	tmp = env;
+// 	while (tmp)
+// 	{
+// 		if (!ft_strcmp(tmp->key, key))
+// 			return (tmp->value);
+// 		tmp = tmp->next;
+// 	}
+// 	return (NULL);
+// }
