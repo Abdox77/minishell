@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/21 16:34:40 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/04/22 14:42:39 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,31 +18,37 @@ static void display_cmd(t_token *token)
 {
     printf("THIS IS A CMD NUMBER : %d\n", i);
     if (token && token->cmd)
-    {
-         printf("\t\tCMD IS =======>  : %s\n", token->cmd->cmd);
+    {   
+        i++;
+        printf("\t\tCMD IS =======>  : %s\n", token->cmd->cmd);
         if (token->cmd->args)
         {
             printf("\t\t ARGS ARE =======>  : \n");
                 for (int j = 0; token->cmd->args[j]; j++)
                     printf ("\t\t\targ[%d] : %s\n", j, token->cmd->args[j]);
         }
+        if (token->cmd->redir)
+        {
+            t_redir *redir = token->cmd->redir;
+            while(redir)
+            {
+                if (redir->mode == INFILE)
+                    printf("\t\t\tINFILE : %s\n", redir->file_name);
+                else if (redir->mode == OUTFILE)
+                    printf("\t\t\tOUTFILE : %s\n", redir->file_name);
+                else if (redir->mode == HEREDOC)
+                    printf("\t\t\tHEREDOC : %s\n", redir->file_name);
+                else if (redir->mode == APPEND)
+                    printf("\t\t\tAPPEND : %s\n", redir->file_name);
+                else if (redir->mode == TRUNC)
+                    printf("\t\t\tTRUNC : %s\n", redir->file_name);
+                else if (redir->mode == STD_OUT)
+                    printf("\t\t\tSTD_OUT : %s\n", redir->file_name);
+                redir = redir->next;
+            }
+        }
     }
-    /*
-        to test later 
-
-    if (token->cmd->redir)
-    {
-        
-
-    }*/
 }
-
-// static void display_pipe(t_token *token)
-// {
-//     ++i;
-//     printf("THIS IS A PIPE NUMBER : %d\n", i);
-// }
-
 
 void display(t_token *token)
 {

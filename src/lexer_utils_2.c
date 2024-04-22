@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 11:12:42 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/15 17:17:56 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/04/22 14:47:03 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void add_redirection(t_token **token, REDIR_MODE mode, char *file_name)
 {
 	t_redir *tmp;
 
-	if (!(*token)->cmd->redir)
+	if (!((*token)->cmd->redir))
 	{	
 		(*token)->cmd->redir = new_cmd_redir(mode, file_name);
 		if (!(*token)->cmd->redir)
@@ -27,8 +27,8 @@ void add_redirection(t_token **token, REDIR_MODE mode, char *file_name)
 		tmp = (*token)->cmd->redir;
 		while(tmp->next)
 			tmp = tmp->next;
-		tmp = new_cmd_redir(mode, file_name);
-		if (!tmp)
+		tmp->next = new_cmd_redir(mode, file_name);
+		if (!tmp->next)
 			ft_error("REDIR creation failed and returned null\n", EXIT_FAILURE);				
 	}
 }
@@ -91,7 +91,7 @@ void handle_output(t_token **token, char **line)
     }
     else
         mode = TRUNC; // or output to check later
-    while ((**line) && is_space(**line) == false)
+    while ((**line) && is_space(**line) == true)
         ++(*line);
     if (**line == '\'' || **line == '"')
     {
@@ -106,8 +106,6 @@ void handle_output(t_token **token, char **line)
     }
     else
     {
-    	while(**line && is_space(**line) == true)
-    		++(*line);
         while ((*line)[len] && is_special_char((*line)[len]) == false)
             ++len;
         file_name = ft_substr(*line, 0, len);
@@ -125,24 +123,3 @@ void handle_redirection(t_token **token, char **line)
     else
         handle_output(token, line);
 }
-
-/*
-
- 	t_redir *tmp;
-
-    tmp = token->cmd->redir;
-    for(;tmp->next;)
-    {
-    	if (tmp->mode == INFILE)
-    		printf("type is infile\n");
-    	else if (tmp->mode == HEREDOC)
-    		printf("type is HEREDOC\n");
-    	else if (tmp->mode == TRUNC)
-    		printf("type is TRUNC\n");
-    	else if (tmp->mode == APPEND)
-    		printf("type is APPEND\n");
-    	printf("redir to file namre : %s\n", tmp->file_name);
-    	tmp = tmp->next;
-    }
-
-*/

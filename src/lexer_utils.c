@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 15:14:16 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/21 06:49:51 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/04/22 16:18:52 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,15 +65,25 @@ void handle_quotes(t_token **token, char ** line)
     }
 }
 
+
+
 void  handle_command(t_token **token, char **line)
 {
     int     len;
 
+    printf("line is in handlecmd %s\n", *line);
     if (!token || !*token)
         (*token) = new_token(CMD);
     len = 0;
     while (**line && is_space(**line) == true)
         ++(*line);
+    if (**line && is_redirection_char(**line) == true)
+    {
+        handle_redirection(token, line);
+        return ;
+    }
+    // i should add a function that gets the command and handle the edge cases such as l"s"
+    
     while ((*line)[len] && is_special_char((*line)[len]) == false)
         ++len;
     (*token)->type = CMD;
@@ -104,4 +114,5 @@ void  handle_command(t_token **token, char **line)
                 handle_quotes(token, line);
         }
     }
+    
 }
