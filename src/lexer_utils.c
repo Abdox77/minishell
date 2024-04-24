@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 15:14:16 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/22 16:18:52 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/04/24 14:01:35 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,9 +86,12 @@ void  handle_command(t_token **token, char **line)
     
     while ((*line)[len] && is_special_char((*line)[len]) == false)
         ++len;
-    (*token)->type = CMD;
-    (*token)->cmd->cmd = ft_substr(*line, 0, len);
-    (*line) += len;
+   
+    if (len)
+    { (*token)->type = CMD;
+        (*token)->cmd->cmd = ft_substr(*line, 0, len);
+        (*line) += len;
+    }
     if ((**line))
     {
         while (**line && is_redirection_char(**line) == false  && **line != '|')

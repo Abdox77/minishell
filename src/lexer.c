@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:22:59 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/22 16:21:36 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/04/24 13:59:58 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void handle_pipe(t_token **token, char **line)
     if (!*token)
         ft_error("failed to create token", EXIT_FAILURE);
     ++(*line);
-    printf("line is %s\n", *line);
+    printf("line is in handle pipe %s\n", *line);
     lexer(&((*token)->r_token), line);
 }
 
@@ -28,10 +28,6 @@ void lexer(t_token **token, char **line)
 {
     if (!line || !*line || !**line)
         return;
-    if (is_space(**line))
-    {
-        
-    }
     if (**line == '|')
         handle_pipe(token, line);
     else
