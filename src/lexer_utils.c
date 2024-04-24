@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 15:14:16 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/24 14:01:35 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/04/24 19:52:52 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,23 +67,12 @@ void handle_quotes(t_token **token, char ** line)
 
 
 
-void  handle_command(t_token **token, char **line)
+static void get_command(t_token **token, char **line)
 {
-    int     len;
+    int len;
 
-    printf("line is in handlecmd %s\n", *line);
-    if (!token || !*token)
-        (*token) = new_token(CMD);
     len = 0;
-    while (**line && is_space(**line) == true)
-        ++(*line);
-    if (**line && is_redirection_char(**line) == true)
-    {
-        handle_redirection(token, line);
-        return ;
-    }
-    // i should add a function that gets the command and handle the edge cases such as l"s"
-    
+    skip_spaces(line);
     while ((*line)[len] && is_special_char((*line)[len]) == false)
         ++len;
    
@@ -92,14 +81,30 @@ void  handle_command(t_token **token, char **line)
         (*token)->cmd->cmd = ft_substr(*line, 0, len);
         (*line) += len;
     }
+}
+
+void  handle_command(t_token **token, char **line)
+{
+    int     len;
+
+    if (!token || !*token)
+        (*token) = new_token(CMD);
+    while (**line && is_space(**line) == true)
+        ++(*line);
+    if (**line && is_redirection_char(**line) == true)
+    {
+        handle_redirection(token, line);
+        
+    }
+    get_command(token, line);
     if ((**line))
     {
         while (**line && is_redirection_char(**line) == false  && **line != '|')
         {
-            while(**line && *line && is_space(**line) == true)
+            while(**line && *line && is_space(**line) == true) // i should a function that skipps spaces , it will optimize the code 
                 ++(*line);
             len = 0;
-            while ((*line)[len] && is_special_char((*line)[len]) == false)
+            while ((*line)[len] && is_special_char((*line)[len]) == false) // a function that calculates the len of a word
                 ++len;
             if (!(*token)->cmd->args && len)
             {

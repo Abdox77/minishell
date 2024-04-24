@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/21 06:30:17 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/04/24 20:41:33 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,6 +136,7 @@ void        handle_output(t_token **token, char **line);
 
 
 /*=====================LEXER_UTILS=====================*/
+void        skip_spaces(char **line);
 char	    **split(char *str, char *charset);
 char        **add_arg(char **args, char *arg);
 void        add_redirection(t_token **token, REDIR_MODE mode, char *file_name);

@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/22 14:42:39 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/04/24 20:03:28 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,26 @@ void display(t_token *token)
     // display(token->r_token);
 }
 
+void special_trim(char **line)
+{
+    int len;
+    char *new_line;
+
+    if (!*line || !**line)
+        return ;
+    skip_spaces(line);
+    len = ft_strlen(*line);
+    if (len > 1)
+    {
+        while (len - 1 && is_space(*(*line + len - 1)))
+            len--;
+        new_line = ft_substr(*line, 0, len);
+        if (!new_line)
+            return ; //error
+        line = &new_line;          
+    }      
+}
+
 void    minishell_loop(void)
 {
     char *line;
@@ -83,6 +103,7 @@ void    minishell_loop(void)
         if (line)
 		    add_history(line);
         tmp = head_tokens;
+        special_trim(&line);
         lexer(&(tmp), &line);
         display(head_tokens);
         if (*line)
