@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 15:14:16 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/24 19:52:52 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/04/25 13:09:56 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,19 +65,54 @@ void handle_quotes(t_token **token, char ** line)
     }
 }
 
+static char *special_cmd_quote(char **line, int len, char quote)
+{
+    int i;
+    char *cmd;
+    t_bool quote_open;
 
+    i = -1;
+    quote_open = false;
+    cmd = malloc(sizeof(char) * (len + 1));
+    if (!cmd)
+        ft_error("failed to allocate memory for cmd\n", EXIT_FAILURE);
+    while (++i < len - 1)
+    {
+        if (**line == quote && quote_open == false)
+        {
+            ++(*line);
+            quote_open = true;
+        }
+        cmd[i] = **line;
+        ++(*line);
+    }
+    cmd[i] = '\0';
+    return (cmd);
+}
 
 static void get_command(t_token **token, char **line)
 {
     int len;
+    char quote;
 
     len = 0;
     skip_spaces(line);
     while ((*line)[len] && is_special_char((*line)[len]) == false)
         ++len;
-   
-    if (len)
-    { (*token)->type = CMD;
+    if (is_quote((*line)[len]))
+    {
+        quote = (*line)[len];
+        len++;
+        while ((*line)[len] && (*line)[len] != quote)
+            ++len;
+        if (!(*line)[len])
+            printf("Syntax Error unclosed quote\n");
+        (*token)->cmd->cmd = special_cmd_quote(line, len, quote);
+        // (*line) += len + 1;
+    }
+    else if (len)
+    { 
+        (*token)->type = CMD;
         (*token)->cmd->cmd = ft_substr(*line, 0, len);
         (*line) += len;
     }
@@ -92,10 +127,7 @@ void  handle_command(t_token **token, char **line)
     while (**line && is_space(**line) == true)
         ++(*line);
     if (**line && is_redirection_char(**line) == true)
-    {
         handle_redirection(token, line);
-        
-    }
     get_command(token, line);
     if ((**line))
     {

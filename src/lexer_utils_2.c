@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 11:12:42 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/22 14:47:03 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/04/25 12:39:44 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void handle_input(t_token **token, char **line)
     }
     else
         mode = INFILE;
-    while ((**line) && is_space(**line) == false)
+    while ((**line) && is_space(**line) == true)
         ++(*line);
     if (is_quote(**line) == true)
     {
@@ -60,7 +60,7 @@ void handle_input(t_token **token, char **line)
         if (!*line[len])
             ft_error("Syntax Error unclosed quote\n", 126); // okay maybe use free here => to do later
         file_name = ft_substr(*line, 0, len);
-        (*line) += len; // removed len + 1 for debubugin purposes 
+        (*line) += len;
     }
     else
     {
@@ -93,7 +93,7 @@ void handle_output(t_token **token, char **line)
         mode = TRUNC; // or output to check later
     while ((**line) && is_space(**line) == true)
         ++(*line);
-    if (**line == '\'' || **line == '"')
+    if (is_quote(**line) == true)
     {
         quote = **line;
         (*line)++;

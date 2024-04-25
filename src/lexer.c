@@ -26,6 +26,7 @@ void handle_pipe(t_token **token, char **line)
 
 void lexer(t_token **token, char **line)
 {
+
     if (!line || !*line || !**line)
         return;
     if (**line == '|')
