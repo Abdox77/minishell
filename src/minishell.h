@@ -170,6 +170,13 @@ void        ft_env(t_env *env);
 int         cd(char **arg, t_exec *exec);
 
 
+/*=======================EXECUTION=======================*/
+void execute_commands(t_token *token);
+void open_pipe_and_redirect(void);
+void execute_command(t_token *token);
+void execute_manager(t_token *head);
+
+
 
 /*=====================MINISHELL=====================*/
 void        minishell_loop(void);
