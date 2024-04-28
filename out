@@ -1,0 +1,12 @@
+total 24
+drwxr-xr-x  11 amohdi  2019   374 Apr 28 17:22 .
+drwxr-xr-x   5 amohdi  2019   170 Apr 27 16:04 ..
+drwxr-xr-x  14 amohdi  2019   476 Apr 28 17:18 .git
+-rw-r--r--   1 amohdi  2019    30 Apr 27 15:22 .gitignore
+-rw-r--r--   1 amohdi  2019   845 Apr 28 17:18 Makefile
+drwxr-xr-x   4 amohdi  2019   136 Apr 27 15:22 _txt_files_
+-rwxr-xr-x   1 amohdi  2019    53 Apr 27 15:22 build_and_run
+drwxr-xr-x   9 amohdi  2019   306 Apr 27 15:22 builtins
+drwxr-xr-x  47 amohdi  2019  1598 Apr 27 15:22 libft
+-rw-r--r--   1 amohdi  2019     0 Apr 28 17:27 out
+drwxr-xr-x  20 amohdi  2019   680 Apr 28 17:18 src
