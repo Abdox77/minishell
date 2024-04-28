@@ -52,6 +52,8 @@ typedef enum {
 
 typedef enum
 {
+    AND,
+    OR,
     NONE,
     CMD,
     PIPE     
@@ -133,7 +135,7 @@ void        handle_quotes(t_token **token, char ** line);
 void        handle_redirection(t_token **token, char **line);
 void        handle_input(t_token **token, char **line);
 void        handle_output(t_token **token, char **line);
-
+void handle_operator(t_token **token, char **line);
 
 /*=====================LEXER_UTILS=====================*/
 void        skip_spaces(char **line);
@@ -152,6 +154,7 @@ t_bool      is_space(char c);
 t_bool      is_quote(char c);
 t_bool      is_special_char(char c);
 t_bool      is_redirection_char(char c);
+t_bool      is_an_operator(char *line);
 int         ft_strcmp(const char *s1, const char *s2);
 
 

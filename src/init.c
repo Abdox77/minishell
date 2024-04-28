@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 01:45:18 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/25 12:40:08 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/04/28 22:26:35 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,15 @@ t_token *new_token(TOKEN type)
     memset(token, 0, sizeof(t_token));
     token->type = type;
     if (type== CMD)
-        token->cmd = new_cmd();
+    {
+	    token->cmd = new_cmd();
+	    if(!token->cmd)
+	        ft_error("failed to create new cmd\n", EXIT_FAILURE);
+    }
     return (token);
 }
 
-t_redir *new_cmd_redir (REDIR_MODE mode, char *file_name)
+t_redir *new_cmd_redir(REDIR_MODE mode, char *file_name)
 {
     t_redir *new;
 

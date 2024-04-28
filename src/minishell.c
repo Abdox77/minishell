@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/24 20:03:28 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/04/28 21:39:42 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,14 +54,19 @@ void display(t_token *token)
 {
     if (!token)
         return;
-    if (token->type == PIPE)
+	printf("got here in display\n");
+    if (token->type != CMD)
     {
-        printf("pipe\n");
-        display_cmd(token->l_token);
+	if (token->type == PIPE)
+        	printf("PIPE\n");
+	else if (token->type == AND)
+        	printf("AND\n");
+	else if (token->type == OR)
+		printf("OR\n");
+        display(token->l_token);
         display(token->r_token);
     }
-        // display_pipe(token);
-    else if (token->type == CMD)
+    else
         display_cmd(token);
     // display(token->r_token);
 }

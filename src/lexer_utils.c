@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 15:14:16 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/25 13:09:56 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/04/28 22:31:43 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,7 @@ static char *special_cmd_quote(char **line, int len, char quote)
         ++(*line);
     }
     cmd[i] = '\0';
+    ++(*line); // check for uncloesed quote here
     return (cmd);
 }
 
@@ -97,7 +98,7 @@ static void get_command(t_token **token, char **line)
 
     len = 0;
     skip_spaces(line);
-    while ((*line)[len] && is_special_char((*line)[len]) == false)
+    while ((*line)[len] && is_special_char((*line)[len]) == false && is_an_operator(*line + len) == false)
         ++len;
     if (is_quote((*line)[len]))
     {
@@ -108,7 +109,6 @@ static void get_command(t_token **token, char **line)
         if (!(*line)[len])
             printf("Syntax Error unclosed quote\n");
         (*token)->cmd->cmd = special_cmd_quote(line, len, quote);
-        // (*line) += len + 1;
     }
     else if (len)
     { 
@@ -131,19 +131,20 @@ t_token		*handle_command(char **line)
     get_command(&cmd, line);
     if ((**line))
     {
-        while (**line && **line != '|')
+        while (**line && **line != '|' && is_an_operator(*line) == false)
         {
-            while(**line && *line && is_space(**line) == true) // i should a function that skipps spaces , it will optimize the code 
+            while(**line && is_space(**line) == true) // i should a function that skipps spaces , it will optimize the code 
                 ++(*line);
             len = 0;
-            while ((*line)[len] && is_special_char((*line)[len]) == false) // a function that calculates the len of a word
+            while ((*line)[len] && is_an_operator(*line + len) == false && is_special_char((*line)[len]) == false) // a function that calculates the len of a word
                 ++len;
+	    
             if (!cmd->cmd->args && len)
             {
-                cmd->cmd->args = malloc(sizeof(char *) * 2);
-                cmd->cmd->args[0] = ft_substr(*line, 0, len);
-                cmd->cmd->args[1] = NULL;
-                (*line) += len;
+                    cmd->cmd->args = malloc(sizeof(char *) * 2);
+                    cmd->cmd->args[0] = ft_substr(*line, 0, len);
+                    cmd->cmd->args[1] = NULL;
+                    (*line) += len;
             }
             else if (cmd->cmd->args && len)
             {
@@ -152,8 +153,8 @@ t_token		*handle_command(char **line)
             }
             else if (is_quote(**line) == true)
                 handle_quotes(&cmd, line);
-	    if (is_redirection_char(**line))
-		handle_redirection(&cmd, line);
+	        if (is_redirection_char(**line))
+		        handle_redirection(&cmd, line);
         }
     }
     return (cmd);
