@@ -118,41 +118,43 @@ static void get_command(t_token **token, char **line)
     }
 }
 
-void  handle_command(t_token **token, char **line)
+t_token		*handle_command(char **line)
 {
-    int     len;
-
-    if (!token || !*token)
-        (*token) = new_token(CMD);
+    int	len;
+    t_token *cmd;
+    
+    cmd = new_token(CMD);
     while (**line && is_space(**line) == true)
         ++(*line);
     if (**line && is_redirection_char(**line) == true)
-        handle_redirection(token, line);
-    get_command(token, line);
+        handle_redirection(&cmd, line);
+    get_command(&cmd, line);
     if ((**line))
     {
-        while (**line && is_redirection_char(**line) == false  && **line != '|')
+        while (**line && **line != '|')
         {
             while(**line && *line && is_space(**line) == true) // i should a function that skipps spaces , it will optimize the code 
                 ++(*line);
             len = 0;
             while ((*line)[len] && is_special_char((*line)[len]) == false) // a function that calculates the len of a word
                 ++len;
-            if (!(*token)->cmd->args && len)
+            if (!cmd->cmd->args && len)
             {
-                (*token)->cmd->args = malloc(sizeof(char *) * 2);
-                (*token)->cmd->args[0] = ft_substr(*line, 0, len);
-                (*token)->cmd->args[1] = NULL;
+                cmd->cmd->args = malloc(sizeof(char *) * 2);
+                cmd->cmd->args[0] = ft_substr(*line, 0, len);
+                cmd->cmd->args[1] = NULL;
                 (*line) += len;
             }
-            else if ((*token)->cmd->args && len)
+            else if (cmd->cmd->args && len)
             {
-                (*token)->cmd->args =  add_arg((*token)->cmd->args, ft_substr(*line, 0, len));
+                cmd->cmd->args =  add_arg(cmd->cmd->args, ft_substr(*line, 0, len));
                 (*line) += len;
             }
             else if (is_quote(**line) == true)
-                handle_quotes(token, line);
+                handle_quotes(&cmd, line);
+	    if (is_redirection_char(**line))
+		handle_redirection(&cmd, line);
         }
     }
-    
+    return (cmd);
 }

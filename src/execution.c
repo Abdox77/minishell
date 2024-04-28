@@ -1,10 +1,9 @@
 #include "minishell.h"
 
-
 void execute_command(t_token *token)
 {
 	open_infiles_outfile(token->cmd->redir); // not sure about the name here
-	execve(token->cmd)
+	execve(token->cmdi);
 }
 
 void open_pipe_and_redirect(void)
@@ -26,8 +25,6 @@ void execute_commands(t_token *token)
 	else
 		return ;
 }
-
-
 void execute_manager(t_token *head)
 {
 	if (!head)

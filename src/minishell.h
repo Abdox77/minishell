@@ -128,7 +128,7 @@ t_token     *new_token(TOKEN type);
 
 /*=====================LEXER=====================*/
 void        lexer(t_token **token, char **line);
-void        handle_command(t_token **token, char **line);
+t_token     *handle_command(char **line);
 void        handle_quotes(t_token **token, char ** line);
 void        handle_redirection(t_token **token, char **line);
 void        handle_input(t_token **token, char **line);
@@ -142,6 +142,9 @@ char        **add_arg(char **args, char *arg);
 void        add_redirection(t_token **token, REDIR_MODE mode, char *file_name);
 t_cmd       *new_cmd(void);
 
+// duplicating cmd token
+char **ft_dup_args(char **args);
+t_redir *ft_dup_redir(t_redir *redir);
 
 /*=====================UTILS========================*/
 int         strs_len(char **args);
