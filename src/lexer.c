@@ -45,30 +45,42 @@ t_bool is_an_operator(char *line)
 	return false;
 }
 
+static t_token *dup_token(t_token *token)
+{
+	if (!token)
+		return NULL;
+	else if (token->type != CMD)
+		return (new_token(token->type));
+	else
+		return (cmd_token_dup(token)); 
+}
+
 void handle_operator(t_token **token, char **line)
 {
 	TOKEN type;
 	t_token *tmp;
-	t_token *new;
 
-	printf("in handle_operator line %s\n", *line);
-	(*line) += 2;
+	printf("in handle_operator line is : %s\n", *line);
 	if (**line == '&')
+	{
+		printf("type is and\n");
 		type = AND;
+	}
 	else
 		type = OR;
-	new = new_token(type);
-	if (!new)
-		ft_error("failed to create new token in handle_operator\n", EXIT_FAILURE);
+	(*line) += 2;
 	if (*token)
 	{
+		if ((*token)->type == PIPE)
+			printf("its a fucking pipe\n");
 		tmp = *token;
-		token = &new;
-		(*token)->l_token = tmp;
+		*token = new_token(type);
+		(*token)->l_token = dup_token(tmp);
+		(*token)->r_token = NULL;
 	}
 	else
 		ft_error("syntax error here\n", EXIT_FAILURE); // in case of syntax error just print the error
-	lexer(token, line);
+	lexer(&((*token)->r_token), line);
 }
 
 void lexer(t_token **token, char **line)
@@ -77,17 +89,33 @@ void lexer(t_token **token, char **line)
 	if (!*line || !**line)
 		return ;
 	if (is_an_operator(*line) == true)
+	{
 		handle_operator(token, line);
+		if ((*token)->type == AND)
+		{	
+			printf("lets gooo\n");
+			if ((*token)->l_token->type == PIPE)
+				printf("lets gooo 222222\n");
+			//if ((*token)->l_token->r_token->type == CMD)
+			//	printf("bingo\n");
+		}
+
+	}
 	else if (**line == '|')
 		handle_pipe(token, line);
 	else
 	{
 		cmd = handle_command(line);
-		if (*line && **line == '|')
+		if (*line && **line == '|' && is_an_operator(*line) == false)
 		{
 			(*token)->l_token = cmd_token_dup(cmd);
 			lexer(&((*token)->r_token), line);
 			return ;
+		}
+		else if (!*token)
+		{
+			*token = cmd_token_dup(cmd);
+			printf("line is %s and command is %s\n", *line, (*token)->cmd->cmd);
 		}
 		else if (!**line || (**line && is_an_operator(*line) == true))
 		{
@@ -98,7 +126,6 @@ void lexer(t_token **token, char **line)
 		}
 		else
 			printf("line is not empty how tf this function is finished and line is %s\n", *line);
-	}
-	if (*line)
-		lexer(token, line);
+	}	
 }
+
