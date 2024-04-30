@@ -183,6 +183,9 @@ void execute_command(t_token *token);
 void execute_manager(t_token *head);
 
 
+//=====================DEBUG=====================//
+void display_cmd(t_token *token);
+
 
 /*=====================MINISHELL=====================*/
 void        minishell_loop(void);

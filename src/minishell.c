@@ -14,7 +14,7 @@
 
 int i = 0;
 
-static void display_cmd(t_token *token)
+void display_cmd(t_token *token)
 {
     printf("THIS IS A CMD NUMBER : %d\n", i);
     if (token && token->cmd)
@@ -54,16 +54,12 @@ void display(t_token *token)
 {
     if (!token)
         return;
-    if (token->type == AND)
-        printf("AND loooooooooo\n");
     if (token->type != CMD)
     {
+        if (token->type == AND || token->type == OR)
+            printf("AND\n");
         if (token->type == PIPE)
             printf("pipe\n");
-        else if (token->type == AND)
-            printf("AND\n");
-        else if (token->type == OR)
-            printf("OR\n");
         display(token->l_token);
         display(token->r_token);
     }
@@ -95,19 +91,22 @@ static void lexer_manager(t_token **token, char **line)
 {
 	if (!*line || !**line)
 		return ;
+    *token = set_pipe_head();
 	while (**line)
-		lexer(token, line);
+       { lexer(token, line);
+        special_trim(line);
+       }
 }
 
 void    minishell_loop(void)
 {
     char *line;
     t_token *head_tokens;
-    t_token *tmp;
+    
 
-    head_tokens = set_pipe_head();
-    if (!head_tokens)
-        return; // maybe throw an error here
+    head_tokens = NULL;
+    //if (!head_tokens)
+      //  return; // maybe throw an error here
     while(42)
     {
         line = readline(GREEN"minishell$ " "\033[35m");
@@ -115,9 +114,8 @@ void    minishell_loop(void)
             break;
         if (line)
 		    add_history(line);
-        tmp = head_tokens;
         special_trim(&line);
-        lexer_manager(&(tmp), &line);
+        lexer_manager(&head_tokens, &line);
         display(head_tokens);
         if (*line)
             printf("line is %s\n", line);
