@@ -23,21 +23,6 @@ void handle_pipe(t_token **token, char **line)
     lexer(token, line);
 }
 
-t_token *cmd_token_dup(t_token *token) // maybe its dumb to duplicate every fucking commmand it will defintly 
-{
-	t_token *new;
-
-	if (!token)
-		return NULL;
-	new = new_token(CMD);
-	if (!new)
-		ft_error("failled to create new token in cmd_token_dup\n", 1);
-	new->cmd->cmd = ft_strdup(token->cmd->cmd);
-	new->cmd->args = ft_dup_args(token->cmd->args);// okay here maybe add the command to the args
-	new->cmd->redir = ft_dup_redir(token->cmd->redir);
-	return (new);
-}
-
 t_bool is_an_operator(char *line)
 {
 	if ((*line == '&' && *(line + 1) && *(line + 1) == '&') || (*line == '|' && *(line + 1) && *(line + 1) == '|'))
@@ -45,76 +30,134 @@ t_bool is_an_operator(char *line)
 	return false;
 }
 
-// static t_token *dup_token(t_token *token)
+// void handle_operator(t_token **token, char **line)
 // {
-// 	if (!token)
-// 		return NULL;
-// 	else if (token->type != CMD)
-// 		return (new_token(token->type));
+// 	TOKEN type;
+// 	t_token *tmp;
+
+// 	printf("in handle_operator line is : %s\n", *line);
+// 	if (**line == '&')
+// 	{
+// 		printf("type is and\n");
+// 		type = AND;
+// 	}
 // 	else
-// 		return (cmd_token_dup(token)); 
+// 		type = OR;
+// 	(*line) += 2;
+// 	if (*token)
+// 	{
+// 		if ((*token)->type == PIPE)
+// 			printf("its a fucking pipe\n");
+// 		tmp = *token;
+// 		*token = new_token(type);
+// 		(*token)->l_token = tmp;
+// 		(*token)->r_token = NULL;
+// 		lexer(&((*token)->r_token), line);
+// 	}
+// 	else
+// 		ft_error("syntax error here\n", EXIT_FAILURE); // in case of syntax error just print the error
 // }
 
-void handle_operator(t_token **token, char **line)
+static void place_cmd_node(t_token **root, t_token **to_put)
 {
-	TOKEN type;
-	t_token *tmp;
-
-	printf("in handle_operator line is : %s\n", *line);
-	if (**line == '&')
+	printf("command to be placed is %s\n", (*to_put)->cmd->cmd);
+	if (!*root)
+		*root = *to_put;
+	else if ((*root)->type != CMD)
 	{
-		printf("type is and\n");
-		type = AND;
+		if (!((*root)->l_token))
+		{
+			printf("loool\n");
+			(*root)->l_token = *to_put;}
+		else if (!((*root)->r_token))
+			(*root)->r_token = *to_put;
+		else
+			place_cmd_node(&((*root)->r_token), to_put);
 	}
-	else
-		type = OR;
-	(*line) += 2;
-	if (*token)
-	{
-		if ((*token)->type == PIPE)
-			printf("its a fucking pipe\n");
-		tmp = *token;
-		*token = new_token(type);
-		(*token)->l_token = tmp;
-		(*token)->r_token = NULL;
-		lexer(&((*token)->r_token), line);
-	}
-	else
-		ft_error("syntax error here\n", EXIT_FAILURE); // in case of syntax error just print the error
 }
 
-void lexer(t_token **token, char **line)
+static void place_pipe_node(t_token **root, t_token **to_put)
 {
-	t_token *cmd;
+	t_token *tmp;
+
+	if (!*root)
+		*root = *to_put;
+	else if ((*root)->type == CMD)
+	{
+		tmp = *root;
+		*root = *to_put;
+		(*root)->l_token = tmp;
+	}
+	else
+		place_pipe_node((&(*root)->r_token), to_put);
+}
+
+static void	place_operator_node(t_token **root, t_token **to_put)
+{
+	t_token *tmp;
+
+	if (!*root)
+		printf("syntax error here\n");
+	else
+	{
+		tmp = *root;
+		*root = *to_put;
+		(*root)->l_token = tmp;
+	}
+}
+
+static void place_node(t_token **root, t_token **to_put, TOKEN type)
+{
+	if (type == CMD)
+	{	
+		// printf("command befor placecmd %s\n", )	
+		place_cmd_node(root, to_put);}
+	else if (type == AND)
+		place_operator_node(root, to_put);
+	else if (type == PIPE)
+		place_pipe_node(root, to_put);
+	else
+		printf("what i'm doing here lol\n");
+}
+
+static void handle_operators(t_token **token, char **line)
+{
+	t_token *tmp;
+
+	tmp = new_token(AND);
+	(*line) += 2;
+	place_node (token, &tmp, AND);
+}
+
+static void handle_pipes(t_token **token, char **line)
+{
+	t_token *tmp;
+
+	printf("got here oiin pipe\n");
+	tmp = new_token(PIPE);
+	(*line) += 1;
+	place_node (token, &tmp, PIPE);
+}
+
+static void handle_commands(t_token **root, char **line)
+{
+	t_token *tmp;
+
+	tmp = handle_command(line);
+	place_node(root, &tmp, CMD);
+	printf("the command is :%s\n", (*root)->cmd->cmd);
+}
+
+void	lexer(t_token **token, char **line)
+{
+
 	if (!*line || !**line)
 		return ;
 	if (is_an_operator(*line) == true)
-		handle_operator(token, line);
+		handle_operators(token, line);
 	else if (**line == '|')
-		handle_pipe(token, line);
+		handle_pipes(token, line);
 	else
-	{
-		cmd = handle_command(line);
-		if (!*token)
-		{
-			*token = cmd;
-			printf("line is %s and command is %s\n", *line, (*token)->cmd->cmd);
-		}
-		else if (*line && **line == '|' && is_an_operator(*line) == false)
-		{
-			(*token)->l_token = cmd_token_dup(cmd);
-			lexer(&((*token)->r_token), line);
-			return ;
-		}
-		else if (!**line || (**line && is_an_operator(*line) == true))
-		{
-			if ((*token)->l_token)
-				(*token)->r_token = cmd_token_dup(cmd);
-			else
-				(*token)->l_token = cmd_token_dup(cmd);
-		}
-		else
-			printf("line is not empty how tf this function is finished and line is %s\n", *line);
-	}	
+		handle_commands(token, line);
+		lexer(token, line);
 }
-

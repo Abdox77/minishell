@@ -87,15 +87,26 @@ void special_trim(char **line)
     }      
 }
 
-static void lexer_manager(t_token **token, char **line)
+static t_token *lexer_manager(char **line)
 {
 	if (!*line || !**line)
-		return ;
-    *token = set_pipe_head();
+		return NULL; 
+    t_token *head;
+
+    
+    head = NULL;
+    // head = set_pipe_head();
 	while (**line)
-       { lexer(token, line);
+    {
+        lexer(&head, line);
         special_trim(line);
-       }
+    }
+    printf("here after the loop\n");
+    // if ((*head)->type == AND)
+    //     printf("ok\n");
+    // else if ((*head)->type == PIPE)
+    //     printf("okoooooooo\n");
+    return head;
 }
 
 void    minishell_loop(void)
@@ -105,8 +116,6 @@ void    minishell_loop(void)
     
 
     head_tokens = NULL;
-    //if (!head_tokens)
-      //  return; // maybe throw an error here
     while(42)
     {
         line = readline(GREEN"minishell$ " "\033[35m");
@@ -115,13 +124,13 @@ void    minishell_loop(void)
         if (line)
 		    add_history(line);
         special_trim(&line);
-        lexer_manager(&head_tokens, &line);
+        head_tokens = lexer_manager( &line);
         display(head_tokens);
         if (*line)
             printf("line is %s\n", line);
         else
             printf("line is empty\n");
-        head_tokens = set_pipe_head();
+        head_tokens = NULL;
         
     }
 }
