@@ -30,34 +30,6 @@ t_bool is_an_operator(char *line)
 	return false;
 }
 
-// void handle_operator(t_token **token, char **line)
-// {
-// 	TOKEN type;
-// 	t_token *tmp;
-
-// 	printf("in handle_operator line is : %s\n", *line);
-// 	if (**line == '&')
-// 	{
-// 		printf("type is and\n");
-// 		type = AND;
-// 	}
-// 	else
-// 		type = OR;
-// 	(*line) += 2;
-// 	if (*token)
-// 	{
-// 		if ((*token)->type == PIPE)
-// 			printf("its a fucking pipe\n");
-// 		tmp = *token;
-// 		*token = new_token(type);
-// 		(*token)->l_token = tmp;
-// 		(*token)->r_token = NULL;
-// 		lexer(&((*token)->r_token), line);
-// 	}
-// 	else
-// 		ft_error("syntax error here\n", EXIT_FAILURE); // in case of syntax error just print the error
-// }
-
 static void place_cmd_node(t_token **root, t_token **to_put)
 {
 	if (!*root)
@@ -106,9 +78,7 @@ static void	place_operator_node(t_token **root, t_token **to_put)
 static void place_node(t_token **root, t_token **to_put, TOKEN type)
 {
 	if (type == CMD)
-	{	
-		// printf("command befor placecmd %s\n", )	
-		place_cmd_node(root, to_put);}
+		place_cmd_node(root, to_put);
 	else if (type == AND)
 		place_operator_node(root, to_put);
 	else if (type == PIPE)
@@ -143,16 +113,22 @@ static void handle_commands(t_token **root, char **line)
 	place_node(root, &tmp, CMD);
 }
 
-void	lexer(t_token **token, char **line)
+static void handle_parenthesis(t_token **token, char **line)
 {
 
+}
+
+void	lexer(t_token **token, char **line)
+{
 	if (!*line || !**line)
 		return ;
 	if (is_an_operator(*line) == true)
 		handle_operators(token, line);
 	else if (**line == '|')
 		handle_pipes(token, line);
+	else if (**line == '(')
+		handle_parenthesis(token, line);
 	else
 		handle_commands(token, line);
-		lexer(token, line);
+	lexer(token, line);
 }

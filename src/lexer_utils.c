@@ -151,10 +151,8 @@ t_token		*handle_command(char **line)
                 cmd->cmd->args =  add_arg(cmd->cmd->args, ft_substr(*line, 0, len));
                 (*line) += len;
             }
-            else if (is_quote(**line) == true)
-                handle_quotes(&cmd, line);
-	        if (is_redirection_char(**line))
-		        handle_redirection(&cmd, line);
+            else if (is_quote(**line) == true) handle_quotes(&cmd, line);
+	        if (is_redirection_char(**line)) handle_redirection(&cmd, line);
         }
     }
     return (cmd);
