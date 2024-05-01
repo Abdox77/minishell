@@ -60,7 +60,9 @@ void display(t_token *token)
             printf("AND\n");
         if (token->type == PIPE)
             printf("pipe\n");
+        printf("==============left->node==============\n");
         display(token->l_token);
+        printf("==============right->node==============\n");
         display(token->r_token);
     }
     else
@@ -95,17 +97,14 @@ static t_token *lexer_manager(char **line)
 
     
     head = NULL;
-    // head = set_pipe_head();
 	while (**line)
     {
         lexer(&head, line);
         special_trim(line);
     }
-    printf("here after the loop\n");
-    // if ((*head)->type == AND)
-    //     printf("ok\n");
-    // else if ((*head)->type == PIPE)
-    //     printf("okoooooooo\n");
+    if (head->type == AND)
+        printf("ok\n");
+
     return head;
 }
 
@@ -128,8 +127,6 @@ void    minishell_loop(void)
         display(head_tokens);
         if (*line)
             printf("line is %s\n", line);
-        else
-            printf("line is empty\n");
         head_tokens = NULL;
         
     }

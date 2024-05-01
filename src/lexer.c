@@ -60,15 +60,12 @@ t_bool is_an_operator(char *line)
 
 static void place_cmd_node(t_token **root, t_token **to_put)
 {
-	printf("command to be placed is %s\n", (*to_put)->cmd->cmd);
 	if (!*root)
 		*root = *to_put;
 	else if ((*root)->type != CMD)
 	{
 		if (!((*root)->l_token))
-		{
-			printf("loool\n");
-			(*root)->l_token = *to_put;}
+			(*root)->l_token = *to_put;
 		else if (!((*root)->r_token))
 			(*root)->r_token = *to_put;
 		else
@@ -133,7 +130,6 @@ static void handle_pipes(t_token **token, char **line)
 {
 	t_token *tmp;
 
-	printf("got here oiin pipe\n");
 	tmp = new_token(PIPE);
 	(*line) += 1;
 	place_node (token, &tmp, PIPE);
@@ -145,7 +141,6 @@ static void handle_commands(t_token **root, char **line)
 
 	tmp = handle_command(line);
 	place_node(root, &tmp, CMD);
-	printf("the command is :%s\n", (*root)->cmd->cmd);
 }
 
 void	lexer(t_token **token, char **line)
