@@ -128,6 +128,8 @@ t_token		*handle_command(char **line)
         ++(*line);
     if (**line && is_redirection_char(**line) == true)
         handle_redirection(&cmd, line);
+    else if (**line == '(')
+        return NULL;
     get_command(&cmd, line);
     if ((**line))
     {
@@ -138,7 +140,6 @@ t_token		*handle_command(char **line)
             len = 0;
             while ((*line)[len] && is_an_operator(*line + len) == false && is_special_char((*line)[len]) == false) // a function that calculates the len of a word
                 ++len;
-	    
             if (!cmd->cmd->args && len)
             {
                     cmd->cmd->args = malloc(sizeof(char *) * 2);
@@ -153,6 +154,8 @@ t_token		*handle_command(char **line)
             }
             else if (is_quote(**line) == true) handle_quotes(&cmd, line);
 	        if (is_redirection_char(**line)) handle_redirection(&cmd, line);
+            if (**line == '(') return cmd;
+            if (**line == ')') return cmd;
         }
     }
     return (cmd);

@@ -75,6 +75,28 @@ static void	place_operator_node(t_token **root, t_token **to_put)
 	}
 }
 
+static void place_parenthesis_node(t_token **root, t_token **to_put)
+{
+	printf("got to place parent\n");
+	if (!*root)
+	{
+		*root = *to_put;
+		printf("entered here1 \n");
+	}
+	else if (!(*root)->l_token)
+	{
+		(*root)->l_token = *to_put;
+		printf("entered here 2 %s\n", (*root)->cmd->cmd);
+	}
+	else if(!(*root)->r_token)
+	{
+		(*root)->r_token = *to_put;
+		printf("entered here 3\n");
+	}
+	else
+		place_parenthesis_node(&((*root)->r_token), to_put);
+}
+
 static void place_node(t_token **root, t_token **to_put, TOKEN type)
 {
 	if (type == CMD)
@@ -83,6 +105,8 @@ static void place_node(t_token **root, t_token **to_put, TOKEN type)
 		place_operator_node(root, to_put);
 	else if (type == PIPE)
 		place_pipe_node(root, to_put);
+	else if (type == PARENTHESIS)
+		place_parenthesis_node(root, to_put);
 	else
 		printf("what i'm doing here lol\n");
 }
@@ -113,11 +137,46 @@ static void handle_commands(t_token **root, char **line)
 	place_node(root, &tmp, CMD);
 }
 
-static void handle_parenthesis(t_token **token, char **line)
+static void handle_parenthesis(t_token **root, char **line)
 {
-
+	t_token *node;
+	
+	++(*line);
+	node = NULL;
+	parenthesis_lexer(&node, line);
+	if (!*line || **line != ')')
+		printf("syntax error\n");
+	else if (!node)
+		printf("node is still NULL and line is %s\n", *line);
+	else if (**line == ')')
+		++(*line);
+	if (node->type == CMD)
+	{
+		printf("it's a cmd and the cmd is %s\n", node->cmd->cmd);
+	
+	}
+	else if (node->type == PIPE)
+	{
+		printf("it's a pipe and the cmd on the left is %s\n", node->l_token->cmd->cmd);
+		printf("it's a pipe and the cmd on the right is %s\n", node->r_token->cmd->cmd);
+	}
+	place_node(root, &node, PARENTHESIS);
 }
 
+void	parenthesis_lexer(t_token **token, char **line)
+{
+	if (!*line || !**line || **line == ')')
+		return ;
+	if (is_an_operator(*line) == true)
+		handle_operators(token, line);
+	else if (**line == '|')
+		handle_pipes(token, line);
+	else if (**line == '(')
+		handle_parenthesis(token, line);
+	else
+		handle_commands(token, line);
+	parenthesis_lexer(token, line);
+}
 void	lexer(t_token **token, char **line)
 {
 	if (!*line || !**line)
@@ -126,7 +185,7 @@ void	lexer(t_token **token, char **line)
 		handle_operators(token, line);
 	else if (**line == '|')
 		handle_pipes(token, line);
-	else if (**line == '(')
+	else if (**line == '(' || **line == ')')
 		handle_parenthesis(token, line);
 	else
 		handle_commands(token, line);

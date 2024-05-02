@@ -56,6 +56,7 @@ typedef enum
     OR,
     NONE,
     CMD,
+    PARENTHESIS,
     PIPE     
 }   TOKEN;
 
@@ -143,6 +144,9 @@ char	    **split(char *str, char *charset);
 char        **add_arg(char **args, char *arg);
 void        add_redirection(t_token **token, REDIR_MODE mode, char *file_name);
 t_cmd       *new_cmd(void);
+
+void	parenthesis_lexer(t_token **root, char **line);
+
 
 // duplicating cmd token
 char **ft_dup_args(char **args);
