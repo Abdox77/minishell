@@ -144,8 +144,7 @@ char	    **split(char *str, char *charset);
 char        **add_arg(char **args, char *arg);
 void        add_redirection(t_token **token, REDIR_MODE mode, char *file_name);
 t_cmd       *new_cmd(void);
-
-void	parenthesis_lexer(t_token **root, char **line);
+void    	parenthesis_lexer(t_token **root, char **line);
 
 
 // duplicating cmd token
@@ -154,12 +153,13 @@ t_redir *ft_dup_redir(t_redir *redir);
 
 /*=====================UTILS========================*/
 int         strs_len(char **args);
+int         ft_strcmp(const char *s1, const char *s2);
 t_bool      is_space(char c);
 t_bool      is_quote(char c);
 t_bool      is_special_char(char c);
 t_bool      is_redirection_char(char c);
 t_bool      is_an_operator(char *line);
-int         ft_strcmp(const char *s1, const char *s2);
+void        special_trim(char **line);
 
 
 /*=====================ENV=====================*/

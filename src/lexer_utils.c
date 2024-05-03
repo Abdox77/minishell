@@ -12,7 +12,6 @@
 
 #include "minishell.h"
 
-
 char **add_arg(char **args, char *arg)
 {
     int i;
@@ -23,9 +22,12 @@ char **add_arg(char **args, char *arg)
     len = strs_len(args);
     new_args = malloc(sizeof(char *) * (len + 2));
     while (args[++i])
+    {
         new_args[i] = ft_strdup(args[i]);
+        free(args[i]);
+    }
     new_args[i] = ft_strdup(arg);
-    printf("arg is %s\n", new_args[i]);
+    free(arg);
     new_args[i + 1] = NULL;
     return (new_args);
 }
@@ -91,6 +93,15 @@ static char *special_cmd_quote(char **line, int len, char quote)
     return (cmd);
 }
 
+static t_bool is_double_parenthesis(char *s)
+{
+    if (!s || !*s)
+        return false;
+    if (*s == ')' && *(s + 1) != '\0' && *(s + 1) == ')')
+        return true;
+    return false;
+}
+
 static void get_command(t_token **token, char **line)
 {
     int len;
@@ -98,7 +109,7 @@ static void get_command(t_token **token, char **line)
 
     len = 0;
     skip_spaces(line);
-    while ((*line)[len] && is_special_char((*line)[len]) == false && is_an_operator(*line + len) == false)
+    while ((*line)[len] && is_special_char((*line)[len]) == false && is_an_operator(*line + len) == false && *(*line + len) != ')')
         ++len;
     if (is_quote((*line)[len]))
     {
@@ -111,9 +122,14 @@ static void get_command(t_token **token, char **line)
         (*token)->cmd->cmd = special_cmd_quote(line, len, quote);
     }
     else if (len)
-    { 
-        (*token)->type = CMD;
-        (*token)->cmd->cmd = ft_substr(*line, 0, len);
+    {
+        if (is_double_parenthesis(*line + len) == true)
+            (*token)->cmd->cmd = ft_substr(*line, 0, len + 1);
+        else
+        {
+            (*token)->type = CMD;
+            (*token)->cmd->cmd = ft_substr(*line, 0, len);
+        }
         (*line) += len;
     }
 }
@@ -121,15 +137,15 @@ static void get_command(t_token **token, char **line)
 t_token		*handle_command(char **line)
 {
     int	len;
+    t_bool parenthesis_flag;
     t_token *cmd;
     
+    parenthesis_flag = false;
     cmd = new_token(CMD);
     while (**line && is_space(**line) == true)
         ++(*line);
     if (**line && is_redirection_char(**line) == true)
         handle_redirection(&cmd, line);
-    else if (**line == '(')
-        return NULL;
     get_command(&cmd, line);
     if ((**line))
     {
@@ -138,24 +154,32 @@ t_token		*handle_command(char **line)
             while(**line && is_space(**line) == true) // i should a function that skipps spaces , it will optimize the code 
                 ++(*line);
             len = 0;
-            while ((*line)[len] && is_an_operator(*line + len) == false && is_special_char((*line)[len]) == false) // a function that calculates the len of a word
+            while ((*line)[len] && is_an_operator(*line + len) == false && is_special_char((*line)[len]) == false && *(*line + len) != ')') // a function that calculates the len of a word
                 ++len;
+            printf("line is %s and len %d\n", *line ,len);
+            if (is_double_parenthesis(*line + len) == false && *(*line + len) == ')')
+            {
+                printf("break here\n");
+                break;
+            }
             if (!cmd->cmd->args && len)
             {
-                    cmd->cmd->args = malloc(sizeof(char *) * 2);
-                    cmd->cmd->args[0] = ft_substr(*line, 0, len);
-                    cmd->cmd->args[1] = NULL;
-                    (*line) += len;
+                if (is_double_parenthesis(*line + len) == false)
+                    parenthesis_flag = true;
+                cmd->cmd->args = malloc(sizeof(char *) * 2);
+                cmd->cmd->args[0] = ft_substr(*line, 0, len);
+                cmd->cmd->args[1] = NULL;
+                (*line) += len;
             }
             else if (cmd->cmd->args && len)
             {
-                cmd->cmd->args =  add_arg(cmd->cmd->args, ft_substr(*line, 0, len));
+                cmd->cmd->args = add_arg(cmd->cmd->args, ft_substr(*line, 0, len));
                 (*line) += len;
             }
             else if (is_quote(**line) == true) handle_quotes(&cmd, line);
 	        if (is_redirection_char(**line)) handle_redirection(&cmd, line);
-            if (**line == '(') return cmd;
-            if (**line == ')') return cmd;
+            if (is_double_parenthesis(*line) || parenthesis_flag == true)
+                break;
         }
     }
     return (cmd);
