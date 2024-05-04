@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 15:14:16 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/04 14:27:28 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/04 16:13:39 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,27 +139,29 @@ static char *get_token_with_quotes(char **line, int len, char quote)
 
 static void get_cmd_between_parenthesis(t_token **token, char **line)
 {
+    printf("got here in cmd with\n");
     ++(*line);
-    *token = handle_command(line);
+    *token = handle_command(line, true);
     if (**line != ')')
-        printf("Syntax error unexpected token near (");
+        printf("Syntax error unexpected token near (\n");
     else
         ++(*line);
 }
 
-static void get_command(t_token **token, char **line)
+static void get_command(t_token **token, char **line, t_bool parenthesis)
 {
     int len;
     char *tmp;
     char quote;
 
-    printf("got here in cmd\n");
     if (!*line || !**line)
         return;
+    else if (*token)
+        return ;
     len = 0;
     tmp = *line;
     special_trim(line);
-    if (**line == '(')
+    if (**line == '(' && parenthesis == false)
         get_cmd_between_parenthesis(token, line);
     else
     {
@@ -177,7 +179,20 @@ static void get_command(t_token **token, char **line)
             (*token)->cmd->cmd = special_cmd_quote(line, len, quote);
         }
         else if (tmp[len] == ')')
-            printf("Syntax error unexpected token\n"); 
+        { 
+            printf("here\n");
+            if (parenthesis == true)
+            {
+                if (len)
+                {
+                    printf("here 2\n");
+                    *token = new_token(CMD);
+                    (*token)->cmd->cmd = ft_substr(*line, 0, len);
+                }
+            }
+            else
+                printf("Syntax error unexpected token\n");
+        }
         else if (len)
         {
             *token = new_token(CMD);
@@ -190,7 +205,7 @@ static void get_command(t_token **token, char **line)
 }
 
 
-t_token *handle_command(char **line)
+t_token *handle_command(char **line, t_bool parenthesis_flag)
 {
     int len;
     char quote;
@@ -203,7 +218,8 @@ t_token *handle_command(char **line)
     special_trim(line);
     if(**line && is_an_operator(*line) == false && **line != '|')
     {
-        get_command(&cmd, line);
+        printf("here lol\n");
+        get_command(&cmd, line, parenthesis_flag);
         while(**line && is_an_operator(*line) == false && **line != '|')
         {
             len = 0;

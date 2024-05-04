@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:22:59 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/28 22:39:54 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/04 16:04:21 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,7 @@ static void handle_commands(t_token **root, char **line)
 {
 	t_token *tmp;
 
-	tmp = handle_command(line);
+	tmp = handle_command(line, false);
 	place_node(root, &tmp, CMD);
 }
 
