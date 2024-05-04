@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/24 20:03:28 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/04 14:16:53 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,6 @@ static t_token *lexer_manager(char **line)
 		return NULL; 
     t_token *head;
 
-    
     head = NULL;
 	while (**line)
     {
