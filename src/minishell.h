@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/24 20:41:33 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/04 17:18:34 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,10 +181,15 @@ int         cd(char **arg, t_exec *exec);
 
 
 /*=======================EXECUTION=======================*/
-void        execute_commands(t_token *token);
-void        open_pipe_and_redirect(void);
-void        execute_command(t_token *token);
-void        execute_manager(t_token *head);
+// void        execute_commands(t_token *token);
+// void        open_pipe_and_redirect(void);
+// void        execute_command(t_token *token);
+// void        execute_manager(t_token *head);
+int execute(t_token *token, char **envp);
+int execute_command(t_token *token, char **envp);
+char	**find_path(char **envp);
+void	free_2d(char **arr);
+char	*get_cmd(char **tab2, char **envp);
 
 
 //=====================DEBUG=====================//
