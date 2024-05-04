@@ -159,12 +159,13 @@ void	parenthesis_lexer(t_token **token, char **line)
 		handle_operators(token, line);
 	else if (**line == '|')
 		handle_pipes(token, line);
-	// else if (**line == '(')
-	// 	handle_parenthesis(token, line);
+	else if (**line == '(')
+		handle_parenthesis(token, line);
 	else
 		handle_commands(token, line);
 	parenthesis_lexer(token, line);
 }
+
 void	lexer(t_token **token, char **line)
 {
 	if (!*line || !**line)

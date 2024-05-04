@@ -5,17 +5,29 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/24 19:53:00 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/24 19:53:20 by amohdi           ###   ########.fr       */
+/*   Created: 2024/05/04 09:27:47 by amohdi            #+#    #+#             */
+/*   Updated: 2024/05/04 09:34:08 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void skip_spaces(char **line)
+
+t_token *handle_command(char **line)
 {
-    if (!*line || !**line)
-        return ;
-    while (**line && is_space(**line) == true)
-        ++(*line);
+    int len;
+    t_token *cmd;
+
+    cmd == NULL;
+    special_trim(line);
+    if(**line && is_an_operator(line) == false && **line != '|')
+    {
+        get_cmd(&cmd, line);
+        while(**line)
+        {
+            len = 0;
+            special_trim(line);
+        }
+    }
+    return cmd;
 }

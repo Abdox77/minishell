@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 15:14:16 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/28 22:31:43 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/04 09:34:47 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,7 @@ static void get_command(t_token **token, char **line)
         ++len;
     if (is_quote((*line)[len]))
     {
+        *token = new_token(CMD);
         quote = (*line)[len];
         len++;
         while ((*line)[len] && (*line)[len] != quote)
@@ -123,6 +124,7 @@ static void get_command(t_token **token, char **line)
     }
     else if (len)
     {
+        *token = new_token(CMD);
         if (is_double_parenthesis(*line + len) == true)
             (*token)->cmd->cmd = ft_substr(*line, 0, len + 1);
         else
