@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 15:14:16 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/05 09:02:44 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/05 09:13:50 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ static char *get_token_with_quotes(char **line, int len, char quote)
     i = -1;
     quote_open = FALSE;
     printf("before segv line is %s and len is %d\n", *line ,len);
-    while((*line)[len + 1] && is_space((*line)[len + 1]) == FALSE && is_quote((*line)[len + 1]) == FALSE)
+    while((*line)[len + 1] && is_space((*line)[len + 1]) == FALSE && is_quote((*line)[len + 1]) == FALSE && is_an_operator(*line + len + 1) == FALSE && (*line)[len + 1] != '|')
         len++;
     cmd = malloc(sizeof(char) * (len + 1));
     if (!cmd)

@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/05 05:43:18 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/05 08:57:40 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/05 09:12:33 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 t_bool synatx_evaluator(t_token *root)
 {
-    if (check_redirections(root) == false || check_commands(root) == false || check_pipes_placements(root) == false || check_operators_placements(root) == false)
-        return (false);
-    return true;
+    if (check_redirections(root) == FALSE || check_commands(root) == FALSE || check_pipes_placements(root) == FALSE || check_operators_placements(root) == FALSE)
+        return (FALSE);
+    return TRUE;
 }
