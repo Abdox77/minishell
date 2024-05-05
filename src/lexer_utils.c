@@ -6,21 +6,18 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 15:14:16 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/05 08:53:56 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/05 09:02:44 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-
-
 static t_bool is_parenthesis(char c)
 {
     if (c == '(' || c == ')')
-        return true;
-    return false;
+        return TRUE;
+    return FALSE;
 }
-
 
 char **add_arg(char **args, char *arg)
 {
@@ -53,38 +50,11 @@ t_cmd *new_cmd(void)
     return (cmd);
 }
 
-// static char *special_cmd_quote(char **line, int len, char quote)
-// {
-//     int i;
-//     char *cmd;
-//     t_bool quote_open;
-
-//     i = -1;
-//     quote_open = false;
-//     cmd = malloc(sizeof(char) * (len + 1));
-//     if (!cmd)
-//         ft_error("failed to allocate memory for cmd\n", EXIT_FAILURE);
-
-//     while (++i < len - 1)
-//     {
-//         if (**line == quote && quote_open == false)
-//         {
-//             ++(*line);
-//             quote_open = true;
-//         }
-//         cmd[i] = **line;
-//         ++(*line);
-//     }
-//     cmd[i] = '\0';
-//     ++(*line); // check for uncloesed quote here
-//     return (cmd);
-// }
-
 void skip_spaces(char **line)
 {
     if (!*line || !**line)
         return ;
-    while (**line && is_space(**line) == true)
+    while (**line && is_space(**line) == TRUE)
         ++(*line);
 }
 
@@ -119,21 +89,21 @@ static char *get_token_with_quotes(char **line, int len, char quote)
     t_bool quote_open;
 
     i = -1;
-    quote_open = false;
+    quote_open = FALSE;
     printf("before segv line is %s and len is %d\n", *line ,len);
-    while((*line)[len + 1] && is_space((*line)[len + 1]) == false && is_quote((*line)[len + 1]) == false)
+    while((*line)[len + 1] && is_space((*line)[len + 1]) == FALSE && is_quote((*line)[len + 1]) == FALSE)
         len++;
     cmd = malloc(sizeof(char) * (len + 1));
     if (!cmd)
         ft_error("failed to allocate memory for cmd\n", EXIT_FAILURE);
     while (++i < len - 1)
     {
-        if (**line == quote && quote_open == false)
+        if (**line == quote && quote_open == FALSE)
         {
             ++(*line);
-            quote_open = true;
+            quote_open = TRUE;
         }
-        else if (**line == quote && quote_open == true)
+        else if (**line == quote && quote_open == TRUE)
             ++(*line);
         cmd[i] = **line;
         ++(*line);
@@ -157,9 +127,9 @@ static void get_command(t_token **token, char **line)
     len = 0;
     tmp = *line;
     special_trim(line);
-    while(tmp[len] && is_special_char(tmp[len]) == false && is_an_operator(tmp + len) == false && is_parenthesis(tmp[len]) == false)
+    while(tmp[len] && is_special_char(tmp[len]) == FALSE && is_an_operator(tmp + len) == FALSE && is_parenthesis(tmp[len]) == FALSE)
         ++len;
-    if (is_quote(tmp[len]) == true)
+    if (is_quote(tmp[len]) == TRUE)
     {
         *token = new_token(CMD);
         quote = tmp[len];
@@ -204,27 +174,27 @@ t_token *handle_command(char **line)
     t_token *cmd;
 
     cmd = NULL;
-    quote_flag = false;
+    quote_flag = FALSE;
     special_trim(line);
-    if(**line && is_an_operator(*line) == false && **line != '|')
+    if(**line && is_an_operator(*line) == FALSE && **line != '|')
     {
         get_command(&cmd, line);
-        while(**line && is_an_operator(*line) == false && **line != '|')
+        while(**line && is_an_operator(*line) == FALSE && **line != '|')
         {
             len = 0;
             special_trim(line);
-            while((*line)[len] && (*line)[len] != '|' && is_space((*line)[len]) == false && is_redirection_char((*line)[len]) == false && is_an_operator(*line + len) == false && is_parenthesis((*line)[len]) == false)
+            while((*line)[len] && (*line)[len] != '|' && is_space((*line)[len]) == FALSE && is_redirection_char((*line)[len]) == FALSE && is_an_operator(*line + len) == FALSE && is_parenthesis((*line)[len]) == FALSE)
             {
                 if (is_quote((*line)[len]))
                 {
                     printf("break here\n");
-                    quote_flag = true;
+                    quote_flag = TRUE;
                     quote = (*line)[len];
                     break;
                 }
                 len++;
             }
-            if (quote_flag == true)
+            if (quote_flag == TRUE)
             {
                 ++len;
                 printf("imma handle the quotes for the arguments\n");

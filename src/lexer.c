@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:22:59 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/05 05:53:11 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/05 09:03:47 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ void handle_pipe(t_token **token, char **line)
 t_bool is_an_operator(char *line)
 {
 	if ((*line == '&' && *(line + 1) && *(line + 1) == '&') || (*line == '|' && *(line + 1) && *(line + 1) == '|'))
-		return true;
-	return false;
+		return TRUE;
+	return FALSE;
 }
 
 static void place_cmd_node(t_token **root, t_token **to_put)
@@ -155,7 +155,7 @@ void	parenthesis_lexer(t_token **token, char **line)
 {
 	if (!*line || !**line || **line == ')')
 		return ;
-	if (is_an_operator(*line) == true)
+	if (is_an_operator(*line) == TRUE)
 		handle_operators(token, line);
 	else if (**line == '|')
 		handle_pipes(token, line);
@@ -171,7 +171,7 @@ void	lexer(t_token **token, char **line)
 	if (!*line || !**line)
 		return ;
 	special_trim(line);
-	if (is_an_operator(*line) == true)
+	if (is_an_operator(*line) == TRUE)
 		handle_operators(token, line);
 	else if (**line == '|')
 		handle_pipes(token, line);
