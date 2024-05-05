@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 15:14:16 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/05 06:15:14 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/05 07:15:36 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,31 +53,32 @@ t_cmd *new_cmd(void)
     return (cmd);
 }
 
-static char *special_cmd_quote(char **line, int len, char quote)
-{
-    int i;
-    char *cmd;
-    t_bool quote_open;
+// static char *special_cmd_quote(char **line, int len, char quote)
+// {
+//     int i;
+//     char *cmd;
+//     t_bool quote_open;
 
-    i = -1;
-    quote_open = false;
-    cmd = malloc(sizeof(char) * (len + 1));
-    if (!cmd)
-        ft_error("failed to allocate memory for cmd\n", EXIT_FAILURE);
-    while (++i < len - 1)
-    {
-        if (**line == quote && quote_open == false)
-        {
-            ++(*line);
-            quote_open = true;
-        }
-        cmd[i] = **line;
-        ++(*line);
-    }
-    cmd[i] = '\0';
-    ++(*line); // check for uncloesed quote here
-    return (cmd);
-}
+//     i = -1;
+//     quote_open = false;
+//     cmd = malloc(sizeof(char) * (len + 1));
+//     if (!cmd)
+//         ft_error("failed to allocate memory for cmd\n", EXIT_FAILURE);
+
+//     while (++i < len - 1)
+//     {
+//         if (**line == quote && quote_open == false)
+//         {
+//             ++(*line);
+//             quote_open = true;
+//         }
+//         cmd[i] = **line;
+//         ++(*line);
+//     }
+//     cmd[i] = '\0';
+//     ++(*line); // check for uncloesed quote here
+//     return (cmd);
+// }
 
 void skip_spaces(char **line)
 {
@@ -119,6 +120,8 @@ static char *get_token_with_quotes(char **line, int len, char quote)
 
     i = -1;
     quote_open = false;
+    while((*line)[len + 1] && is_space((*line)[len + 1]) == false && is_quote((*line)[len + 1]) == false)
+        len++;
     cmd = malloc(sizeof(char) * (len + 1));
     if (!cmd)
         ft_error("failed to allocate memory for cmd\n", EXIT_FAILURE);
@@ -129,25 +132,17 @@ static char *get_token_with_quotes(char **line, int len, char quote)
             ++(*line);
             quote_open = true;
         }
+        else if (**line == quote && quote_open == true)
+            ++(*line);
         cmd[i] = **line;
         ++(*line);
     }
     cmd[i] = '\0';
     printf("its no longer there\n");
-    ++(*line); // check for uncloesed quote here
+    printf("the cmd after getting it : %s\n", cmd);
+    //++(*line); // check for uncloesed quote here
     return (cmd);
 }
-
-// static void get_cmd_between_parenthesis(t_token **token, char **line)
-// {
-//     printf("got here in cmd with\n");
-//     ++(*line);
-//     *token = handle_command(line, true);
-//     if (**line != ')')
-//         printf("Syntax error unexpected token near (  and line is %s\n", *line);
-//     else
-//         ++(*line);
-// }
 
 static void get_command(t_token **token, char **line)
 {
@@ -162,41 +157,42 @@ static void get_command(t_token **token, char **line)
     len = 0;
     tmp = *line;
     special_trim(line);
-        while(tmp[len] && is_special_char(tmp[len]) == false && is_an_operator(tmp + len) == false && is_parenthesis(tmp[len]) == false)
+    while(tmp[len] && is_special_char(tmp[len]) == false && is_an_operator(tmp + len) == false && is_parenthesis(tmp[len]) == false)
+        ++len;
+    if (is_quote(tmp[len]) == true)
+    {
+        *token = new_token(CMD);
+        quote = tmp[len];
+        ++len;
+        while(tmp[len] && tmp[len] != quote)
             ++len;
-        if (is_quote(tmp[len]) == true)
+        if (!tmp[len])
+            printf("syntax error unclosed quote\n");
+        (*token)->cmd->cmd = get_token_with_quotes(line, len, quote);
+    }
+    else if (tmp[len] == ')')
+    {
+        if (len)
         {
-            *token = new_token(CMD);
-            quote = tmp[len];
-            ++len;
-            while(tmp[len] && tmp[len] != quote)
-                ++len;
-            if (!tmp[len])
-                printf("syntax error unclosed quote\n");
-            (*token)->cmd->cmd = special_cmd_quote(line, len, quote);
+                printf("here 2\n");
+                *token = new_token(CMD);
+                (*token)->cmd->cmd = ft_substr(*line, 0, len);
+                (*line) += len;
         }
-        else if (tmp[len] == ')')
+        else
         {
-            if (len)
-            {
-                    printf("here 2\n");
-                    *token = new_token(CMD);
-                    (*token)->cmd->cmd = ft_substr(*line, 0, len);
-            }
-            else
-            {
-                //
-                return;
-            }
+            //
+            return;
         }
-        else if (len)
-        {
-            *token = new_token(CMD);
-            (*token)->cmd->cmd = ft_substr(*line, 0, len);
-        }
+    }
+    else if (len)
+    {
+        *token = new_token(CMD);
+        (*token)->cmd->cmd = ft_substr(*line, 0, len);
         (*line) += len;
-        if (*token && (*token)->cmd)
-            printf("the command is %s and line is %s\n", (*token)->cmd->cmd, *line);
+    }
+    if (*token && (*token)->cmd)
+        printf("the command is %s and line is\n", (*token)->cmd->cmd);
 }
 
 
@@ -213,7 +209,6 @@ t_token *handle_command(char **line)
     if(**line && is_an_operator(*line) == false && **line != '|')
     {
         get_command(&cmd, line);
-        printf("line is %s\n", *line);
         while(**line && is_an_operator(*line) == false && **line != '|')
         {
             len = 0;
