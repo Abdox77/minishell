@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 15:14:16 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/04 16:13:39 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/05 06:15:14 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,22 +133,23 @@ static char *get_token_with_quotes(char **line, int len, char quote)
         ++(*line);
     }
     cmd[i] = '\0';
+    printf("its no longer there\n");
     ++(*line); // check for uncloesed quote here
     return (cmd);
 }
 
-static void get_cmd_between_parenthesis(t_token **token, char **line)
-{
-    printf("got here in cmd with\n");
-    ++(*line);
-    *token = handle_command(line, true);
-    if (**line != ')')
-        printf("Syntax error unexpected token near (\n");
-    else
-        ++(*line);
-}
+// static void get_cmd_between_parenthesis(t_token **token, char **line)
+// {
+//     printf("got here in cmd with\n");
+//     ++(*line);
+//     *token = handle_command(line, true);
+//     if (**line != ')')
+//         printf("Syntax error unexpected token near (  and line is %s\n", *line);
+//     else
+//         ++(*line);
+// }
 
-static void get_command(t_token **token, char **line, t_bool parenthesis)
+static void get_command(t_token **token, char **line)
 {
     int len;
     char *tmp;
@@ -161,10 +162,6 @@ static void get_command(t_token **token, char **line, t_bool parenthesis)
     len = 0;
     tmp = *line;
     special_trim(line);
-    if (**line == '(' && parenthesis == false)
-        get_cmd_between_parenthesis(token, line);
-    else
-    {
         while(tmp[len] && is_special_char(tmp[len]) == false && is_an_operator(tmp + len) == false && is_parenthesis(tmp[len]) == false)
             ++len;
         if (is_quote(tmp[len]) == true)
@@ -179,19 +176,18 @@ static void get_command(t_token **token, char **line, t_bool parenthesis)
             (*token)->cmd->cmd = special_cmd_quote(line, len, quote);
         }
         else if (tmp[len] == ')')
-        { 
-            printf("here\n");
-            if (parenthesis == true)
+        {
+            if (len)
             {
-                if (len)
-                {
                     printf("here 2\n");
                     *token = new_token(CMD);
                     (*token)->cmd->cmd = ft_substr(*line, 0, len);
-                }
             }
             else
-                printf("Syntax error unexpected token\n");
+            {
+                //
+                return;
+            }
         }
         else if (len)
         {
@@ -201,48 +197,46 @@ static void get_command(t_token **token, char **line, t_bool parenthesis)
         (*line) += len;
         if (*token && (*token)->cmd)
             printf("the command is %s and line is %s\n", (*token)->cmd->cmd, *line);
-    }
 }
 
 
-t_token *handle_command(char **line, t_bool parenthesis_flag)
+t_token *handle_command(char **line)
 {
     int len;
     char quote;
     t_bool quote_flag;
     t_token *cmd;
 
-    
     cmd = NULL;
     quote_flag = false;
     special_trim(line);
     if(**line && is_an_operator(*line) == false && **line != '|')
     {
-        printf("here lol\n");
-        get_command(&cmd, line, parenthesis_flag);
+        get_command(&cmd, line);
+        printf("line is %s\n", *line);
         while(**line && is_an_operator(*line) == false && **line != '|')
         {
             len = 0;
             special_trim(line);
-            while(**line && **line != '|' && is_an_operator(*line) == false && is_parenthesis(**line) == false)
+            while((*line)[len] && (*line)[len] != '|' && is_space((*line)[len]) == false && is_redirection_char((*line)[len]) == false && is_an_operator(*line + len) == false && is_parenthesis((*line)[len]) == false)
             {
-                if (is_quote(**line))
+                if (is_quote((*line)[len]))
                 {
+                    printf("break here\n");
                     quote_flag = true;
+                    quote = (*line)[len];
                     break;
                 }
                 len++;
             }
-            if (quote_flag == true && len)
+            if (quote_flag == true)
             {
-                quote = (*line)[len++];
+                ++len;
+                printf("imma handle the quotes for the arguments\n");
                 while((*line)[len] && (*line)[len] != quote)    
                     ++len;
                 if (!(*line)[len])
-                {
                     printf("Syntax Error unclosed quotes here\n");
-                    // okay , so i can add a flag in the struct of the command that indicates wether an erro happened in one of the commands so no need to allocate for the command , i'll only have to skip the command until i reach a new token
-                }
                 if (!cmd->cmd->args)
                 {
                     cmd->cmd->args = malloc(sizeof(char *) * 2);
@@ -250,119 +244,35 @@ t_token *handle_command(char **line, t_bool parenthesis_flag)
                     cmd->cmd->args[1] = NULL;
                 }
                 else
+                {
                     cmd->cmd->args = add_arg(cmd->cmd->args, ft_substr(*line, 0, len));
-                (*line) += len + 1;
+                    (*line) += len;
+                }
             }
             else if ((*line)[len] == '(')
-                printf("Syntax Error unexpected token near '('\n");
-            if (cmd && !cmd->cmd->args && len)
+            {
+                printf("Syntax Error unexpected token near '(' %s\n", *line);
+                break;
+            }
+            else if (cmd && !cmd->cmd->args && len)
             {
                 cmd->cmd->args = malloc(sizeof(char *) * 2);
                 cmd->cmd->args[0] = ft_substr(*line, 0, len);
                 cmd->cmd->args[1] = NULL;
                 (*line) += len;
+                len = 0;
             }
             else if (cmd && cmd->cmd->args && len)
             {
                 cmd->cmd->args = add_arg(cmd->cmd->args, ft_substr(*line, 0, len));
                 (*line) += len;
+                len = 0;
             }
+            else if (is_redirection_char(**line)) handle_redirection(&cmd, line);
+            else if ((*line)[len] == ')')
+                break;
         }
     }    
     return (cmd);
 }
 
-
-// static t_bool is_double_parenthesis(char *s)
-// {
-//     if (!s || !*s)
-//         return false;
-//     if (*s == ')' && *(s + 1) != '\0' && *(s + 1) == ')')
-//         return true;
-//     return false;
-// }
-
-// static void get_command(t_token **token, char **line)
-// {
-//     int len;
-//     char quote;
-
-//     len = 0;
-//     skip_spaces(line);
-//     while ((*line)[len] && is_special_char((*line)[len]) == false && is_an_operator(*line + len) == false && *(*line + len) != ')')
-//         ++len;
-//     if (is_quote((*line)[len]))
-//     {
-//         *token = new_token(CMD);
-//         quote = (*line)[len];
-//         len++;
-//         while ((*line)[len] && (*line)[len] != quote)
-//             ++len;
-//         if (!(*line)[len])
-//             printf("Syntax Error unclosed quote\n");
-//         (*token)->cmd->cmd = get_token_with_quotes(line, len, quote);
-//     }
-//     else if (len)
-//     {
-//         *token = new_token(CMD);
-//         if (is_double_parenthesis(*line + len) == true)
-//             (*token)->cmd->cmd = ft_substr(*line, 0, len + 1);
-//         else
-//         {
-//             (*token)->type = CMD;
-//             (*token)->cmd->cmd = ft_substr(*line, 0, len);
-//         }
-//         (*line) += len;
-//     }
-// }
-
-// t_token		*handle_command(char **line)
-// {
-//     int	len;
-//     t_bool parenthesis_flag;
-//     t_token *cmd;
-    
-//     parenthesis_flag = false;
-//     cmd = new_token(CMD);
-//     while (**line && is_space(**line) == true)
-//         ++(*line);
-//     if (**line && is_redirection_char(**line) == true)
-//         handle_redirection(&cmd, line);
-//     get_command(&cmd, line);
-//     if ((**line))
-//     {
-//         while (**line && **line != '|' && is_an_operator(*line) == false)
-//         {
-//             while(**line && is_space(**line) == true) // i should a function that skipps spaces , it will optimize the code 
-//                 ++(*line);
-//             len = 0;
-//             while ((*line)[len] && is_an_operator(*line + len) == false && is_special_char((*line)[len]) == false && *(*line + len) != ')') // a function that calculates the len of a word
-//                 ++len;
-//             printf("line is %s and len %d\n", *line ,len);
-//             if (is_double_parenthesis(*line + len) == false && *(*line + len) == ')')
-//             {
-//                 printf("break here\n");
-//                 break;
-//             }
-//             if (!cmd->cmd->args && len)
-//             {
-//                 if (is_double_parenthesis(*line + len) == false)
-//                     parenthesis_flag = true;
-//                 cmd->cmd->args = malloc(sizeof(char *) * 2);
-//                 cmd->cmd->args[0] = ft_substr(*line, 0, len);
-//                 cmd->cmd->args[1] = NULL;
-//                 (*line) += len;
-//             }
-//             else if (cmd->cmd->args && len)
-//             {
-//                 cmd->cmd->args = add_arg(cmd->cmd->args, ft_substr(*line, 0, len));
-//                 (*line) += len;
-//             }
-//             else if (is_quote(**line) == true) handle_quotes(&cmd, line);
-// 	        if (is_redirection_char(**line)) handle_redirection(&cmd, line);
-//             if (is_double_parenthesis(*line) || parenthesis_flag == true)
-//                 break;
-//         }
-//     }
-//     return (cmd);
-// }
