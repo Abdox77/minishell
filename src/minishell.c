@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/24 20:03:28 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/05 22:33:18 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ static t_token *lexer_manager(char **line)
     return head;
 }
 
-void    minishell_loop(void)
+void    minishell_loop(char **env)
 {
     char *line;
     t_token *head_tokens;
@@ -125,6 +125,7 @@ void    minishell_loop(void)
         special_trim(&line);
         head_tokens = lexer_manager( &line);
         display(head_tokens);
+        execute(head_tokens, env);
         if (*line)
             printf("line is %s\n", line);
         head_tokens = NULL;
@@ -135,7 +136,7 @@ void    minishell_loop(void)
 int main(int ac, char **av, char **env)
 {
     (void)av;
-    (void)env;
+    // (void)env;
     if (ac == 1)
-        minishell_loop();
+        minishell_loop(env);
 }

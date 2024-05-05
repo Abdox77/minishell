@@ -1,20 +1,57 @@
 #include "minishell.h"
 
+// static void handle_redirections_exec(t_redir *redir)
+// {
+//     while (redir)
+// 	{
+//         int fd = -1;
+//         if (redir->mode == INFILE || redir->mode == HEREDOC)
+// 		{
+//             fd = open(redir->file_name, O_RDONLY);
+//             if (fd < 0)
+// 			{
+//                 perror("open input file");
+//                 exit(EXIT_FAILURE);
+//             }
+//             dup2(fd, STDIN_FILENO);
+//             close(fd);
+//         }
+// 		else if (redir->mode == OUTFILE || redir->mode == APPEND)
+// 		{
+//             int flags = O_WRONLY | O_CREAT;
+//             if (redir->mode == APPEND)
+//                 flags |= O_APPEND;
+//             else
+//                 flags |= O_TRUNC;
+//             fd = open(redir->file_name, flags, 0644);
+//             if (fd < 0)
+// 			{
+//                 perror("open output file");
+//                 exit(EXIT_FAILURE);
+//             }
+//             dup2(fd, STDOUT_FILENO);
+//             close(fd);
+//         }
+//         redir = redir->next;
+//     }
+// }
+
 static void	execute_left(t_token *node, int *fd, char **envp)
 {
 	dup2(fd[1], STDOUT_FILENO);
-	close(fd[0]);
 	close(fd[1]);
+	// close(fd[0]);
 	execute(node, envp);
 	// exit(); not sure
 }
 
 static void	execute_right(t_token *node, int *fd, char **envp)
 {
-
+	// (void) envp;
 	dup2(fd[0], STDIN_FILENO);
-	close(fd[1]);
 	close(fd[0]);
+	// close(fd[1]);
+	execute(node, envp);
 	// exit();   not sure
 }
 
@@ -37,7 +74,10 @@ static void execute_pipe(t_token *node, char **envp)
 		exit(1); // handle error
 	}
 	if (pid1 == 0)
+	{
+		close(fd[0]);
 		execute_left(node->l_token, fd, envp);
+	}
 	pid2 = fork();
 	if (pid2 == -1)
 	{
@@ -45,10 +85,13 @@ static void execute_pipe(t_token *node, char **envp)
 		exit(1); // handle error
 	}
 	if (pid2 == 0)
+	{
+		close(fd[1]);
 		execute_right(node->r_token, fd, envp);
+	}
 	close(fd[0]);
 	close(fd[1]);
-	waitpid(pid1, &status, 0);
+	waitpid(pid1, &status, WNOHANG);
 	waitpid(pid2, &status, 0);
 	// exit_status = WEXITSTATUS(status);    need to do this later
 }
@@ -56,46 +99,46 @@ static void execute_pipe(t_token *node, char **envp)
 static int	execute_and(t_token *node, char **envp)
 {
 	int	stat;
-	int	old_stdin;
-	int	old_stdout;
+	// int	old_stdin;
+	// int	old_stdout;
 
-	old_stdin = dup(node->cmd->redir->file_name);
-	old_stdout = dup(STDOUT_FILENO);
+	// old_stdin = dup(node->cmd->redir->file_name);
+	// old_stdout = dup(STDOUT_FILENO);
 	// if (node->cmd->redir->mode == HEREDOC)
 	// 	dup2(node->cmd->redir->fd, STDIN_FILENO);         //NEEED to implement fd  for here doc
 	// else
-		dup2(node->input, STDIN_FILENO);
-	dup2(node->output, STDOUT_FILENO);
+	// 	dup2(node->input, STDIN_FILENO);
+	// dup2(node->output, STDOUT_FILENO);
 	stat = execute(node->l_token, envp);
 	if (stat == 0)
 		execute(node->r_token, envp);
-	dup2(old_stdin, STDIN_FILENO);
-	close(old_stdin);
-	dup2(old_stdout, STDOUT_FILENO);
-	close(old_stdout);
+	// dup2(old_stdin, STDIN_FILENO);
+	// close(old_stdin);
+	// dup2(old_stdout, STDOUT_FILENO);
+	// close(old_stdout);
 	return (1);
 }
 
 int	execute_or(t_token *node, char **envp)
 {
 	int	stat;
-	int	old_stdin;
-	int	old_stdout;
+	// int	old_stdin;
+	// int	old_stdout;
 
-	old_stdin = dup(node->input);
-	old_stdout = dup(STDOUT_FILENO);
+	// old_stdin = dup(node->input);
+	// old_stdout = dup(STDOUT_FILENO);
 	// if (node->cmd->redir->mode == HEREDOC)
 	// 	dup2(node->cmd->redir->fd, STDIN_FILENO);         //NEEED to implement fd  for here doc
 	// else
-		dup2(node->input, STDIN_FILENO);
-	dup2(node->output, STDOUT_FILENO);
+	// 	dup2(node->input, STDIN_FILENO);
+	// dup2(node->output, STDOUT_FILENO);
 	stat = execute(node->l_token, envp);
 	if (stat != 0)
 		execute(node->r_token, envp);
-	dup2(old_stdin, STDIN_FILENO);
-	close(old_stdin);
-	dup2(old_stdout, STDOUT_FILENO);
-	close(old_stdout);
+	// dup2(old_stdin, STDIN_FILENO);
+	// close(old_stdin);
+	// dup2(old_stdout, STDOUT_FILENO);
+	// close(old_stdout);
 	return (1);
 }
 
@@ -114,7 +157,7 @@ int execute(t_token *token, char **envp)
 
 int execute_command(t_token *token, char **envp)
 {
-    handle_redirections_exec(token->cmd->redir);
+    // handle_redirections_exec(token->cmd->redir);
     
     // if (check_builtins(token->cmd)) {   //need to implement later
     //     return 0;
@@ -123,10 +166,13 @@ int execute_command(t_token *token, char **envp)
     pid_t pid = fork();
     if (pid == 0)
     {
+		// handle_redirections_exec(token->cmd->redir);
         cmd = get_cmd(token->cmd->cmd, envp);
-        execve(cmd, token->cmd->args, envp);
-        perror("execve failed");
-        exit(EXIT_FAILURE);
+		if (cmd)
+			printf("rhis is cmd%s,\n this is args %s, heeeeeere %s \n" , cmd , token->cmd->args[0], envp[5]);
+        execve(cmd ,token->cmd->args, envp);
+        perror("");
+        exit(127);
     }
     else if (pid > 0)
     {

@@ -6,7 +6,7 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/04 17:18:34 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/05/05 19:55:21 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,7 +189,7 @@ int execute(t_token *token, char **envp);
 int execute_command(t_token *token, char **envp);
 char	**find_path(char **envp);
 void	free_2d(char **arr);
-char	*get_cmd(char **tab2, char **envp);
+char	*get_cmd(char *cmd, char **envp);
 
 
 //=====================DEBUG=====================//
@@ -197,7 +197,7 @@ void    display_cmd(t_token *token);
 
 
 /*=====================MINISHELL=====================*/
-void        minishell_loop(void);
+void        minishell_loop(char **env);
 
 /*=====================CLEANUP=====================*/
 void        free_strs(char **strs);
