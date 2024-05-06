@@ -6,7 +6,11 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2024/05/06 16:42:24 by aabou-ib         ###   ########.fr       */
+=======
+/*   Updated: 2024/05/05 08:58:41 by amohdi           ###   ########.fr       */
+>>>>>>> 6bb5238eab2315b198c4013767c17c6e97767d78
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +41,8 @@
 /*===========================enum=========================*/
 
 typedef enum {
-    false,
-    true
+    FALSE,
+    TRUE,
 }   t_bool;
 
 typedef enum {
@@ -150,6 +154,10 @@ void    	parenthesis_lexer(t_token **root, char **line);
 // duplicating cmd token
 char **ft_dup_args(char **args);
 t_redir *ft_dup_redir(t_redir *redir);
+
+/*=====================SYNTAX_EVALUATOR==================*/
+t_bool synatx_evaluator(t_token *root);
+
 
 /*=====================UTILS========================*/
 int         strs_len(char **args);

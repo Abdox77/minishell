@@ -6,7 +6,11 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:22:59 by amohdi            #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2024/05/04 22:55:48 by aabou-ib         ###   ########.fr       */
+=======
+/*   Updated: 2024/05/05 09:03:47 by amohdi           ###   ########.fr       */
+>>>>>>> 6bb5238eab2315b198c4013767c17c6e97767d78
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +30,8 @@ void handle_pipe(t_token **token, char **line)
 t_bool is_an_operator(char *line)
 {
 	if ((*line == '&' && *(line + 1) && *(line + 1) == '&') || (*line == '|' && *(line + 1) && *(line + 1) == '|'))
-		return true;
-	return false;
+		return TRUE;
+	return FALSE;
 }
 
 static void place_cmd_node(t_token **root, t_token **to_put)
@@ -155,22 +159,23 @@ void	parenthesis_lexer(t_token **token, char **line)
 {
 	if (!*line || !**line || **line == ')')
 		return ;
-	if (is_an_operator(*line) == true)
+	if (is_an_operator(*line) == TRUE)
 		handle_operators(token, line);
 	else if (**line == '|')
 		handle_pipes(token, line);
-	// else if (**line == '(')
-	// 	handle_parenthesis(token, line);
+	else if (**line == '(')
+		handle_parenthesis(token, line);
 	else
 		handle_commands(token, line);
 	parenthesis_lexer(token, line);
 }
+
 void	lexer(t_token **token, char **line)
 {
 	if (!*line || !**line)
 		return ;
 	special_trim(line);
-	if (is_an_operator(*line) == true)
+	if (is_an_operator(*line) == TRUE)
 		handle_operators(token, line);
 	else if (**line == '|')
 		handle_pipes(token, line);

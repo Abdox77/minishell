@@ -6,7 +6,11 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:41 by amohdi            #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2024/05/05 22:33:18 by aabou-ib         ###   ########.fr       */
+=======
+/*   Updated: 2024/05/04 14:16:53 by amohdi           ###   ########.fr       */
+>>>>>>> 6bb5238eab2315b198c4013767c17c6e97767d78
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +99,6 @@ static t_token *lexer_manager(char **line)
 		return NULL; 
     t_token *head;
 
-    
     head = NULL;
 	while (**line)
     {

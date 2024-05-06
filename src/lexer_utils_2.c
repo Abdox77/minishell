@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 11:12:42 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/25 12:39:44 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/05 08:59:45 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,9 +49,9 @@ void handle_input(t_token **token, char **line)
     }
     else
         mode = INFILE;
-    while ((**line) && is_space(**line) == true)
+    while ((**line) && is_space(**line) == TRUE)
         ++(*line);
-    if (is_quote(**line) == true)
+    if (is_quote(**line) == TRUE)
     {
         quote = **line;
         (*line)++;
@@ -64,9 +64,9 @@ void handle_input(t_token **token, char **line)
     }
     else
     {
-    	while(**line && is_space(**line) == true)
+    	while(**line && is_space(**line) == TRUE)
     		++(*line);
-        while ((*line)[len] && is_special_char((*line)[len]) == false)
+        while ((*line)[len] && is_special_char((*line)[len]) == FALSE)
             ++len;
         file_name = ft_substr(*line, 0, len);
         (*line) += len;
@@ -91,9 +91,9 @@ void handle_output(t_token **token, char **line)
     }
     else
         mode = TRUNC; // or output to check later
-    while ((**line) && is_space(**line) == true)
+    while ((**line) && is_space(**line) == TRUE)
         ++(*line);
-    if (is_quote(**line) == true)
+    if (is_quote(**line) == TRUE)
     {
         quote = **line;
         (*line)++;
@@ -106,7 +106,7 @@ void handle_output(t_token **token, char **line)
     }
     else
     {
-        while ((*line)[len] && is_special_char((*line)[len]) == false)
+        while ((*line)[len] && is_special_char((*line)[len]) == FALSE)
             ++len;
         file_name = ft_substr(*line, 0, len);
         (*line) += len;
