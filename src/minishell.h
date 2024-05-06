@@ -6,7 +6,7 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/05 19:55:21 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/05/06 16:42:24 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,11 +185,16 @@ int         cd(char **arg, t_exec *exec);
 // void        open_pipe_and_redirect(void);
 // void        execute_command(t_token *token);
 // void        execute_manager(t_token *head);
-int execute(t_token *token, char **envp);
-int execute_command(t_token *token, char **envp);
+// int execute(t_token *token, char **envp);
+// int execute_command(t_token *token, char **envp);
+// void execute_command(t_token *token, char **envp);
 char	**find_path(char **envp);
 void	free_2d(char **arr);
 char	*get_cmd(char *cmd, char **envp);
+int execute_or(t_token *node, char **envp);
+int execute_and(t_token *node, char **envp);
+int execute(t_token *token, char **envp);
+
 
 
 //=====================DEBUG=====================//
