@@ -164,20 +164,52 @@ static void get_command(t_token **token, char **line)
         printf("the command is %s and line is\n", (*token)->cmd->cmd);
 }
 
+static void free_args(char **args)
+{
+    int i;
+
+    if (!args)
+        return ;
+    i = -1;
+    while(args[++i])
+        free(args[i]);
+    free(args);
+}
+
+static char **add_cmd_to_args(char *cmd , char **args)
+{
+    int i;
+    int len;
+    char **new_args;
+
+    if (!cmd || !args)
+        return NULL;
+    i = -1;
+    len = strs_len(args) + 1;
+    new_args = malloc(sizeof(char *) * (len + 1));
+    if (!new_args)
+        return (NULL);
+    new_args[++i] = ft_strdup(cmd);
+    while(++i < len)
+        new_args[i] = ft_strdup(args[i - 1]);
+    new_args[i] = NULL;
+    free_strs(args);
+    return (new_args);
+}
 
 t_token *handle_command(char **line)
 {
     int len;
     char quote;
     t_bool quote_flag;
-    t_token *cmd;
+    t_token *token;
 
-    cmd = NULL;
+    token = NULL;
     quote_flag = FALSE;
     special_trim(line);
     if(**line && is_an_operator(*line) == FALSE && **line != '|')
     {
-        get_command(&cmd, line);
+        get_command(&token, line);
         while(**line && is_an_operator(*line) == FALSE && **line != '|')
         {
             len = 0;
@@ -199,15 +231,15 @@ t_token *handle_command(char **line)
                     ++len;
                 if (!(*line)[len])
                     printf("Syntax Error unclosed quotes here\n");
-                if (!cmd->cmd->args)
+                if (!token->cmd->args)
                 {
-                    cmd->cmd->args = malloc(sizeof(char *) * 2);
-                    cmd->cmd->args[0] = get_token_with_quotes(line, len, quote);
-                    cmd->cmd->args[1] = NULL;
+                    token->cmd->args = malloc(sizeof(char *) * 2);
+                    token->cmd->args[0] = get_token_with_quotes(line, len, quote);
+                    token->cmd->args[1] = NULL;
                 }
                 else
                 {
-                    cmd->cmd->args = add_arg(cmd->cmd->args, ft_substr(*line, 0, len));
+                    token->cmd->args = add_arg(token->cmd->args, ft_substr(*line, 0, len));
                     (*line) += len;
                 }
             }
@@ -216,25 +248,27 @@ t_token *handle_command(char **line)
                 printf("Syntax Error unexpected token near '(' %s\n", *line);
                 break;
             }
-            else if (cmd && !cmd->cmd->args && len)
+            else if (token && !token->cmd->args && len)
             {
-                cmd->cmd->args = malloc(sizeof(char *) * 2);
-                cmd->cmd->args[0] = ft_substr(*line, 0, len);
-                cmd->cmd->args[1] = NULL;
+                token->cmd->args = malloc(sizeof(char *) * 2);
+                token->cmd->args[0] = ft_substr(*line, 0, len);
+                token->cmd->args[1] = NULL;
                 (*line) += len;
                 len = 0;
             }
-            else if (cmd && cmd->cmd->args && len)
+            else if (token && token->cmd->args && len)
             {
-                cmd->cmd->args = add_arg(cmd->cmd->args, ft_substr(*line, 0, len));
+                token->cmd->args = add_arg(token->cmd->args, ft_substr(*line, 0, len));
                 (*line) += len;
                 len = 0;
             }
-            else if (is_redirection_char(**line)) handle_redirection(&cmd, line);
+            else if (is_redirection_char(**line)) handle_redirection(&token, line);
             else if ((*line)[len] == ')')
                 break;
         }
+        if(token && token->cmd->cmd && token->cmd->args)
+            token->cmd->args = add_cmd_to_args(token->cmd->cmd , token->cmd->args);
     }    
-    return (cmd);
+    return (token);
 }
 
