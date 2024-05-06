@@ -164,17 +164,6 @@ static void get_command(t_token **token, char **line)
         printf("the command is %s and line is\n", (*token)->cmd->cmd);
 }
 
-static void free_args(char **args)
-{
-    int i;
-
-    if (!args)
-        return ;
-    i = -1;
-    while(args[++i])
-        free(args[i]);
-    free(args);
-}
 
 static char **add_cmd_to_args(char *cmd , char **args)
 {
