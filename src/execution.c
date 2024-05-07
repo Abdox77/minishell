@@ -192,26 +192,20 @@
 
 #include "minishell.h"
 
-static char **initialize_args_if_null(char *cmd, char **args) {
-    // Check if args is NULL
-    if (args == NULL) {
-        // Allocate space for a single element in the args array
-        args = malloc(2 * sizeof(char*)); // Space for cmd and NULL terminator
-        
-        // Check if memory allocation was successful
-        if (args == NULL) {
+static char **initialize_args_if_null(char *cmd, char **args)
+{
+
+    if (args == NULL)
+    {
+        args = malloc(2 * sizeof(char*));
+        if (args == NULL)
+        {
             perror("Failed to allocate memory for args");
             exit(EXIT_FAILURE);
         }
-        
-        // Assign cmd to the first element of the args array
         args[0] = cmd;
-        
-        // Set the second element to NULL to indicate the end of the array
         args[1] = NULL;
     }
-    
-    // Return the updated args array
     return args;
 }
 
@@ -260,7 +254,7 @@ static void handle_redirections_exec(t_redir *redir)
     }
 }
 
-int execute_command(t_token *token, char **envp) {
+void execute_command(t_token *token, char **envp) {
     char *cmd = token->cmd->cmd;
     char **args = token->cmd->args;
     
@@ -270,7 +264,7 @@ int execute_command(t_token *token, char **envp) {
     if (pid < 0)
     {
         perror("Fork failed");
-        return -1;
+        // return -1;
     }
     else if (pid == 0)
     {
@@ -278,14 +272,15 @@ int execute_command(t_token *token, char **envp) {
         // handle redirections
         handle_redirections_exec(token->cmd->input);
         char *cmd_path = get_cmd(cmd, envp);
-        if (cmd_path == NULL)
-        {
-            perror(cmd);
-            exit(127);
-        }
+        // if (cmd_path == NULL)
+        // {
+        //     perror(cmd);
+        //     exit(127);
+        // }
 
         execve(cmd_path, args, envp);
-        perror("Execution failed");
+        perror(cmd);
+        stat(127, 1);
         exit(127);
     }
     else
@@ -293,9 +288,7 @@ int execute_command(t_token *token, char **envp) {
         // in parent process, wait for the child process to finish
         int status;
         waitpid(pid, &status, 0);
-        if (WIFEXITED(status))
-            return WEXITSTATUS(status);
-        return -1; //child process did not exit normally
+        stat(WEXITSTATUS(status), 1);
     }
 }
 
@@ -352,29 +345,30 @@ static void execute_pipe(t_token *node, char **envp) {
     // wait for both child processes to finish
     waitpid(pid1, &status1, 0);
     waitpid(pid2, &status2, 0);
+    stat(WEXITSTATUS(status2), 1);
 }
 
-int execute(t_token *token, char **envp)
+void execute(t_token *token, char **envp)
 {
-    if (token == NULL)
-        return 0;
+    // if (token == NULL)
+    //     return 0;
     int status = 0;
     if (token->type == CMD)
         // execute a simple command
-        status = execute_command(token, envp);
+        execute_command(token, envp);
     else if (token->type == PIPE)
         execute_pipe(token, envp);
     else if (token->type == AND)
     {
-        status = execute(token->l_token, envp);
-        if (status == 0)
-            status = execute(token->r_token, envp);
+       execute(token->l_token, envp);
+        if (stat(0, 0) == 0)
+            execute(token->r_token, envp);
     }
     else if (token->type == OR)
     {
-        status = execute(token->l_token, envp);
-        if (status != 0)
-            status = execute(token->r_token, envp);
+        execute(token->l_token, envp);
+        if (stat(0, 0) != 0)
+            execute(token->r_token, envp);
     }
     else
     {
@@ -384,22 +378,22 @@ int execute(t_token *token, char **envp)
     }
 
     // return the final status code
-    return status;
+    // return status;
 }
 
 
-int execute_and(t_token *node, char **envp)
+void execute_and(t_token *node, char **envp)
 {
-    int status = execute(node->l_token, envp);
-    if (status == 0)
-        return execute(node->r_token, envp);
-    return status;
+    execute(node->l_token, envp);
+    if (stat(0, 0) == 0)
+        execute(node->r_token, envp);
+    // return status;
 }
 
-int execute_or(t_token *node, char **envp)
+void execute_or(t_token *node, char **envp)
 {
-    int status = execute(node->l_token, envp);
-    if (status != 0)
-        return execute(node->r_token, envp);
-    return status;
+    execute(node->l_token, envp);
+    if (stat(0, 0) != 0)
+        execute(node->r_token, envp);
+    // return status;
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/06 19:24:38 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/07 23:14:17 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,9 +203,10 @@ int         cd(char **arg, t_exec *exec);
 char	**find_path(char **envp);
 void	free_2d(char **arr);
 char	*get_cmd(char *cmd, char **envp);
-int execute_or(t_token *node, char **envp);
-int execute_and(t_token *node, char **envp);
-int execute(t_token *token, char **envp);
+void     execute_or(t_token *node, char **envp);
+void     execute_and(t_token *node, char **envp);
+void     execute(t_token *token, char **envp);
+int     stat(int code, int flag);
 
 
 

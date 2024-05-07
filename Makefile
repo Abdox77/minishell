@@ -21,6 +21,7 @@ SRC = 	src/minishell.c \
 		builtins/cd.c \
 		src/execution.c \
 		src/execution_utils.c \
+		src/status.c \
 
 OBJ = $(SRC:.c=.o)
 RM = rm -rf

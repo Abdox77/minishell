@@ -6,7 +6,7 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/07 19:29:09 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/05/07 23:41:31 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,9 @@ void display(t_token *token)
         return;
     if (token->type != CMD)
     {
-        if (token->type == AND || token->type == OR)
+        if(token->type == OR)
+            printf("OR\n");
+        if (token->type == AND)
             printf("AND\n");
         if (token->type == PIPE)
             printf("pipe\n");
