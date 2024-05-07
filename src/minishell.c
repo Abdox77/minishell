@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/06 19:24:31 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/07 16:36:21 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,7 @@ void    minishell_loop(char **env)
     char *line;
     t_token *head_tokens;
     
-
+    (void)env;
     head_tokens = NULL;
     while(42)
     {
@@ -134,7 +134,7 @@ void    minishell_loop(char **env)
         special_trim(&line);
         head_tokens = lexer_manager( &line);
         display(head_tokens);
-        execute(head_tokens, env);
+        //execute(head_tokens, env);
         if (*line)
             printf("line is %s\n", line);
         head_tokens = NULL;

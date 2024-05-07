@@ -251,7 +251,7 @@ int execute_command(t_token *token, char **envp) {
     {
         // in child process
         // handle redirections
-        handle_redirections_exec(token->cmd->redir);
+        handle_redirections_exec(token->cmd->input);
         char *cmd_path = get_cmd(cmd, envp);
         if (cmd_path == NULL)
         {

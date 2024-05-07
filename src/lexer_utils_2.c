@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 11:12:42 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/05 08:59:45 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/07 16:42:50 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,9 @@ void add_redirection(t_redir **redir, REDIR_MODE mode, char *file_name)
     if (!((*redir)))
 	{	
 	    *redir = new_cmd_redir(mode, file_name);
+        if(!*redir)
+            printf("redir is NULL\n");
+        printf("got here when the redirection is : %s %s\n" ,file_name, (*redir)->file_name);
 	    if (!*redir)
 		    ft_error("REDIR creation failed and returned null\n", EXIT_FAILURE);
 	}
