@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/07 16:36:21 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/07 15:49:30 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,6 @@ void display_cmd(t_token *token)
                
                 else if (redir->mode == HEREDOC)
                     printf("\t\t\tHEREDOC : %s\n", redir->file_name);
-                
-                else if (redir->mode == TRUNC)
-                    printf("\t\t\tTRUNC : %s\n", redir->file_name);
                 else if (redir->mode == STD_OUT)
                     printf("\t\t\tSTD_OUT : %s\n", redir->file_name);
                 redir = redir->next;
@@ -50,7 +47,9 @@ void display_cmd(t_token *token)
             t_redir *redir = token->cmd->output;
             while(redir)
             {
-                if (redir->mode == OUTFILE)
+                if (redir->mode == TRUNC)
+                    printf("\t\t\tTRUNC : %s\n", redir->file_name);
+                else if (redir->mode == OUTFILE)
                     printf("\t\t\tOUTFILE : %s\n", redir->file_name);
                 else if (redir->mode == APPEND)
                     printf("\t\t\tAPPEND : %s\n", redir->file_name);

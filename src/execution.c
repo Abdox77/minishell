@@ -340,9 +340,11 @@ int execute(t_token *token, char **envp)
     else if (token->type == PIPE)
         execute_pipe(token, envp);
     else if (token->type == AND)
+    {
         status = execute(token->l_token, envp);
         if (status == 0)
             status = execute(token->r_token, envp);
+    }
     else if (token->type == OR)
     {
         status = execute(token->l_token, envp);
