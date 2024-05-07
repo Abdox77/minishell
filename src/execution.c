@@ -192,6 +192,29 @@
 
 #include "minishell.h"
 
+static char **initialize_args_if_null(char *cmd, char **args) {
+    // Check if args is NULL
+    if (args == NULL) {
+        // Allocate space for a single element in the args array
+        args = malloc(2 * sizeof(char*)); // Space for cmd and NULL terminator
+        
+        // Check if memory allocation was successful
+        if (args == NULL) {
+            perror("Failed to allocate memory for args");
+            exit(EXIT_FAILURE);
+        }
+        
+        // Assign cmd to the first element of the args array
+        args[0] = cmd;
+        
+        // Set the second element to NULL to indicate the end of the array
+        args[1] = NULL;
+    }
+    
+    // Return the updated args array
+    return args;
+}
+
 
 static void handle_redirections_exec(t_redir *redir)
 {
@@ -240,6 +263,8 @@ static void handle_redirections_exec(t_redir *redir)
 int execute_command(t_token *token, char **envp) {
     char *cmd = token->cmd->cmd;
     char **args = token->cmd->args;
+    
+    args = initialize_args_if_null(cmd, args);
 
     pid_t pid = fork();
     if (pid < 0)

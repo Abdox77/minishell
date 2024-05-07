@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/07 15:49:30 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/07 19:29:09 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,8 +120,14 @@ void    minishell_loop(char **env)
 {
     char *line;
     t_token *head_tokens;
+    t_exec exec;
+    // int i =0;
     
-    (void)env;
+    exec.env = parse_env(env);
+    exec.envp = env_to_envp(&exec);
+    // while(exec.envp[i]){
+    //     printf("%s \n", exec.envp[i]);
+    //     i++;}
     head_tokens = NULL;
     while(42)
     {
@@ -133,7 +139,7 @@ void    minishell_loop(char **env)
         special_trim(&line);
         head_tokens = lexer_manager( &line);
         display(head_tokens);
-        //execute(head_tokens, env);
+        execute(head_tokens, exec.envp);
         if (*line)
             printf("line is %s\n", line);
         head_tokens = NULL;
