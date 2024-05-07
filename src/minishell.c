@@ -27,23 +27,33 @@ void display_cmd(t_token *token)
                 for (int j = 0; token->cmd->args[j]; j++)
                     printf ("\t\t\targ[%d] : %s\n", j, token->cmd->args[j]);
         }
-        if (token->cmd->redir)
+        if (token->cmd->input)
         {
-            t_redir *redir = token->cmd->redir;
+            t_redir *redir = token->cmd->input;
             while(redir)
             {
                 if (redir->mode == INFILE)
                     printf("\t\t\tINFILE : %s\n", redir->file_name);
-                else if (redir->mode == OUTFILE)
-                    printf("\t\t\tOUTFILE : %s\n", redir->file_name);
+               
                 else if (redir->mode == HEREDOC)
                     printf("\t\t\tHEREDOC : %s\n", redir->file_name);
-                else if (redir->mode == APPEND)
-                    printf("\t\t\tAPPEND : %s\n", redir->file_name);
+                
                 else if (redir->mode == TRUNC)
                     printf("\t\t\tTRUNC : %s\n", redir->file_name);
                 else if (redir->mode == STD_OUT)
                     printf("\t\t\tSTD_OUT : %s\n", redir->file_name);
+                redir = redir->next;
+            }
+        }
+        if (token->cmd->output)
+        {
+            t_redir *redir = token->cmd->output;
+            while(redir)
+            {
+                if (redir->mode == OUTFILE)
+                    printf("\t\t\tOUTFILE : %s\n", redir->file_name);
+                else if (redir->mode == APPEND)
+                    printf("\t\t\tAPPEND : %s\n", redir->file_name);
                 redir = redir->next;
             }
         }

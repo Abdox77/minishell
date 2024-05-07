@@ -41,7 +41,8 @@ typedef enum {
     TRUE,
 }   t_bool;
 
-typedef enum {
+typedef enum 
+{
     INFILE,
     OUTFILE,
     HEREDOC,
@@ -49,6 +50,12 @@ typedef enum {
     TRUNC,
     STD_OUT
 }   REDIR_MODE;
+
+typedef enum
+{
+    INPUT,
+    OUTPUT,
+} REDIR_TYPE;
 
 typedef enum
 {
@@ -91,7 +98,8 @@ struct s_cmd
     // int         pid;
     char        *cmd;
     char        **args;
-    t_redir     *redir;
+    t_redir     *input;
+    t_redir     *output;
 };
 
 
@@ -142,7 +150,7 @@ void handle_operator(t_token **token, char **line);
 void        skip_spaces(char **line);
 char	    **split(char *str, char *charset);
 char        **add_arg(char **args, char *arg);
-void        add_redirection(t_token **token, REDIR_MODE mode, char *file_name);
+void        add_redirection(t_redir **redir, REDIR_MODE mode, char *file_name);
 t_cmd       *new_cmd(void);
 void    	parenthesis_lexer(t_token **root, char **line);
 

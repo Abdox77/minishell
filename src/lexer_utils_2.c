@@ -12,24 +12,24 @@
 
 #include "minishell.h"
 
-void add_redirection(t_token **token, REDIR_MODE mode, char *file_name)
+void add_redirection(t_redir **redir, REDIR_MODE mode, char *file_name)
 {
-	t_redir *tmp;
+    t_redir *tmp;
 
-	if (!((*token)->cmd->redir))
+    if (!((*redir)))
 	{	
-		(*token)->cmd->redir = new_cmd_redir(mode, file_name);
-		if (!(*token)->cmd->redir)
-			ft_error("REDIR creation failed and returned null\n", EXIT_FAILURE);
+	    *redir = new_cmd_redir(mode, file_name);
+	    if (!*redir)
+		    ft_error("REDIR creation failed and returned null\n", EXIT_FAILURE);
 	}
 	else
 	{
-		tmp = (*token)->cmd->redir;
-		while(tmp->next)
-			tmp = tmp->next;
-		tmp->next = new_cmd_redir(mode, file_name);
-		if (!tmp->next)
-			ft_error("REDIR creation failed and returned null\n", EXIT_FAILURE);				
+	    tmp = *redir;
+	    while(tmp->next)
+		    tmp = tmp->next;
+	    tmp->next = new_cmd_redir(mode, file_name);
+	    if (!tmp->next)
+		    ft_error("REDIR creation failed and returned null\n", EXIT_FAILURE);				
 	}
 }
 
@@ -71,7 +71,7 @@ void handle_input(t_token **token, char **line)
         file_name = ft_substr(*line, 0, len);
         (*line) += len;
     }
-    add_redirection(token, mode, file_name);
+    add_redirection(&((*token)->cmd->input), mode, file_name);
 }
 
 void handle_output(t_token **token, char **line)
@@ -111,7 +111,7 @@ void handle_output(t_token **token, char **line)
         file_name = ft_substr(*line, 0, len);
         (*line) += len;
     }
-    add_redirection(token, mode, file_name);
+    add_redirection(&((*token)->cmd->output), mode, file_name);
 }
 
 void handle_redirection(t_token **token, char **line)
