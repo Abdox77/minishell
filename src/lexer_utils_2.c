@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 11:12:42 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/08 19:10:31 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/08 19:38:04 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,8 @@ void handle_input(t_token **token, char **line)
         file_name = ft_substr(*line, 0, len);
         (*line) += len;
     }
+    if (len == 0)
+        printf("Syntax error unexpected token near '%c'\n", **line);
     add_redirection(&((*token)->cmd), mode, file_name);
 }
 
@@ -118,6 +120,8 @@ void handle_output(t_token **token, char **line)
         file_name = ft_substr(*line, 0, len);
         (*line) += len;
     }
+    if (len == 0)
+        printf("Syntax error unexpected token near '%c'\n", **line);
     add_redirection(&((*token)->cmd), mode, file_name);
 }
 
