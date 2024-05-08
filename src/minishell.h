@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/06 19:24:38 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/08 18:09:38 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,8 +98,8 @@ struct s_cmd
     // int         pid;
     char        *cmd;
     char        **args;
-    t_redir     *input;
-    t_redir     *output;
+    t_redir     *pre_cmd;
+    t_redir     *post_cmd;
 };
 
 
@@ -144,13 +144,13 @@ void        handle_quotes(t_token **token, char ** line);
 void        handle_redirection(t_token **token, char **line);
 void        handle_input(t_token **token, char **line);
 void        handle_output(t_token **token, char **line);
-void handle_operator(t_token **token, char **line);
+void        handle_operator(t_token **token, char **line);
 
 /*=====================LEXER_UTILS=====================*/
 void        skip_spaces(char **line);
 char	    **split(char *str, char *charset);
 char        **add_arg(char **args, char *arg);
-void        add_redirection(t_redir **redir, REDIR_MODE mode, char *file_name);
+void        add_redirection(t_cmd **cmd, REDIR_MODE mode, char *file_name);
 t_cmd       *new_cmd(void);
 void    	parenthesis_lexer(t_token **root, char **line);
 

@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 15:14:16 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/07 16:40:09 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/08 19:25:58 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,16 +121,14 @@ static void get_command(t_token **token, char **line)
 
     if (!*line || !**line)
         return;
-    else if (*token)
-        return ;
     len = 0;
     tmp = *line;
-    special_trim(line);
     while(tmp[len] && is_special_char(tmp[len]) == FALSE && is_an_operator(tmp + len) == FALSE && is_parenthesis(tmp[len]) == FALSE)
         ++len;
     if (is_quote(tmp[len]) == TRUE)
     {
-        *token = new_token(CMD);
+        if (!*token)
+            *token = new_token(CMD);
         quote = tmp[len];
         ++len;
         while(tmp[len] && tmp[len] != quote)
@@ -143,25 +141,21 @@ static void get_command(t_token **token, char **line)
     {
         if (len)
         {
-                printf("here 2\n");
+            if (!*token)
                 *token = new_token(CMD);
-                (*token)->cmd->cmd = ft_substr(*line, 0, len);
-                (*line) += len;
+            (*token)->cmd->cmd = ft_substr(*line, 0, len);
+            (*line) += len;
         }
         else
-        {
-            //
             return;
-        }
     }
     else if (len)
     {
-        *token = new_token(CMD);
+        if (!*token)
+            *token = new_token(CMD);
         (*token)->cmd->cmd = ft_substr(*line, 0, len);
         (*line) += len;
     }
-    if (*token && (*token)->cmd)
-        printf("the command is %s and line is\n", (*token)->cmd->cmd);
 }
 
 
@@ -203,6 +197,8 @@ t_token *handle_command(char **line)
         {
             len = 0;
             special_trim(line);
+            if (token && token->cmd && !token->cmd->cmd)
+                get_command(&token, line);
             while((*line)[len] && (*line)[len] != '|' && is_space((*line)[len]) == FALSE && is_redirection_char((*line)[len]) == FALSE && is_an_operator(*line + len) == FALSE && is_parenthesis((*line)[len]) == FALSE)
             {
                 if (is_quote((*line)[len]))
@@ -257,7 +253,7 @@ t_token *handle_command(char **line)
         }
         if(token && token->cmd->cmd && token->cmd->args)
             token->cmd->args = add_cmd_to_args(token->cmd->cmd , token->cmd->args);
-    }    
+    }
     return (token);
 }
 
