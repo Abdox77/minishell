@@ -6,7 +6,7 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/07 23:14:17 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/05/08 06:20:08 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -207,7 +207,7 @@ void     execute_or(t_token *node, char **envp);
 void     execute_and(t_token *node, char **envp);
 void     execute(t_token *token, char **envp);
 int     stat(int code, int flag);
-
+char *expand_env_variable(char *input, t_env *env);
 
 
 //=====================DEBUG=====================//
