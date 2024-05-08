@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:22:59 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/06 19:25:01 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/08 19:48:08 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ static void place_node(t_token **root, t_token **to_put, TOKEN type)
 {
 	if (type == CMD)
 		place_cmd_node(root, to_put);
-	else if (type == AND)
+	else if (type == AND || type == OR)
 		place_operator_node(root, to_put);
 	else if (type == PIPE)
 		place_pipe_node(root, to_put);
@@ -111,13 +111,21 @@ static void place_node(t_token **root, t_token **to_put, TOKEN type)
 		printf("what i'm doing here lol\n");
 }
 
+static t_token *new_operator(char **line)
+{
+	if (**line == '|')
+		return (new_token(OR));
+	else
+		return (new_token(AND));
+}
+
 static void handle_operators(t_token **token, char **line)
 {
 	t_token *tmp;
 
-	tmp = new_token(AND);
+	tmp = new_operator(line);
 	(*line) += 2;
-	place_node (token, &tmp, AND);
+	place_node(token, &tmp, tmp->type);
 }
 
 static void handle_pipes(t_token **token, char **line)

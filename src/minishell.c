@@ -27,9 +27,10 @@ void display_cmd(t_token *token)
                 for (int j = 0; token->cmd->args[j]; j++)
                     printf ("\t\t\targ[%d] : %s\n", j, token->cmd->args[j]);
         }
-        if (token->cmd->input)
+        if (token->cmd->pre_cmd)
         {
-            t_redir *redir = token->cmd->input;
+            printf("pre cmd redirections ===========>\n");
+            t_redir *redir = token->cmd->pre_cmd;
             while(redir)
             {
                 if (redir->mode == INFILE)
@@ -42,9 +43,10 @@ void display_cmd(t_token *token)
                 redir = redir->next;
             }
         }
-        if (token->cmd->output)
+        if (token->cmd->post_cmd)
         {
-            t_redir *redir = token->cmd->output;
+            printf("post cmd redirections ===========>\n");
+            t_redir *redir = token->cmd->post_cmd;
             while(redir)
             {
                 if (redir->mode == TRUNC)
