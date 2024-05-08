@@ -1,4 +1,5 @@
 PASSED TESTS =============================
+cmd <> something
 
 
 
@@ -6,5 +7,4 @@ PASSED TESTS =============================
 
 
 FAILED TESTED =============================
-
-cmd <> something
+ls | (ls && make) | cat ; missed placed the nodes 
