@@ -1,5 +1,6 @@
 PASSED TESTS =============================
-cmd <> something
+cmd <> something                                            THIS SHOWS A SYNTAX ERROR I STILL NEED TO FIND A WAY TO FINISH MAYBE I SHOULD JUST SKIP THE LINE
+ls | (echo && make) | cat ; missed placed the nodes         THIS IS FIXED
 
 
 
@@ -7,4 +8,4 @@ cmd <> something
 
 
 FAILED TESTED =============================
-ls | (echo && make) | cat ; missed placed the nodes 
+printf(" ====> THIS TEST CASE SEGV 

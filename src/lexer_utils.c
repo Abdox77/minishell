@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 15:14:16 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/08 19:25:58 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/09 09:35:33 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,7 @@ static char *get_token_with_quotes(char **line, int len, char quote)
 
     i = -1;
     quote_open = FALSE;
+    
     while((*line)[len + 1] && is_space((*line)[len + 1]) == FALSE && is_quote((*line)[len + 1]) == FALSE && is_an_operator(*line + len + 1) == FALSE && (*line)[len + 1] != '|')
         len++;
     cmd = malloc(sizeof(char) * (len + 1));
