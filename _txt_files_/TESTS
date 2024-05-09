@@ -7,4 +7,4 @@ cmd <> something
 
 
 FAILED TESTED =============================
-ls | (ls && make) | cat ; missed placed the nodes 
+ls | (echo && make) | cat ; missed placed the nodes 

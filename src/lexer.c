@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:22:59 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/08 19:48:08 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/09 09:32:18 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,12 @@ static void place_pipe_node(t_token **root, t_token **to_put)
 
 	if (!*root)
 		*root = *to_put;
+	else if (*root && (*root)->r_token && ((*root)->r_token->type == AND || (*root)->r_token->type == OR))
+	{
+		tmp = (*root)->r_token;
+		(*root)->r_token = *to_put;
+		(*root)->r_token->l_token = tmp;
+	}
 	else if ((*root)->type == CMD)
 	{
 		tmp = *root;
@@ -77,22 +83,12 @@ static void	place_operator_node(t_token **root, t_token **to_put)
 
 static void place_parenthesis_node(t_token **root, t_token **to_put)
 {
-	printf("got to place parent\n");
 	if (!*root)
-	{
 		*root = *to_put;
-		printf("entered here1 \n");
-	}
 	else if (!(*root)->l_token)
-	{
 		(*root)->l_token = *to_put;
-		printf("entered here 2 %s\n", (*root)->cmd->cmd);
-	}
 	else if(!(*root)->r_token)
-	{
 		(*root)->r_token = *to_put;
-		printf("entered here 3\n");
-	}
 	else
 		place_parenthesis_node(&((*root)->r_token), to_put);
 }
@@ -134,7 +130,7 @@ static void handle_pipes(t_token **token, char **line)
 
 	tmp = new_token(PIPE);
 	(*line) += 1;
-	place_node (token, &tmp, PIPE);
+	place_node(token, &tmp, PIPE);
 }
 
 static void handle_commands(t_token **root, char **line)
@@ -154,7 +150,7 @@ static void handle_parenthesis(t_token **root, char **line)
 	parenthesis_lexer(&node, line);
 	if (!*line || **line != ')')
 		printf("syntax error\n");
-	else if (**line == ')')
+	if (**line == ')')
 		++(*line);
 	place_node(root, &node, PARENTHESIS);
 }
