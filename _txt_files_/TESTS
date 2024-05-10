@@ -9,3 +9,4 @@ ls | (echo && make) | cat ; missed placed the nodes         THIS IS FIXED
 
 FAILED TESTED =============================
 printf(" ====> THIS TEST CASE SEGV 
+ls | | cat ======> still need to handle this testcase in the syntax_evaluator

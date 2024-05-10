@@ -121,8 +121,6 @@ static void get_command(t_token **token, char **line)
 
     if (!*line || !**line)
         return;
-    else if (*token)
-        return ;
     len = 0;
     tmp = *line;
     special_trim(line);
@@ -130,7 +128,8 @@ static void get_command(t_token **token, char **line)
         ++len;
     if (is_quote(tmp[len]) == TRUE)
     {
-        *token = new_token(CMD);
+        if (!*token)
+            *token = new_token(CMD);
         quote = tmp[len];
         ++len;
         while(tmp[len] && tmp[len] != quote)
@@ -143,10 +142,10 @@ static void get_command(t_token **token, char **line)
     {
         if (len)
         {
-                printf("here 2\n");
+            if (!*token)
                 *token = new_token(CMD);
-                (*token)->cmd->cmd = ft_substr(*line, 0, len);
-                (*line) += len;
+            (*token)->cmd->cmd = ft_substr(*line, 0, len);
+            (*line) += len;
         }
         else
         {
@@ -156,7 +155,8 @@ static void get_command(t_token **token, char **line)
     }
     else if (len)
     {
-        *token = new_token(CMD);
+        if (!*token)
+            *token = new_token(CMD);
         (*token)->cmd->cmd = ft_substr(*line, 0, len);
         (*line) += len;
     }
@@ -203,6 +203,8 @@ t_token *handle_command(char **line)
         {
             len = 0;
             special_trim(line);
+            if (token && !token->cmd->cmd)
+                get_command(&token, line);
             while((*line)[len] && (*line)[len] != '|' && is_space((*line)[len]) == FALSE && is_redirection_char((*line)[len]) == FALSE && is_an_operator(*line + len) == FALSE && is_parenthesis((*line)[len]) == FALSE)
             {
                 if (is_quote((*line)[len]))

@@ -81,7 +81,6 @@ void handle_output(t_token **token, char **line)
     char 		*file_name;
     REDIR_MODE 	mode;
 
-
     len = 0;
     ++(*line);
     if ((**line) == '>')
@@ -116,8 +115,10 @@ void handle_output(t_token **token, char **line)
 
 void handle_redirection(t_token **token, char **line)
 {
-    if (!*line || !**line || !(*token) || !(*token)->cmd)
+    if (!*line || !**line)
         ft_error("WHAT HAPPENED ?\n", EXIT_FAILURE); // not possible for line to be null
+    if (!*token)
+        *token = new_token(CMD);
 	else if (**line == '<')
         handle_input(token, line);
     else
