@@ -110,9 +110,10 @@ static t_token *lexer_manager(char **line)
         lexer(&head, line);
         special_trim(line);
     }
-    if (head->type == AND)
+    if (!head)
+        printf("not heead\n");
+    else if (head && head->type == AND)
         printf("ok\n");
-
     return head;
 }
 

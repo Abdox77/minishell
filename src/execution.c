@@ -352,7 +352,9 @@ void execute(t_token *token, char **envp)
 {
     // if (token == NULL)
     //     return 0;
-    int status = 0;
+    // int status = 0;
+    if (!token)
+        return;
     if (token->type == CMD)
         // execute a simple command
         execute_command(token, envp);
@@ -374,7 +376,7 @@ void execute(t_token *token, char **envp)
     {
         // unknown token type
         printf("Unknown token type\n");
-        status = -1;
+        // status = -1;
     }
 
     // return the final status code
