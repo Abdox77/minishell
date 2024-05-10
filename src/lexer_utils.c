@@ -90,8 +90,11 @@ static char *get_token_with_quotes(char **line, int len, char quote)
 
     i = -1;
     quote_open = FALSE;
-    while((*line)[len + 1] && is_space((*line)[len + 1]) == FALSE && is_quote((*line)[len + 1]) == FALSE && is_an_operator(*line + len + 1) == FALSE && (*line)[len + 1] != '|')
-        len++;
+    if (*line && *(*line + len))
+    {
+        while((*line)[len + 1] && is_space((*line)[len + 1]) == FALSE && is_quote((*line)[len + 1]) == FALSE && is_an_operator(*line + len + 1) == FALSE && (*line)[len + 1] != '|' && is_parenthesis((*line)[len + 1]) == FALSE)
+            len++;
+    }
     cmd = malloc(sizeof(char) * (len + 1));
     if (!cmd)
         ft_error("failed to allocate memory for cmd\n", EXIT_FAILURE);
@@ -105,6 +108,8 @@ static char *get_token_with_quotes(char **line, int len, char quote)
         if (**line == quote && quote_open == TRUE)
             ++(*line);
         cmd[i] = **line;
+        if (!**line)
+            break;
         ++(*line);
     }
     cmd[i] = '\0';
@@ -227,11 +232,12 @@ t_token *handle_command(char **line)
                     token->cmd->args = malloc(sizeof(char *) * 2);
                     token->cmd->args[0] = get_token_with_quotes(line, len, quote);
                     token->cmd->args[1] = NULL;
+                    len = 0;
                 }
                 else
                 {
-                    token->cmd->args = add_arg(token->cmd->args, ft_substr(*line, 0, len));
-                    (*line) += len;
+                    token->cmd->args = add_arg(token->cmd->args, get_token_with_quotes(line, len, quote));
+                    len = 0;
                 }
             }
             else if ((*line)[len] == '(')
@@ -254,7 +260,7 @@ t_token *handle_command(char **line)
                 len = 0;
             }
             else if (is_redirection_char(**line)) handle_redirection(&token, line);
-            else if ((*line)[len] == ')')
+            if (*line && **line && **line == ')')
                 break;
         }
         if(token && token->cmd->cmd && token->cmd->args)

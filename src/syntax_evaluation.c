@@ -12,9 +12,19 @@
 
 #include "minishell.h"
 
+static t_bool check_tree(t_token *root)
+{
+
+}
+
+static t_bool check_commands(t_token *root)
+{
+
+}
+
 t_bool synatx_evaluator(t_token *root)
 {
-    if (check_redirections(root) == FALSE || check_commands(root) == FALSE || check_pipes_placements(root) == FALSE || check_operators_placements(root) == FALSE)
+    if (check_tree(root) == FALSE || check_commands(root) == FALSE)
         return (FALSE);
     return TRUE;
 }

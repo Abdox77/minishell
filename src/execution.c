@@ -353,6 +353,7 @@ void execute(t_token *token, char **envp)
     // if (token == NULL)
     //     return 0;
     int status = 0;
+    (void)status;
     if (token->type == CMD)
         // execute a simple command
         execute_command(token, envp);
