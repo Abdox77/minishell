@@ -6,7 +6,7 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/10 16:29:04 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/05/10 21:11:55 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,9 @@ void display_cmd(t_token *token)
                 for (int j = 0; token->cmd->args[j]; j++)
                     printf ("\t\t\targ[%d] : %s\n", j, token->cmd->args[j]);
         }
-        if (token->cmd->pre_cmd)
+        if (token->cmd->input)
         {
-            printf("pre cmd redirections ===========>\n");
-            t_redir *redir = token->cmd->pre_cmd;
+            t_redir *redir = token->cmd->input;
             while(redir)
             {
                 if (redir->mode == INFILE)
@@ -43,10 +42,9 @@ void display_cmd(t_token *token)
                 redir = redir->next;
             }
         }
-        if (token->cmd->post_cmd)
+        if (token->cmd->output)
         {
-            printf("post cmd redirections ===========>\n");
-            t_redir *redir = token->cmd->post_cmd;
+            t_redir *redir = token->cmd->output;
             while(redir)
             {
                 if (redir->mode == TRUNC)

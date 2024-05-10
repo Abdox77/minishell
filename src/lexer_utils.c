@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 15:14:16 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/09 09:35:33 by codespace        ###   ########.fr       */
+/*   Updated: 2024/05/10 21:10:46 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,6 @@ static char *get_token_with_quotes(char **line, int len, char quote)
 
     i = -1;
     quote_open = FALSE;
-    
     while((*line)[len + 1] && is_space((*line)[len + 1]) == FALSE && is_quote((*line)[len + 1]) == FALSE && is_an_operator(*line + len + 1) == FALSE && (*line)[len + 1] != '|')
         len++;
     cmd = malloc(sizeof(char) * (len + 1));
@@ -122,14 +121,16 @@ static void get_command(t_token **token, char **line)
 
     if (!*line || !**line)
         return;
+    else if (*token)
+        return ;
     len = 0;
     tmp = *line;
+    special_trim(line);
     while(tmp[len] && is_special_char(tmp[len]) == FALSE && is_an_operator(tmp + len) == FALSE && is_parenthesis(tmp[len]) == FALSE)
         ++len;
     if (is_quote(tmp[len]) == TRUE)
     {
-        if (!*token)
-            *token = new_token(CMD);
+        *token = new_token(CMD);
         quote = tmp[len];
         ++len;
         while(tmp[len] && tmp[len] != quote)
@@ -142,21 +143,25 @@ static void get_command(t_token **token, char **line)
     {
         if (len)
         {
-            if (!*token)
+                printf("here 2\n");
                 *token = new_token(CMD);
-            (*token)->cmd->cmd = ft_substr(*line, 0, len);
-            (*line) += len;
+                (*token)->cmd->cmd = ft_substr(*line, 0, len);
+                (*line) += len;
         }
         else
+        {
+            //
             return;
+        }
     }
     else if (len)
     {
-        if (!*token)
-            *token = new_token(CMD);
+        *token = new_token(CMD);
         (*token)->cmd->cmd = ft_substr(*line, 0, len);
         (*line) += len;
     }
+    if (*token && (*token)->cmd)
+        printf("the command is %s and line is\n", (*token)->cmd->cmd);
 }
 
 
@@ -198,8 +203,6 @@ t_token *handle_command(char **line)
         {
             len = 0;
             special_trim(line);
-            if (token && token->cmd && !token->cmd->cmd)
-                get_command(&token, line);
             while((*line)[len] && (*line)[len] != '|' && is_space((*line)[len]) == FALSE && is_redirection_char((*line)[len]) == FALSE && is_an_operator(*line + len) == FALSE && is_parenthesis((*line)[len]) == FALSE)
             {
                 if (is_quote((*line)[len]))
@@ -254,7 +257,7 @@ t_token *handle_command(char **line)
         }
         if(token && token->cmd->cmd && token->cmd->args)
             token->cmd->args = add_cmd_to_args(token->cmd->cmd , token->cmd->args);
-    }
+    }    
     return (token);
 }
 

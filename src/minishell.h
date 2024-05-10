@@ -6,7 +6,7 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/10 16:26:49 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/05/10 21:12:50 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,8 +98,8 @@ struct s_cmd
     // int         pid;
     char        *cmd;
     char        **args;
-    t_redir     *pre_cmd;
-    t_redir     *post_cmd;
+    t_redir     *input;
+    t_redir     *output;
 };
 
 
@@ -150,7 +150,7 @@ void        handle_operator(t_token **token, char **line);
 void        skip_spaces(char **line);
 char	    **split(char *str, char *charset);
 char        **add_arg(char **args, char *arg);
-void        add_redirection(t_cmd **cmd, REDIR_MODE mode, char *file_name);
+void add_redirection(t_redir **redir, REDIR_MODE mode, char *file_name);
 t_cmd       *new_cmd(void);
 void    	parenthesis_lexer(t_token **root, char **line);
 

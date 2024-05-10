@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils_2.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 11:12:42 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/08 19:38:04 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/10 21:12:22 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void add_redirection_helper(t_redir **redir, REDIR_MODE mode, char *file_name)
+void add_redirection(t_redir **redir, REDIR_MODE mode, char *file_name)
 {
     t_redir *tmp;
 
@@ -31,14 +31,6 @@ static void add_redirection_helper(t_redir **redir, REDIR_MODE mode, char *file_
 	    if (!tmp->next)
 		    ft_error("REDIR creation failed and returned null\n", EXIT_FAILURE);				
 	}
-}
-
-void add_redirection(t_cmd **cmd, REDIR_MODE mode, char *file_name)
-{
-    if (!(*cmd)->cmd)
-        add_redirection_helper(&((*cmd)->pre_cmd), mode, file_name);
-    else
-        add_redirection_helper(&((*cmd)->post_cmd), mode, file_name);
 }
 
 void handle_input(t_token **token, char **line)
@@ -79,9 +71,7 @@ void handle_input(t_token **token, char **line)
         file_name = ft_substr(*line, 0, len);
         (*line) += len;
     }
-    if (len == 0)
-        printf("Syntax error unexpected token near '%c'\n", **line);
-    add_redirection(&((*token)->cmd), mode, file_name);
+    add_redirection(&((*token)->cmd->input), mode, file_name);
 }
 
 void handle_output(t_token **token, char **line)
@@ -91,6 +81,7 @@ void handle_output(t_token **token, char **line)
     char 		*file_name;
     REDIR_MODE 	mode;
 
+
     len = 0;
     ++(*line);
     if ((**line) == '>')
@@ -99,7 +90,7 @@ void handle_output(t_token **token, char **line)
         ++(*line);
     }
     else
-        mode = TRUNC;
+        mode = TRUNC; // or output to check later
     while ((**line) && is_space(**line) == TRUE)
         ++(*line);
     if (is_quote(**line) == TRUE)
@@ -109,9 +100,9 @@ void handle_output(t_token **token, char **line)
         while ((*line)[len] && (*line)[len] != quote)
             ++len;
         if (!*line[len])
-            ft_error("Syntax Error unclosed quote\n", 126);
+            ft_error("Syntax Error unclosed quote\n", 126); // okay maybe use free here => to do later
         file_name = ft_substr(*line, 0, len);
-        (*line) += len;
+        (*line) += len; // removed len + 1 for debubugin purposes 
     }
     else
     {
@@ -120,20 +111,14 @@ void handle_output(t_token **token, char **line)
         file_name = ft_substr(*line, 0, len);
         (*line) += len;
     }
-    if (len == 0)
-        printf("Syntax error unexpected token near '%c'\n", **line);
-    add_redirection(&((*token)->cmd), mode, file_name);
+    add_redirection(&((*token)->cmd->output), mode, file_name);
 }
 
 void handle_redirection(t_token **token, char **line)
 {
-    if (!*line || !**line)
-        {ft_error("WHAT HAPPENED ?\n", EXIT_FAILURE);} // not possible for line to be null
-	if (!*token)
-    {
-        *token = new_token(CMD);
-    }
-    else if (**line == '<')
+    if (!*line || !**line || !(*token) || !(*token)->cmd)
+        ft_error("WHAT HAPPENED ?\n", EXIT_FAILURE); // not possible for line to be null
+	else if (**line == '<')
         handle_input(token, line);
     else
         handle_output(token, line);
