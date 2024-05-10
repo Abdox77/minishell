@@ -192,75 +192,95 @@
 
 #include "minishell.h"
 
-
-static void handle_redirections_exec(t_redir *redir)
+static char **initialize_args_if_null(char *cmd, char **args)
 {
-    while (redir)
-    {
-        int fd = -1;
 
-        if (redir->mode == INFILE)
+    if (args == NULL)
+    {
+        args = malloc(2 * sizeof(char*));
+        if (args == NULL)
         {
-            fd = open(redir->file_name, O_RDONLY);
-            if (fd < 0)
-            {
-                perror("Failed to open input file");
-                return;  
-            }
-            dup2(fd, STDIN_FILENO);
-            close(fd);
+            perror("Failed to allocate memory for args");
+            exit(EXIT_FAILURE);
         }
-        // output redirection (overwrite)
-        else if (redir->mode == OUTFILE)
-        {
-            fd = open(redir->file_name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-            if (fd < 0)
-            {
-                perror("Failed to open output file");
-                return;
-            }
-            dup2(fd, STDOUT_FILENO);
-            close(fd);
-        }
-        else if (redir->mode == APPEND)
-        {
-            fd = open(redir->file_name, O_WRONLY | O_CREAT | O_APPEND, 0644);
-            if (fd < 0)
-            {
-                perror("Failed to open output file");
-                return; 
-            }
-            dup2(fd, STDOUT_FILENO);
-            close(fd);
-        }
-        redir = redir->next;
+        args[0] = cmd;
+        args[1] = NULL;
     }
+    return args;
 }
 
-int execute_command(t_token *token, char **envp) {
+
+// static void handle_redirections_exec(t_redir *redir)
+// {
+//     while (redir)
+//     {
+//         int fd = -1;
+
+//         if (redir->mode == INFILE)
+//         {
+//             fd = open(redir->file_name, O_RDONLY);
+//             if (fd < 0)
+//             {
+//                 perror("Failed to open input file");
+//                 return;  
+//             }
+//             dup2(fd, STDIN_FILENO);
+//             close(fd);
+//         }
+//         // output redirection (overwrite)
+//         else if (redir->mode == OUTFILE)
+//         {
+//             fd = open(redir->file_name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+//             if (fd < 0)
+//             {
+//                 perror("Failed to open output file");
+//                 return;
+//             }
+//             dup2(fd, STDOUT_FILENO);
+//             close(fd);
+//         }
+//         else if (redir->mode == APPEND)
+//         {
+//             fd = open(redir->file_name, O_WRONLY | O_CREAT | O_APPEND, 0644);
+//             if (fd < 0)
+//             {
+//                 perror("Failed to open output file");
+//                 return; 
+//             }
+//             dup2(fd, STDOUT_FILENO);
+//             close(fd);
+//         }
+//         redir = redir->next;
+//     }
+// }
+
+void execute_command(t_token *token, char **envp) {
     char *cmd = token->cmd->cmd;
     char **args = token->cmd->args;
+    
+    args = initialize_args_if_null(cmd, args);
 
     pid_t pid = fork();
     if (pid < 0)
     {
         perror("Fork failed");
-        return -1;
+        // return -1;
     }
     else if (pid == 0)
     {
         // in child process
         // handle redirections
-        handle_redirections_exec(token->cmd->pre_cmd);
+        // handle_redirections_exec(token->cmd->input);
         char *cmd_path = get_cmd(cmd, envp);
-        if (cmd_path == NULL)
-        {
-            perror(cmd);
-            exit(127);
-        }
+        // if (cmd_path == NULL)
+        // {
+        //     perror(cmd);
+        //     exit(127);
+        // }
 
         execve(cmd_path, args, envp);
-        perror("Execution failed");
+        perror(cmd);
+        stat(127, 1);
         exit(127);
     }
     else
@@ -268,9 +288,7 @@ int execute_command(t_token *token, char **envp) {
         // in parent process, wait for the child process to finish
         int status;
         waitpid(pid, &status, 0);
-        if (WIFEXITED(status))
-            return WEXITSTATUS(status);
-        return -1; //child process did not exit normally
+        stat(WEXITSTATUS(status), 1);
     }
 }
 
@@ -327,29 +345,30 @@ static void execute_pipe(t_token *node, char **envp) {
     // wait for both child processes to finish
     waitpid(pid1, &status1, 0);
     waitpid(pid2, &status2, 0);
+    stat(WEXITSTATUS(status2), 1);
 }
 
-int execute(t_token *token, char **envp)
+void execute(t_token *token, char **envp)
 {
-    if (token == NULL)
-        return 0;
+    // if (token == NULL)
+    //     return 0;
     int status = 0;
     if (token->type == CMD)
         // execute a simple command
-        status = execute_command(token, envp);
+        execute_command(token, envp);
     else if (token->type == PIPE)
         execute_pipe(token, envp);
     else if (token->type == AND)
     {
-        status = execute(token->l_token, envp);
-        if (status == 0)
-            status = execute(token->r_token, envp);
+       execute(token->l_token, envp);
+        if (stat(0, 0) == 0)
+            execute(token->r_token, envp);
     }
     else if (token->type == OR)
     {
-        status = execute(token->l_token, envp);
-        if (status != 0)
-            status = execute(token->r_token, envp);
+        execute(token->l_token, envp);
+        if (stat(0, 0) != 0)
+            execute(token->r_token, envp);
     }
     else
     {
@@ -359,22 +378,22 @@ int execute(t_token *token, char **envp)
     }
 
     // return the final status code
-    return status;
+    // return status;
 }
 
 
-int execute_and(t_token *node, char **envp)
+void execute_and(t_token *node, char **envp)
 {
-    int status = execute(node->l_token, envp);
-    if (status == 0)
-        return execute(node->r_token, envp);
-    return status;
+    execute(node->l_token, envp);
+    if (stat(0, 0) == 0)
+        execute(node->r_token, envp);
+    // return status;
 }
 
-int execute_or(t_token *node, char **envp)
+void execute_or(t_token *node, char **envp)
 {
-    int status = execute(node->l_token, envp);
-    if (status != 0)
-        return execute(node->r_token, envp);
-    return status;
+    execute(node->l_token, envp);
+    if (stat(0, 0) != 0)
+        execute(node->r_token, envp);
+    // return status;
 }

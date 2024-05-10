@@ -48,7 +48,6 @@ char	*get_cmd(char *cmd, char **envp)
 	{
 		pathcmd = ft_strjoin("/", cmd);
 		pathcmd = ft_strjoin(tab[j], pathcmd);
-		// printf("======%s========= \n", pathcmd);
 		if (access(pathcmd, F_OK | X_OK) != -1)
 			return (free_2d(tab), pathcmd);
 		free(pathcmd);
