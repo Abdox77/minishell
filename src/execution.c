@@ -270,7 +270,7 @@ void execute_command(t_token *token, char **envp) {
     {
         // in child process
         // handle redirections
-        // handle_redirections_exec(token->cmd->input);
+        handle_redirections(token->cmd);
         char *cmd_path = get_cmd(cmd, envp);
         // if (cmd_path == NULL)
         // {
@@ -352,9 +352,7 @@ void execute(t_token *token, char **envp)
 {
     // if (token == NULL)
     //     return 0;
-    // int status = 0;
-    if (!token)
-        return;
+    int status = 0;
     if (token->type == CMD)
         // execute a simple command
         execute_command(token, envp);
@@ -376,7 +374,7 @@ void execute(t_token *token, char **envp)
     {
         // unknown token type
         printf("Unknown token type\n");
-        // status = -1;
+        status = -1;
     }
 
     // return the final status code

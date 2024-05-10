@@ -6,7 +6,7 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/10 21:12:50 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/05/10 21:39:13 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,6 +208,9 @@ void     execute_and(t_token *node, char **envp);
 void     execute(t_token *token, char **envp);
 int     stat(int code, int flag);
 char *expand_env_variable(char *input, t_env *env);
+void handle_input_redirection(t_redir *input);
+void handle_output_redirection(t_redir *output);
+void handle_redirections(t_cmd *cmd);
 
 
 

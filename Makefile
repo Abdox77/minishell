@@ -1,5 +1,5 @@
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g #3 -fsanitize=address 
+CFLAGS = -Wall -Wextra -Werror -g3 -fsanitize=address 
 SRC = 	src/minishell.c \
 		src/init.c \
 		src/lexer.c 	 \
@@ -23,6 +23,7 @@ SRC = 	src/minishell.c \
 		src/execution_utils.c \
 		src/status.c \
 		src/expander.c \
+		src/redirection.c \
 
 OBJ = $(SRC:.c=.o)
 RM = rm -rf
