@@ -86,31 +86,39 @@ static char *get_token_with_quotes(char **line, int len, char quote)
 {
     int i;
     char *cmd;
-    t_bool quote_open;
+    int nb_quotes;
+    //t_bool quote_open;
 
-    i = -1;
-    quote_open = FALSE;
+    i = 0;
+    // quote_open = FALSE;
+    nb_quotes = 1;
     if (*line && *(*line + len))
     {
-        while((*line)[len + 1] && is_space((*line)[len + 1]) == FALSE && is_quote((*line)[len + 1]) == FALSE && is_an_operator(*line + len + 1) == FALSE && (*line)[len + 1] != '|' && is_parenthesis((*line)[len + 1]) == FALSE)
+        while((*line)[len] && is_space((*line)[len]) == FALSE && is_an_operator(*line + len) == FALSE && (*line)[len] != '|' && is_parenthesis((*line)[len]) == FALSE)
+        {
+            if (is_quote((*line)[len]) == TRUE)
+                ++nb_quotes;
             len++;
+        }
+        if (nb_quotes % 2)
+            printf("unclosed quotes\n");
+        printf("len is %d\n", len);
     }
     cmd = malloc(sizeof(char) * (len + 1));
     if (!cmd)
         ft_error("failed to allocate memory for cmd\n", EXIT_FAILURE);
-    while (++i < len - 1)
+    while (i < len - 1)
     {
-        if (**line == quote && quote_open == FALSE)
+        if (**line == quote)
+            ++(*line);
+        else
         {
+            cmd[i] = **line;
+            if (!**line)
+                break;
             ++(*line);
-            quote_open = TRUE;
+            ++i;
         }
-        if (**line == quote && quote_open == TRUE)
-            ++(*line);
-        cmd[i] = **line;
-        if (!**line)
-            break;
-        ++(*line);
     }
     cmd[i] = '\0';
     if (**line == quote)
@@ -223,6 +231,7 @@ t_token *handle_command(char **line)
             if (quote_flag == TRUE)
             {
                 ++len;
+                printf("skipped quote :%s\n", &(*line)[len]);
                 while((*line)[len] && (*line)[len] != quote)    
                     ++len;
                 if (!(*line)[len])

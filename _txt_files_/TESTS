@@ -1,6 +1,7 @@
 PASSED TESTS =============================
 cmd <> something                                            THIS SHOWS A SYNTAX ERROR I STILL NEED TO FIND A WAY TO FINISH MAYBE I SHOULD JUST SKIP THE LINE
 ls | (echo && make) | cat ; missed placed the nodes         THIS IS FIXED
+ls -""la""aaaaaaaaaaa   discovered a new edge case lol      THIS IS FIXED
 
 
 
@@ -10,4 +11,3 @@ ls | (echo && make) | cat ; missed placed the nodes         THIS IS FIXED
 FAILED TESTED =============================
 printf(" ====> THIS TEST CASE SEGV 
 ls | | cat ======> still need to handle this testcase in the syntax_evaluator
-ls -""la""aaaaaaaaaaa   discovered a new edge case lol
