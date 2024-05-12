@@ -35,6 +35,13 @@
 
 /*===========================enum=========================*/
 
+typedef enum{
+    NOT_PRINTED,
+    PRINT,
+    RETRIEVE,
+    SET_TO_NOT_PRINTED,
+}   t_error;
+
 typedef enum {
     FAILED,
     PASSED,
@@ -79,21 +86,16 @@ typedef struct s_redir      t_redir;
 typedef struct s_env        t_env;
 typedef struct s_env_var    t_var;
 typedef struct s_exec       t_exec;
-typedef struct s_error      t_error;
+
 
 /*=======================STRUCTS============================*/
 
-struct s_error
-{
-    char *message;
-};
 
 struct s_token {
     TOKEN       type;
     t_token     *r_token;
     t_token     *l_token;
     t_cmd       *cmd;
-    t_error     error;
 } ;
 
 struct s_redir {
@@ -155,21 +157,20 @@ void        handle_input(t_token **token, char **line);
 void        handle_output(t_token **token, char **line);
 
 /*=====================LEXER_UTILS=====================*/
+t_cmd       *new_cmd(void);
 void        skip_spaces(char **line);
 char	    **split(char *str, char *charset);
 char        **add_arg(char **args, char *arg);
 void        add_redirection(t_redir **redir, REDIR_MODE mode, char *file_name);
-t_cmd       *new_cmd(void);
 void    	parenthesis_lexer(t_token **root, char **line);
 
 
 // duplicating cmd token
-char **ft_dup_args(char **args);
+char    **ft_dup_args(char **args);
 t_redir *ft_dup_redir(t_redir *redir);
 
 /*=====================SYNTAX_EVALUATOR==================*/
-void set_error_message(t_token **token , char *message, char **line);
-t_eval synatx_evaluator(t_token *root);
+void evaluate_syntax(t_token *root);
 
 /*=====================UTILS========================*/
 int         strs_len(char **args);
@@ -180,7 +181,7 @@ t_bool      is_special_char(char c);
 t_bool      is_redirection_char(char c);
 t_bool      is_an_operator(char **line, int len);
 void        special_trim(char **line);
-char	*ft_tolowerr(char *c);
+char	    *ft_tolowerr(char *c);
 
 /*=====================ENV=====================*/
 char	   **env_to_envp(t_exec *exec);
@@ -231,6 +232,7 @@ void        minishell_loop(char **env);
 
 /*=====================CLEANUP=====================*/
 void        free_strs(char **strs);
+t_bool      ft_print_error(char *message, char **line, t_error indicator);
 void        ft_error(char *error_message, int exit_code);
 
 #endif

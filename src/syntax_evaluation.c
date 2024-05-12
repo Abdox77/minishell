@@ -32,26 +32,41 @@ static t_eval  check_args(char **args)
     return PASSED;
 }
 
-static t_eval check_commands(t_token *root)
+t_bool ft_print_error(char *message, char **line, t_error indicator)
+{
+    static t_bool is_printed;
+
+    if (indicator == SET_TO_NOT_PRINTED)
+        is_printed = FALSE;
+    else if (indicator == RETRIEVE)
+        return (is_printed);
+    else if (indicator == PRINT)
+    {
+        if (is_printed == TRUE)
+            return FALSE;
+        if (line && *line)
+            (*line) += ft_strlen(*line); 
+        is_printed = TRUE;
+        write(STDERR_FILENO, message, ft_strlen(message));
+    }
+    return FALSE;
+}
+
+static t_eval check_command(t_token *root)
 {
     if (!root->cmd || (root->cmd && root->cmd->cmd && root->cmd->cmd[0] == '\0') || (root->cmd->args && check_args(root->cmd->args) == FAILED))
-        // return (printf("Syntax Error\n"), FAILED);
-        return (PASSED);
-    return PASSED;
-}
-
-static t_eval check_tree(t_token *root)
-{
-    (void)root;
-    return PASSED;
-}
-
-t_eval synatx_evaluator(t_token *root)
-{
-
-    if (!root)
-        return FAILED;
-    else if (root && (check_tree(root) == FAILED || check_commands(root) == FAILED))
         return (FAILED);
     return PASSED;
+}
+
+void evaluate_syntax(t_token *root)
+{
+    if (!root)
+        return ;
+    if ((root->type == PIPE || root->type == OR || root->type == AND) && (!root->r_token || !root->l_token))
+        ft_print_error("Syntax Error\n", NULL, PRINT);
+    if (root->type == CMD && check_command(root) == FAILED)
+        ft_print_error("Syntax Error\n", NULL, PRINT);
+    evaluate_syntax(root->l_token);
+    evaluate_syntax(root->r_token);
 }

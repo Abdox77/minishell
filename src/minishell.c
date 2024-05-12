@@ -110,13 +110,10 @@ static t_token *lexer_manager(char **line)
 	while (**line)
     {
         lexer(&head, line);
-        
         special_trim(line);
     }
     if (!head)
-        printf("Synatx Error :<\n");
-    else if (head && head->type == AND)
-        printf("ok\n");
+        ft_print_error("Syntax Error\n", line, PRINT);
     return head;
 }
 
@@ -139,12 +136,14 @@ void    minishell_loop(char **env)
         special_trim(&line);
         head_tokens = lexer_manager( &line);
         display(head_tokens);
-        if (synatx_evaluator(head_tokens) == PASSED)
+        evaluate_syntax(head_tokens);
+        if (ft_print_error(NULL, NULL, RETRIEVE) == FALSE)
             execute(head_tokens, &exec);
+        ft_print_error(NULL, NULL, SET_TO_NOT_PRINTED);
+        // cleanup(head_tokens);
         if (*line)
             printf("line is %s\n", line);
         head_tokens = NULL;
-        
     }
 }
 

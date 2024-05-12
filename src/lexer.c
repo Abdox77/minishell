@@ -32,14 +32,10 @@ t_bool is_an_operator(char **line, int len)
 	{
 		operator = (*line)[len];
 		if ((*line)[len + 1] == operator)
-		{
-			// printf("returned true\n");
 			return TRUE;
-		}
 		if (operator == '&')
 		{
-			printf("Syntax error unexpected token near '&'\n");
-			(*line) += ft_strlen(*line);
+			ft_print_error("Syntax error unexpected token near '&'\n", line, PRINT);
 			return FALSE;
 		}
 		else
@@ -48,8 +44,10 @@ t_bool is_an_operator(char **line, int len)
 				len++;
 			if ((*line)[len + 1] == '|' || (*line)[len + 1] == '&')
 			{
-				printf("Syntax error unexpected token near '%c'\n", operator);
-				(*line) += ft_strlen(*line);
+				if (operator == '|')
+					ft_print_error("Syntax error unexpected token near '|'\n", line, PRINT);
+				else
+					ft_print_error("Syntax error unexpected token near '&'\n", line, PRINT);
 				return FALSE;
 			}
 		}
@@ -99,7 +97,7 @@ static void	place_operator_node(t_token **root, t_token **to_put)
 	t_token *tmp;
 
 	if (!*root)
-		printf("syntax error here\n");
+		return;
 	else
 	{
 		tmp = *root;
@@ -145,8 +143,7 @@ static t_eval check_operator_syntax(char **line)
 		++(*line);
 		return (PASSED);
 	}
-	printf("Syntax error unexpected token near operator\n");
-	(*line) += ft_strlen(*line);
+	ft_print_error("Syntax error unexpected token near operator\n", line, PRINT);
 	return FAILED;
 }
 
@@ -191,7 +188,7 @@ static void handle_parenthesis(t_token **root, char **line)
 	parenthesis_lexer(&node, line);
 	if (!*line || **line != ')')
 	{
-		set_error_message(&node, "", line);
+		ft_print_error("Syntax error unlosed parenthesis\n", line, PRINT);
 		return ;
 	}
 	if (**line == ')')

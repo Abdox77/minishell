@@ -28,8 +28,7 @@ t_bool      is_quote(char c)
 
 t_bool      is_special_char(char c)
 {
-    if (is_redirection_char(c) || is_space(c) || is_quote(c) || c == '|'
-    || c == '$')
+    if (is_redirection_char(c) || is_space(c) || is_quote(c) || c == '|')
         return (TRUE);
     return (FALSE);
 }

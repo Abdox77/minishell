@@ -196,15 +196,6 @@ static char **add_cmd_to_args(char *cmd , char **args)
     return (new_args);
 }
 
-void set_error_message(t_token **token , char *message, char **line)
-{
-    printf("%s", message);
-    if (*token)
-        (*token)->error.message = message;
-    if (**line)
-        (*line) += ft_strlen(*line);
-}
-
 t_token *handle_command(char **line)
 {
     int len;
@@ -235,7 +226,7 @@ t_token *handle_command(char **line)
             if (quote_flag == TRUE)
             {
                 if (!(*line)[len])
-                    printf("Syntax Error unclosed quotes here\n");
+                    ft_print_error("Syntax Error unclosed quotes here\n", line, PRINT);
                 quote_flag = FALSE;
                 if (!token->cmd->args)
                 {
@@ -252,7 +243,7 @@ t_token *handle_command(char **line)
             }
             else if ((*line)[len] == '(')
             {
-                set_error_message(&token ,"Syntax Error unexpected token '('\n", line);
+                ft_print_error("Syntax Error unexpected token '('\n", line, PRINT);
                 break;
             }
             else if (token && !token->cmd->args && len)
