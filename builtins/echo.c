@@ -6,7 +6,7 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 08:11:05 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/05 21:45:25 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/05/12 13:54:48 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,10 @@ static int	n_exists(char *arg)
 	return (1);
 }
 
-int	echo(char **arg)
+int	ft_echo(char **arg)
 {
 	int	i;
-	int	j;
+	// int	j;
 	int	flag;
 
 	i = 1;

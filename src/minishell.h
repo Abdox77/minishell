@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/12 07:14:42 by codespace        ###   ########.fr       */
+/*   Updated: 2024/05/12 13:58:52 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,6 +192,7 @@ t_env       *parse_env(char **env);
 t_env       *create_node(char *key, char *value);
 
 
+
 /*=====================BUILTINS=====================*/
 int	        pwd(void);
 int         echo(char **arg);
@@ -211,9 +212,9 @@ int         cd(char **arg, t_exec *exec);
 char	**find_path(char **envp);
 void	free_2d(char **arr);
 char	*get_cmd(char *cmd, char **envp);
-void     execute_or(t_token *node, char **envp);
-void     execute_and(t_token *node, char **envp);
-void     execute(t_token *token, char **envp);
+void execute_or(t_token *node, t_exec *exec);
+void execute_and(t_token *node, t_exec *exec);
+void execute(t_token *token, t_exec *exec);
 int     stat(int code, int flag);
 char *expand_env_variable(char *input, t_env *env);
 void handle_input_redirection(t_redir *input);

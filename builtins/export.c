@@ -6,13 +6,13 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 08:13:01 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/21 16:42:56 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/05/12 13:55:00 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../src/minishell.h"
 
-void ft_lstadd_back_env(t_env **head, t_env *new_node)
+static void ft_lstadd_back_env(t_env **head, t_env *new_node)
 {
     if (!new_node) {
         return;
@@ -32,7 +32,7 @@ void ft_lstadd_back_env(t_env **head, t_env *new_node)
 }
 
 // Function to validate and extract the key from the input string
-char *check_and_get_key(const char *p)
+static char *check_and_get_key(const char *p)
 {
     if (p == NULL) {
         return NULL;
@@ -69,7 +69,7 @@ char *check_and_get_key(const char *p)
 
 
 // Function to extract the value from the input string
-char *search_for_value(const char *p)
+static char *search_for_value(const char *p)
 {
     if (p == NULL) {
         return NULL;
@@ -95,7 +95,7 @@ char *search_for_value(const char *p)
 }
 
 // Function to search for a key in the linked list
-int search_key(t_env *head, const char *key)
+static int search_key(t_env *head, const char *key)
 {
     if (key == NULL) {
         return -1;
@@ -150,7 +150,7 @@ static t_env	*sort_export(t_env *env)
 	return (env);
 }
 
-void	print_export(t_env *env)
+static void	print_export(t_env *env)
 {
 	t_env	*tmp;
 
