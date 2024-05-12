@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:22:59 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/12 14:03:48 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/12 14:21:40 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,7 +165,7 @@ static void handle_operators(t_token **token, char **line)
 	if (check_operator_syntax(line) == FAILED)
 		return ;
 	tmp = new_operator(line);
-	(*line) += 2;
+	// (*line) += 2;
 	place_node(token, &tmp, tmp->type);
 }
 
