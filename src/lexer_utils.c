@@ -97,6 +97,7 @@ static char *get_token_in_between_quotes(char **line, char quote)
         len++;
     if (!(*line)[len] || 0 == len)
     {
+        ft_print_error("Syntax Error unclosed quotes\n", NULL, PRINT);
         if (0 == len && (*line)[len] == quote)
             ++(*line);
         return NULL;
@@ -108,6 +109,7 @@ static char *get_token_in_between_quotes(char **line, char quote)
         token[i] = (*line)[i];
     token[i] = '\0';
     *line += len;
+    printf("|%s|", *line);
     return (token);
 }
 
