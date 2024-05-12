@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/12 13:58:52 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/05/12 13:14:25 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,9 +178,8 @@ t_bool      is_space(char c);
 t_bool      is_quote(char c);
 t_bool      is_special_char(char c);
 t_bool      is_redirection_char(char c);
-t_bool      is_an_operator(char *line);
+t_bool      is_an_operator(char **line, int len);
 void        special_trim(char **line);
-
 
 /*=====================ENV=====================*/
 char	   **env_to_envp(t_exec *exec);
@@ -190,8 +189,6 @@ void        print_env(t_env *head);
 void        append_node(t_env **head, char *key, char *value);
 t_env       *parse_env(char **env);
 t_env       *create_node(char *key, char *value);
-
-
 
 /*=====================BUILTINS=====================*/
 int	        pwd(void);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:22:59 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/12 07:29:35 by codespace        ###   ########.fr       */
+/*   Updated: 2024/05/12 13:22:21 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,32 @@ void handle_pipe(t_token **token, char **line)
 
 
 
-t_bool is_an_operator(char *line)
+t_bool is_an_operator(char **line, int len)
 {
-	if ((*line == '&' && *(line + 1) && *(line + 1) == '&') || (*line == '|' && *(line + 1) && *(line + 1) == '|'))
-		return TRUE;
+	char operator;
+	if (((*line)[len] == '&' && (*line)[len] == '|'))
+	{
+		operator = (*line)[len];
+		if ((*line)[len + 1] == operator)
+			return TRUE;
+		if (operator == '&')
+		{
+			printf("Syntax error unexpected token near &\n");
+			(*line) += ft_strlen(*line);
+			return FALSE;
+		}
+		else
+		{
+			while((*line)[len + 1] && is_space((*line)[len + 1]))
+				len++;
+			if ((*line)[len + 1] == '|' || (*line)[len + 1] == '&')
+			{
+				printf("Syntax error unexpected token near %c\n", operator);
+				(*line) += ft_strlen(*line);
+				return FALSE;
+			}
+		}
+	}
 	return FALSE;
 }
 
@@ -182,7 +204,7 @@ void	parenthesis_lexer(t_token **token, char **line)
 {
 	if (!*line || !**line || **line == ')')
 		return ;
-	if (is_an_operator(*line) == TRUE)
+	if (is_an_operator(line, 0) == TRUE)
 		handle_operators(token, line);
 	else if (**line == '|')
 		handle_pipes(token, line);
@@ -198,7 +220,7 @@ void	lexer(t_token **token, char **line)
 	if (!*line || !**line)
 		return ;
 	special_trim(line);
-	if (is_an_operator(*line) == TRUE)
+	if (is_an_operator(line, 0) == TRUE)
 		handle_operators(token, line);
 	else if (**line == '|')
 		handle_pipes(token, line);

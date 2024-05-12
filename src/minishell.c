@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/12 14:00:34 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/05/12 13:10:43 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,7 +139,7 @@ void    minishell_loop(char **env)
         special_trim(&line);
         head_tokens = lexer_manager( &line);
         display(head_tokens);
-        if (synatx_evaluator(head_tokens) == TRUE)
+        if (synatx_evaluator(head_tokens) == PASSED)
             execute(head_tokens, &exec);
         if (*line)
             printf("line is %s\n", line);

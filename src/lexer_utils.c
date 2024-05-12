@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 15:14:16 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/12 07:27:29 by codespace        ###   ########.fr       */
+/*   Updated: 2024/05/12 13:24:25 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,7 +143,7 @@ static void get_command(t_token **token, char **line)
     len = 0;
     tmp = *line;
     special_trim(line);
-    while(tmp[len] && is_special_char(tmp[len]) == FALSE && is_an_operator(tmp + len) == FALSE && is_parenthesis(tmp[len]) == FALSE)
+    while(tmp[len] && is_special_char(tmp[len]) == FALSE && is_an_operator(line , len) == FALSE && is_parenthesis(tmp[len]) == FALSE)
         ++len;
     if (is_quote(tmp[len]) == TRUE)
     {
@@ -214,16 +214,16 @@ t_token *handle_command(char **line)
     token = NULL;
     quote_flag = FALSE;
     special_trim(line);
-    if(**line != '\0' && is_an_operator(*line) == FALSE && **line != '|')
+    if(**line != '\0' && is_an_operator(line, 0) == FALSE && **line != '|')
     {
         get_command(&token, line);
-        while(**line != '\0' && is_an_operator(*line) == FALSE && **line != '|')
+        while(**line != '\0' && is_an_operator(line, 0) == FALSE && **line != '|')
         {
             len = 0;
             special_trim(line);
             if (token && !token->cmd->cmd)
                 get_command(&token, line);
-            while((*line)[len] && (*line)[len] != '|' && is_space((*line)[len]) == FALSE && is_redirection_char((*line)[len]) == FALSE && is_an_operator((*line)[len]) == FALSE && is_parenthesis((*line)[len]) == FALSE)
+            while((*line)[len] && (*line)[len] != '|' && is_space((*line)[len]) == FALSE && is_redirection_char((*line)[len]) == FALSE && is_an_operator(line , len) == FALSE && is_parenthesis((*line)[len]) == FALSE)
             {
                 if (is_quote((*line)[len]) == TRUE)
                 {
