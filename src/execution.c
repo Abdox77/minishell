@@ -254,12 +254,13 @@ static char **initialize_args_if_null(char *cmd, char **args)
 //     }
 // }
 
-void execute_command(t_token *token, char **envp) {
+void execute_command(t_token *token, t_exec *exec) {
     char *cmd = token->cmd->cmd;
     char **args = token->cmd->args;
-    
-    args = initialize_args_if_null(cmd, args);
 
+    if (check_builtins(token, exec))
+        return;
+    args = initialize_args_if_null(cmd, args);
     pid_t pid = fork();
     if (pid < 0)
     {
@@ -271,14 +272,14 @@ void execute_command(t_token *token, char **envp) {
         // in child process
         // handle redirections
         handle_redirections(token->cmd);
-        char *cmd_path = get_cmd(cmd, envp);
+        char *cmd_path = get_cmd(cmd, exec->envp);
         // if (cmd_path == NULL)
         // {
         //     perror(cmd);
         //     exit(127);
         // }
 
-        execve(cmd_path, args, envp);
+        execve(cmd_path, args, exec->envp);
         perror(cmd);
         stat(127, 1);
         exit(127);
@@ -292,23 +293,23 @@ void execute_command(t_token *token, char **envp) {
     }
 }
 
-static void execute_left(t_token *node, int *fd, char **envp) {
+static void execute_left(t_token *node, int *fd, t_exec *exec) {
     dup2(fd[1], STDOUT_FILENO);
     close(fd[0]); // close the read end of the pipe
     close(fd[1]); // close the write end of the pipe in child process
-    execute(node, envp); // execute the left command
+    execute(node, exec); // execute the left command
     exit(0);
 }
 
-static void execute_right(t_token *node, int *fd, char **envp) {
+static void execute_right(t_token *node, int *fd, t_exec *exec) {
     dup2(fd[0], STDIN_FILENO); // redirect stdin to read end of the pipe
     close(fd[0]); // close the read end of the pipe in child process
     close(fd[1]); // close the write end of the pipe
-    execute(node, envp); // execute the right command
+    execute(node, exec); // execute the right command
     exit(0);
 }
 
-static void execute_pipe(t_token *node, char **envp) {
+static void execute_pipe(t_token *node, t_exec *exec) {
     int fd[2];
     pid_t pid1, pid2;
     int status1, status2;
@@ -325,7 +326,7 @@ static void execute_pipe(t_token *node, char **envp) {
     } else if (pid1 == 0) {
         // in child process for left command
         close(fd[0]); // close read end of the pipe
-        execute_left(node->l_token, fd, envp);
+        execute_left(node->l_token, fd, exec);
     }
 
     pid2 = fork();
@@ -335,7 +336,7 @@ static void execute_pipe(t_token *node, char **envp) {
     } else if (pid2 == 0) {
         // in child process for right command
         close(fd[1]); // close write end of the pipe
-        execute_right(node->r_token, fd, envp);
+        execute_right(node->r_token, fd, exec);
     }
 
     // in parent process
@@ -348,30 +349,28 @@ static void execute_pipe(t_token *node, char **envp) {
     stat(WEXITSTATUS(status2), 1);
 }
 
-void execute(t_token *token, char **envp)
+void execute(t_token *token, t_exec *exec)
 {
     // if (token == NULL)
     //     return 0;
-    if (!token)
-        return ;
     int status = 0;
     (void)status;
     if (token->type == CMD)
         // execute a simple command
-        execute_command(token, envp);
+        execute_command(token, exec);
     else if (token->type == PIPE)
-        execute_pipe(token, envp);
+        execute_pipe(token, exec);
     else if (token->type == AND)
     {
-       execute(token->l_token, envp);
+       execute(token->l_token, exec);
         if (stat(0, 0) == 0)
-            execute(token->r_token, envp);
+            execute(token->r_token, exec);
     }
     else if (token->type == OR)
     {
-        execute(token->l_token, envp);
+        execute(token->l_token, exec);
         if (stat(0, 0) != 0)
-            execute(token->r_token, envp);
+            execute(token->r_token, exec);
     }
     else
     {
@@ -385,18 +384,18 @@ void execute(t_token *token, char **envp)
 }
 
 
-void execute_and(t_token *node, char **envp)
+void execute_and(t_token *node, t_exec *exec)
 {
-    execute(node->l_token, envp);
+    execute(node->l_token, exec);
     if (stat(0, 0) == 0)
-        execute(node->r_token, envp);
+        execute(node->r_token, exec);
     // return status;
 }
 
-void execute_or(t_token *node, char **envp)
+void execute_or(t_token *node, t_exec *exec)
 {
-    execute(node->l_token, envp);
+    execute(node->l_token, exec);
     if (stat(0, 0) != 0)
-        execute(node->r_token, envp);
+        execute(node->r_token, exec);
     // return status;
 }

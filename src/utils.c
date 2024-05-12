@@ -6,7 +6,7 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 09:13:22 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/15 16:28:32 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/05/12 13:02:21 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,4 +43,18 @@ int	ft_strcmp(const char *s1, const char *s2)
 	else if (p1[i] < p2[i])
 		return (-1);
 	return (0);
+}
+
+char	*ft_tolowerr(char *c)
+{
+	int	i;
+
+	i = 0;
+	while (c[i])
+	{
+		if (c[i] >= 'A' && c[i] <= 'Z')
+			c[i] += 32;
+		i++;
+	}
+	return (c);
 }
