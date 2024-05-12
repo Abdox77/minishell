@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/12 13:14:25 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/12 14:45:37 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,6 +180,7 @@ t_bool      is_special_char(char c);
 t_bool      is_redirection_char(char c);
 t_bool      is_an_operator(char **line, int len);
 void        special_trim(char **line);
+char	*ft_tolowerr(char *c);
 
 /*=====================ENV=====================*/
 char	   **env_to_envp(t_exec *exec);
@@ -192,7 +193,7 @@ t_env       *create_node(char *key, char *value);
 
 /*=====================BUILTINS=====================*/
 int	        pwd(void);
-int         echo(char **arg);
+int         ft_echo(char **arg);
 int         unset(t_env **env, char **cmd);
 void        ft_env(t_env *env);
 int         cd(char **arg, t_exec *exec);
@@ -217,6 +218,7 @@ char *expand_env_variable(char *input, t_env *env);
 void handle_input_redirection(t_redir *input);
 void handle_output_redirection(t_redir *output);
 void handle_redirections(t_cmd *cmd);
+int	check_builtins(t_token *node, t_exec *exec);
 
 
 
