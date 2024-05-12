@@ -144,12 +144,18 @@ static void handle_commands(t_token **root, char **line)
 static void handle_parenthesis(t_token **root, char **line)
 {
 	t_token *node;
-	
+	static int i;
+
 	++(*line);
 	node = NULL;
 	parenthesis_lexer(&node, line);
 	if (!*line || **line != ')')
-		set_error_message(&node, "Syntax Error unclosed parenthesis\n", line);
+	{
+		i++;
+		printf("i is : %d\n", i);
+		set_error_message(&node, "Syntax Error unclosed parenthesis \n", line);
+		return ;
+	}
 	if (**line == ')')
 		++(*line);
 	place_node(root, &node, PARENTHESIS);

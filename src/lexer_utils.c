@@ -199,7 +199,8 @@ static char **add_cmd_to_args(char *cmd , char **args)
 void set_error_message(t_token **token , char *message, char **line)
 {
     printf("%s", message);
-    (*token)->error.message = message;
+    if (*token)
+        (*token)->error.message = message;
     if (**line)
         (*line) += ft_strlen(*line);
 }

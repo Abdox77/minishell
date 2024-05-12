@@ -48,7 +48,10 @@ static t_eval check_tree(t_token *root)
 
 t_eval synatx_evaluator(t_token *root)
 {
-    if (check_tree(root) == FAILED || check_commands(root) == FAILED)
+
+    if (!root)
+        return FAILED;
+    else if (root && (check_tree(root) == FAILED || check_commands(root) == FAILED))
         return (FAILED);
     return PASSED;
 }
