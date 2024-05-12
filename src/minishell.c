@@ -139,7 +139,8 @@ void    minishell_loop(char **env)
         special_trim(&line);
         head_tokens = lexer_manager( &line);
         display(head_tokens);
-        execute(head_tokens, exec.envp);
+        if (synatx_evaluator(head_tokens) == TRUE)
+            execute(head_tokens, exec.envp);
         if (*line)
             printf("line is %s\n", line);
         head_tokens = NULL;

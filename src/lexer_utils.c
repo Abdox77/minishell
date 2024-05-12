@@ -98,7 +98,7 @@ static char *get_token_in_between_quotes(char **line, char quote)
     if (!(*line)[len] || 0 == len)
     {
         if (0 == len && (*line)[len] == quote)
-            ++(*line);   
+            ++(*line);
         return NULL;
     }
     token = malloc(sizeof(char) * len + 1);
@@ -133,49 +133,6 @@ static char *get_token_with_quotes(char **line, int len)
     return (arg);
 }
 
-// static char *get_token_with_quotes(char **line, int len, char quote)
-// {
-//     int i;
-//     char *cmd;
-//     int nb_quotes;
-
-//     // so imma add a while loop and use a function that gets the string in between the quotes , then call strjoin every time
-//     i = 0;
-//     nb_quotes = 1;
-//     if (*line && *(*line + len))
-//     {
-//         while((*line)[len] && is_space((*line)[len]) == FALSE && is_an_operator(*line + len) == FALSE && (*line)[len] != '|' && is_parenthesis((*line)[len]) == FALSE)
-//         {
-//             if (is_quote((*line)[len]) == TRUE)
-//                 ++nb_quotes;
-//             len++;
-//         }
-//         if (nb_quotes % 2)
-//             printf("unclosed quotes\n");
-//         printf("len is %d\n", len);
-//     }
-//     cmd = malloc(sizeof(char) * (len + 1));
-//     if (!cmd)
-//         ft_error("failed to allocate memory for cmd\n", EXIT_FAILURE);
-//     while (i < len - 1)
-//     {
-//         if (**line == quote)
-//             ++(*line);
-//         else
-//         {
-//             cmd[i] = **line;
-//             if (!**line)
-//                 break;
-//             ++(*line);
-//             ++i;
-//         }
-//     }
-//     cmd[i] = '\0';
-//     if (**line == quote)
-//         ++(*line); // check for uncloesed quote here
-//     return (cmd);
-// }
-
 static void get_command(t_token **token, char **line)
 {
     int len;
@@ -205,7 +162,6 @@ static void get_command(t_token **token, char **line)
         }
         else
         {
-            
             // syntax error 
             return;
         }
@@ -257,10 +213,10 @@ t_token *handle_command(char **line)
     token = NULL;
     quote_flag = FALSE;
     special_trim(line);
-    if(**line && is_an_operator(*line) == FALSE && **line != '|')
+    if(**line != '\0' && is_an_operator(*line) == FALSE && **line != '|')
     {
         get_command(&token, line);
-        while(**line && is_an_operator(*line) == FALSE && **line != '|')
+        while(**line != '\0' && is_an_operator(*line) == FALSE && **line != '|')
         {
             len = 0;
             special_trim(line);
@@ -279,6 +235,7 @@ t_token *handle_command(char **line)
             {
                 if (!(*line)[len])
                     printf("Syntax Error unclosed quotes here\n");
+                quote_flag = FALSE;
                 if (!token->cmd->args)
                 {
                     token->cmd->args = malloc(sizeof(char *) * 2);
@@ -311,7 +268,7 @@ t_token *handle_command(char **line)
                 (*line) += len;
                 len = 0;
             }
-            else if (is_redirection_char(**line)) handle_redirection(&token, line);
+            if (is_redirection_char(**line) == TRUE) handle_redirection(&token, line);
             if (*line && **line && **line == ')')
                 break;
         }

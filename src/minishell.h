@@ -169,7 +169,7 @@ t_redir *ft_dup_redir(t_redir *redir);
 
 /*=====================SYNTAX_EVALUATOR==================*/
 void set_error_message(t_token **token , char *message, char **line);
-t_bool synatx_evaluator(t_token *root);
+t_eval synatx_evaluator(t_token *root);
 
 /*=====================UTILS========================*/
 int         strs_len(char **args);
