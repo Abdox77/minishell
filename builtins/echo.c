@@ -6,7 +6,7 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 08:11:05 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/12 13:54:48 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/05/12 15:32:49 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,10 @@ int	ft_echo(char **arg)
 	// int	j;
 	int	flag;
 
+	// stat(0, 1);
 	i = 1;
 	flag = 0;
-	if (!arg[i])
+	if (!arg)
 	{
 		ft_write("\n", 1, 0);
 		return (1);
@@ -50,10 +51,11 @@ int	ft_echo(char **arg)
 				continue ;
 			}
 		}
-		// if (arg[i][0] == '$' && arg[i][1] == '?')
-		// {
-        //     //need to do implementation for last exit status
-		// }
+		if (arg[i][0] == '$' && arg[i][1] == '?')
+		{
+            ft_write(ft_itoa(stat(0,0)), 1, 1);
+			return (1);
+		}
 		if (arg[i])
 		{
 			ft_write(arg[i], 1, 0);
@@ -64,5 +66,6 @@ int	ft_echo(char **arg)
 	}
 	if (flag == 0)
 		ft_write("\n", 1, 0);
+	stat(0, 1);
 	return (0);
 }

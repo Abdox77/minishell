@@ -26,7 +26,8 @@ SRC = 	src/minishell.c \
 		src/redirection.c \
 		src/syntax_evaluation.c \
 		builtins/check_builtin.c \
-		builtins/echo.c
+		builtins/echo.c \
+		src/expandv2.c \
 
 OBJ = $(SRC:.c=.o)
 RM = rm -rf

@@ -271,18 +271,24 @@ void execute_command(t_token *token, t_exec *exec) {
     {
         // in child process
         // handle redirections
+        // expand_variables(token->cmd, exec->env);
         handle_redirections(token->cmd);
-        char *cmd_path = get_cmd(cmd, exec->envp);
-        // if (cmd_path == NULL)
-        // {
-        //     perror(cmd);
-        //     exit(127);
-        // }
+        if (check_builtins(token, exec))
+            return;
+        else
+        {
+            char *cmd_path = get_cmd(cmd, exec->envp);
+            // if (cmd_path == NULL)
+            // {
+            //     perror(cmd);
+            //     exit(127);
+            // }
 
-        execve(cmd_path, args, exec->envp);
-        perror(cmd);
-        stat(127, 1);
-        exit(127);
+            execve(cmd_path, args, exec->envp);
+            perror(cmd);
+            stat(127, 1);
+            exit(127);
+        }
     }
     else
     {
@@ -351,8 +357,8 @@ static void execute_pipe(t_token *node, t_exec *exec) {
 
 void execute(t_token *token, t_exec *exec)
 {
-    // if (token == NULL)
-    //     return 0;
+    if (token == NULL)
+        return;
     int status = 0;
     (void)status;
     if (token->type == CMD)

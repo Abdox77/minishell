@@ -6,7 +6,7 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/12 14:45:37 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/05/12 19:26:22 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,6 +220,7 @@ void handle_input_redirection(t_redir *input);
 void handle_output_redirection(t_redir *output);
 void handle_redirections(t_cmd *cmd);
 int	check_builtins(t_token *node, t_exec *exec);
+void expand_variables(t_cmd *cmd, t_env *env_list);
 
 
 
