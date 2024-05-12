@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:22:59 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/12 13:22:21 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/12 14:03:48 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,14 +28,17 @@ void handle_pipe(t_token **token, char **line)
 t_bool is_an_operator(char **line, int len)
 {
 	char operator;
-	if (((*line)[len] == '&' && (*line)[len] == '|'))
+	if (((*line)[len] == '&' || (*line)[len] == '|'))
 	{
 		operator = (*line)[len];
 		if ((*line)[len + 1] == operator)
+		{
+			// printf("returned true\n");
 			return TRUE;
+		}
 		if (operator == '&')
 		{
-			printf("Syntax error unexpected token near &\n");
+			printf("Syntax error unexpected token near '&'\n");
 			(*line) += ft_strlen(*line);
 			return FALSE;
 		}
@@ -45,7 +48,7 @@ t_bool is_an_operator(char **line, int len)
 				len++;
 			if ((*line)[len + 1] == '|' || (*line)[len + 1] == '&')
 			{
-				printf("Syntax error unexpected token near %c\n", operator);
+				printf("Syntax error unexpected token near '%c'\n", operator);
 				(*line) += ft_strlen(*line);
 				return FALSE;
 			}
