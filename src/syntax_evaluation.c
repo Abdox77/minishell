@@ -34,9 +34,9 @@ static t_eval  check_args(char **args)
 
 static t_eval check_commands(t_token *root)
 {
-    if (!root->cmd || (root->cmd && !root->cmd->cmd) || (root->cmd->args && check_args(root->cmd->args) == FAILED))
+    if (!root->cmd || (root->cmd && root->cmd->cmd && root->cmd->cmd[0] == '\0') || (root->cmd->args && check_args(root->cmd->args) == FAILED))
+        // return (printf("Syntax Error\n"), FAILED);
         return (PASSED);
-        // return (printf("Syntax Error\n"), PASSED);
     return PASSED;
 }
 

@@ -23,6 +23,8 @@ void handle_pipe(t_token **token, char **line)
     lexer(token, line);
 }
 
+
+
 t_bool is_an_operator(char *line)
 {
 	if ((*line == '&' && *(line + 1) && *(line + 1) == '&') || (*line == '|' && *(line + 1) && *(line + 1) == '|'))
@@ -115,10 +117,28 @@ static t_token *new_operator(char **line)
 		return (new_token(AND));
 }
 
+static t_eval check_operator_syntax(char **line)
+{
+	char operator;
+
+	operator = **line;
+	++(*line);
+	if (**line == operator)
+	{
+		++(*line);
+		return (PASSED);
+	}
+	printf("Syntax error unexpected token near operator\n");
+	(*line) += ft_strlen(*line);
+	return FAILED;
+}
+
 static void handle_operators(t_token **token, char **line)
 {
 	t_token *tmp;
 
+	if (check_operator_syntax(line) == FAILED)
+		return ;
 	tmp = new_operator(line);
 	(*line) += 2;
 	place_node(token, &tmp, tmp->type);
@@ -144,16 +164,13 @@ static void handle_commands(t_token **root, char **line)
 static void handle_parenthesis(t_token **root, char **line)
 {
 	t_token *node;
-	static int i;
 
 	++(*line);
 	node = NULL;
 	parenthesis_lexer(&node, line);
 	if (!*line || **line != ')')
 	{
-		i++;
-		printf("i is : %d\n", i);
-		set_error_message(&node, "Syntax Error unclosed parenthesis \n", line);
+		set_error_message(&node, "", line);
 		return ;
 	}
 	if (**line == ')')

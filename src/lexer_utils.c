@@ -223,7 +223,7 @@ t_token *handle_command(char **line)
             special_trim(line);
             if (token && !token->cmd->cmd)
                 get_command(&token, line);
-            while((*line)[len] && (*line)[len] != '|' && is_space((*line)[len]) == FALSE && is_redirection_char((*line)[len]) == FALSE && is_an_operator(*line + len) == FALSE && is_parenthesis((*line)[len]) == FALSE)
+            while((*line)[len] && (*line)[len] != '|' && is_space((*line)[len]) == FALSE && is_redirection_char((*line)[len]) == FALSE && is_an_operator((*line)[len]) == FALSE && is_parenthesis((*line)[len]) == FALSE)
             {
                 if (is_quote((*line)[len]) == TRUE)
                 {
