@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:22:59 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/12 14:21:40 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/12 14:37:10 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,14 +134,6 @@ static void place_node(t_token **root, t_token **to_put, TOKEN type)
 		printf("what i'm doing here lol\n");
 }
 
-static t_token *new_operator(char **line)
-{
-	if (**line == '|')
-		return (new_token(OR));
-	else
-		return (new_token(AND));
-}
-
 static t_eval check_operator_syntax(char **line)
 {
 	char operator;
@@ -161,11 +153,15 @@ static t_eval check_operator_syntax(char **line)
 static void handle_operators(t_token **token, char **line)
 {
 	t_token *tmp;
+	char 	operator;
 
+	operator = **line;
 	if (check_operator_syntax(line) == FAILED)
 		return ;
-	tmp = new_operator(line);
-	// (*line) += 2;
+	if (operator == '&')
+		tmp = new_token(AND);
+	else
+		tmp = new_token(OR);
 	place_node(token, &tmp, tmp->type);
 }
 
