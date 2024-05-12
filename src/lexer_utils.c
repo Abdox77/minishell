@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 15:14:16 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/11 21:30:30 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/12 07:27:29 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,20 +90,24 @@ static char *get_token_in_between_quotes(char **line, char quote)
 
     i = -1;
     len = 0;
-    if (!*line || !**line || (**line && !(*line)[len])) // to figure out the conditions later
+    if (!*line || !**line)
         return NULL;
     ++(*line);
     while ((*line)[len] && (*line)[len] != quote)
         len++;
     if (!(*line)[len] || 0 == len)
-        return NULL; // it's a syntax error
+    {
+        if (0 == len && (*line)[len] == quote)
+            ++(*line);   
+        return NULL;
+    }
     token = malloc(sizeof(char) * len + 1);
     if(!token)
         return (NULL);
-    while(++i < len) // -1 for the quote
+    while(++i < len)
         token[i] = (*line)[i];
     token[i] = '\0';
-    *line += (len - 1);
+    *line += len;
     return (token);
 }
 
@@ -116,21 +120,16 @@ static char *get_token_with_quotes(char **line, int len)
     arg = ft_substr(*line, 0, len);
     (*line) += len;
     if (!arg)
-        printf("problemo leo\n");
+        printf("problemo LEO\n");
     buff = NULL;
     while(**line && (**line == '"' || **line == '\''))
     {
         quote = **line;
         buff = get_token_in_between_quotes(line, quote);
-        printf("line here after skipped the copied arg %s\n", buff);
-        // if(!buff)
-            // return arg;
         arg = ft_strjoin(arg, buff);
-        //maybe check for unclosed quotes here
         if(buff)
             ++(*line);
     }
-    printf("line is | %s |after break from the loop\n", *line);
     return (arg);
 }
 
@@ -181,7 +180,6 @@ static void get_command(t_token **token, char **line)
 {
     int len;
     char *tmp;
-    // char quote;
 
     if (!*line || !**line)
         return;
@@ -194,12 +192,6 @@ static void get_command(t_token **token, char **line)
     {
         if (!*token)
             *token = new_token(CMD);
-        // quote = tmp[len];
-        // ++len;
-        // while(tmp[len] && tmp[len] != quote)
-        //     ++len;
-        if (!tmp[len])
-            printf("syntax error unclosed quote\n");
         (*token)->cmd->cmd = get_token_with_quotes(line, len);
     }
     else if (tmp[len] == ')')
@@ -213,6 +205,7 @@ static void get_command(t_token **token, char **line)
         }
         else
         {
+            
             // syntax error 
             return;
         }
@@ -224,10 +217,7 @@ static void get_command(t_token **token, char **line)
         (*token)->cmd->cmd = ft_substr(*line, 0, len);
         (*line) += len;
     }
-    if (*token && (*token)->cmd)
-        printf("the command is %s and line is\n", (*token)->cmd->cmd);
 }
-
 
 static char **add_cmd_to_args(char *cmd , char **args)
 {
@@ -250,10 +240,17 @@ static char **add_cmd_to_args(char *cmd , char **args)
     return (new_args);
 }
 
+void set_error_message(t_token **token , char *message, char **line)
+{
+    printf("%s", message);
+    (*token)->error.message = message;
+    if (**line)
+        (*line) += ft_strlen(*line);
+}
+
 t_token *handle_command(char **line)
 {
     int len;
-    // char quote;
     t_bool quote_flag;
     t_token *token;
 
@@ -271,20 +268,15 @@ t_token *handle_command(char **line)
                 get_command(&token, line);
             while((*line)[len] && (*line)[len] != '|' && is_space((*line)[len]) == FALSE && is_redirection_char((*line)[len]) == FALSE && is_an_operator(*line + len) == FALSE && is_parenthesis((*line)[len]) == FALSE)
             {
-                if (is_quote((*line)[len]))
+                if (is_quote((*line)[len]) == TRUE)
                 {
                     quote_flag = TRUE;
-                    // quote = (*line)[len];
                     break;
                 }
                 len++;
             }
             if (quote_flag == TRUE)
             {
-                // ++len;
-                printf("skipped quote :%s\n", &(*line)[len]);
-                // while((*line)[len] && (*line)[len] != quote)    
-                //     ++len;
                 if (!(*line)[len])
                     printf("Syntax Error unclosed quotes here\n");
                 if (!token->cmd->args)
@@ -302,7 +294,7 @@ t_token *handle_command(char **line)
             }
             else if ((*line)[len] == '(')
             {
-                printf("Syntax Error unexpected token near '(' %s\n", *line);
+                set_error_message(&token ,"Syntax Error unexpected token '('\n", line);
                 break;
             }
             else if (token && !token->cmd->args && len)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/11 21:15:20 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/12 07:14:42 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@
 
 # define PURPLE "\033[0;35m"
 # define GREEN "\033[36m"
-
 
 
 /*===========================enum=========================*/
@@ -80,16 +79,21 @@ typedef struct s_redir      t_redir;
 typedef struct s_env        t_env;
 typedef struct s_env_var    t_var;
 typedef struct s_exec       t_exec;
-
+typedef struct s_error      t_error;
 
 /*=======================STRUCTS============================*/
 
+struct s_error
+{
+    char *message;
+};
 
 struct s_token {
     TOKEN       type;
     t_token     *r_token;
     t_token     *l_token;
     t_cmd       *cmd;
+    t_error     error;
 } ;
 
 struct s_redir {
@@ -149,7 +153,6 @@ void        handle_quotes(t_token **token, char ** line);
 void        handle_redirection(t_token **token, char **line);
 void        handle_input(t_token **token, char **line);
 void        handle_output(t_token **token, char **line);
-void        handle_operator(t_token **token, char **line);
 
 /*=====================LEXER_UTILS=====================*/
 void        skip_spaces(char **line);
@@ -165,8 +168,8 @@ char **ft_dup_args(char **args);
 t_redir *ft_dup_redir(t_redir *redir);
 
 /*=====================SYNTAX_EVALUATOR==================*/
+void set_error_message(t_token **token , char *message, char **line);
 t_bool synatx_evaluator(t_token *root);
-
 
 /*=====================UTILS========================*/
 int         strs_len(char **args);

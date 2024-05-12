@@ -6,7 +6,7 @@
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:22:59 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/09 09:32:18 by codespace        ###   ########.fr       */
+/*   Updated: 2024/05/12 07:29:35 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,7 +149,7 @@ static void handle_parenthesis(t_token **root, char **line)
 	node = NULL;
 	parenthesis_lexer(&node, line);
 	if (!*line || **line != ')')
-		printf("syntax error\n");
+		set_error_message(&node, "Syntax Error unclosed parenthesis\n", line);
 	if (**line == ')')
 		++(*line);
 	place_node(root, &node, PARENTHESIS);

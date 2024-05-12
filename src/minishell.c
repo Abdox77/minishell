@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/10 21:11:55 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/05/12 07:30:46 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,8 +65,10 @@ void display(t_token *token)
         return;
     if (token->type != CMD)
     {
-        if (token->type == AND || token->type == OR)
+        if (token->type == AND)
             printf("AND\n");
+        else if (token->type == OR)
+            printf("OR\n");
         if (token->type == PIPE)
             printf("pipe\n");
         printf("==============left->node==============\n");
@@ -108,10 +110,11 @@ static t_token *lexer_manager(char **line)
 	while (**line)
     {
         lexer(&head, line);
+        
         special_trim(line);
     }
     if (!head)
-        printf("not heead\n");
+        printf("Synatx Error :<\n");
     else if (head && head->type == AND)
         printf("ok\n");
     return head;

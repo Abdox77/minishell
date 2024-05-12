@@ -352,6 +352,8 @@ void execute(t_token *token, char **envp)
 {
     // if (token == NULL)
     //     return 0;
+    if (!token)
+        return ;
     int status = 0;
     (void)status;
     if (token->type == CMD)
