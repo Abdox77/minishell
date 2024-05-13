@@ -1,5 +1,5 @@
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g3 -fsanitize=address 
+CFLAGS = -Wall -Wextra -Werror -g3 #-fsanitize=address 
 SRC = 	src/minishell.c \
 		src/init.c \
 		src/lexer.c 	 \
@@ -10,7 +10,6 @@ SRC = 	src/minishell.c \
 		src/split.c \
 		src/utils.c \
 		src/utils_2.c \
-		src/here_doc.c \
 		src/cleanup.c \
 		src/get_env.c \
 		src/linked_list_helper.c \

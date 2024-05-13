@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:22:59 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/12 14:37:10 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/13 20:14:42 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ t_bool is_an_operator(char **line, int len)
 		{
 			ft_print_error("Syntax error unexpected token near '&'\n", line, PRINT);
 			return FALSE;
-		}
+		} 
 		else
 		{
 			while((*line)[len + 1] && is_space((*line)[len + 1]))

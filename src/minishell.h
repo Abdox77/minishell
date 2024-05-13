@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/13 15:00:02 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/13 20:12:31 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@
 
 typedef enum{
     PRINT,
+    SAVE, 
     NOT_PRINTED,
     RETRIEVE,
     SET_TO_NOT_PRINTED,
