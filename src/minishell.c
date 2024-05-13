@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/12 13:10:43 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/13 13:32:43 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,30 @@ static t_token *lexer_manager(char **line)
     return head;
 }
 
+void expand_heredoc_to_infiles(t_token **root)
+{
+    t_redir *tmp;
+
+    if (!*root)
+        return;
+    if ((*root)->type == CMD && (*root)->cmd && (*root)->cmd->input)
+    {
+        tmp = (*root)->cmd->input;
+        while(tmp)
+        {
+            if (tmp->mode == HEREDOC)
+            {
+                tmp->fd = expand_heredoc();
+                if (tmp->fd < 0)
+                    printf("Error in creating fd\n");
+            }
+            tmp = tmp->next;
+        }
+    }
+    expand_heredoc_to_infiles(&(*root)->l_token);
+    expand_heredoc_to_infiles(&(*root)->r_token);
+}
+
 void    minishell_loop(char **env)
 {
     char *line;
@@ -137,6 +161,7 @@ void    minishell_loop(char **env)
         head_tokens = lexer_manager( &line);
         display(head_tokens);
         evaluate_syntax(head_tokens);
+        expand_heredoc_to_infiles(&head_tokens);
         if (ft_print_error(NULL, NULL, RETRIEVE) == FALSE)
             execute(head_tokens, &exec);
         ft_print_error(NULL, NULL, SET_TO_NOT_PRINTED);

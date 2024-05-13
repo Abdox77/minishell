@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/13 13:12:45 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/13 15:00:02 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,14 @@
 
 # define PURPLE "\033[0;35m"
 # define GREEN "\033[36m"
+# define HEREDOC_LOCATION "/var/tmp/"
 # define BUFFER_SIZE 1000
 
 /*===========================enum=========================*/
 
 typedef enum{
-    NOT_PRINTED,
     PRINT,
+    NOT_PRINTED,
     RETRIEVE,
     SET_TO_NOT_PRINTED,
 }   t_error;
