@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 15:14:16 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/12 13:24:25 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/12 21:52:56 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,6 @@ static char *get_token_in_between_quotes(char **line, char quote)
         token[i] = (*line)[i];
     token[i] = '\0';
     *line += len;
-    printf("|%s|", *line);
     return (token);
 }
 
