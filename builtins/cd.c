@@ -6,7 +6,7 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 08:11:48 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/21 16:42:12 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/05/13 18:17:54 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,10 +89,11 @@ static void update_pwd_and_oldpwd(t_exec *exec)
 
 int cd(char **arg, t_exec *exec)
 {
-    int	i;
+    // int	i;
 
-	i = 1;
-	if (!arg[i])
+	// i = 1;
+		// printf("heeeeeeeerree");
+	if (arg[0] == NULL)
 	{
 		if (!check_key(exec->env, "HOME"))
 		{

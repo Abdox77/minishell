@@ -6,7 +6,7 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 08:11:05 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/12 15:32:49 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/05/13 20:29:27 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ int	ft_echo(char **arg)
 	}
 	while (arg[i])
 	{
+		dprintf(STDERR_FILENO, "heeeeeere\n"); 
 		if (arg[i][0] == '-')
 		{
 			if (arg[i][1] == 'n' && n_exists(arg[i]))
@@ -58,14 +59,15 @@ int	ft_echo(char **arg)
 		}
 		if (arg[i])
 		{
-			ft_write(arg[i], 1, 0);
+			printf("%s",arg[i]);
 			if (arg[i] && arg[i + 1])
-				ft_write(" ", 1, 0);
+				printf(" ");
 		}
 		i++;
 	}
 	if (flag == 0)
-		ft_write("\n", 1, 0);
+		printf("\n");
 	stat(0, 1);
+	exit(0);
 	return (0);
 }

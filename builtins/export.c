@@ -6,7 +6,7 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 08:13:01 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/12 13:55:00 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/05/12 23:22:34 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,33 +14,45 @@
 
 static void ft_lstadd_back_env(t_env **head, t_env *new_node)
 {
-    if (!new_node) {
+    if (!new_node)
         return;
-    }
-
-    // If the list is empty, the new node becomes the head
-    if (*head == NULL) {
+    if (*head == NULL)
         *head = new_node;
-    } else {
-        // Otherwise, traverse to the end of the list and add the new node
+    else
+    {
         struct s_env *current = *head;
-        while (current->next != NULL) {
+        while (current->next != NULL)
             current = current->next;
-        }
         current->next = new_node;
     }
+}
+
+static char	*ft_strncpy(char *dest, char *src, unsigned int n)
+{
+	unsigned int	i;
+
+	i = 0;
+	while (src[i] != '\0' && i < n)
+	{
+		dest[i] = src[i];
+		++i;
+	}
+	while (i < n)
+	{
+		dest[i] = '\0';
+		i++;
+	}
+	return (dest);
 }
 
 // Function to validate and extract the key from the input string
 static char *check_and_get_key(const char *p)
 {
-    if (p == NULL) {
+    if (p == NULL)
         return NULL;
-    }
-
     int i = 1;
     // Traverse the input string to find '=' and check for valid characters
-    if (!ft_isalpha(p[0]) || p[0] != '_')
+    if (!ft_isalpha(p[0]) && p[0] != '_')
     {
         printf("%s: not a valid identifier\n", p);
         return NULL;
@@ -57,13 +69,14 @@ static char *check_and_get_key(const char *p)
 
     // Allocate memory for the key and copy it
     char *key = (char *)malloc((i + 1) * sizeof(char));
-    if (!key) {
+    if (!key)
+    {
         perror("malloc");
         return NULL;
     }
 
-    strncpy(key, p, i);
-    key[i] = '\0'; // Null-terminate the key
+    ft_strncpy(key, (char *)p, i);
+    key[i] = '\0'; // null terminate the key
     return key;
 }
 
@@ -76,7 +89,7 @@ static char *search_for_value(const char *p)
     }
 
     // Find the index of '='
-    const char *equal_sign = strchr(p, '=');
+    const char *equal_sign = ft_strchr(p, '=');
     if (!equal_sign) {
         // No '=' found, return NULL
         return NULL;
@@ -169,12 +182,12 @@ int ft_export(t_env *env, char **args)
 {
     if (env == NULL || args == NULL)
         return -1; // Return an error code for NULL input
-    else if (args[0] == NULL) // i need to change it to !args[1] but the 2d array now doesn't have the command as the first argument
+    else if (args[1] == NULL) // i need to change it to !args[1] but the 2d array now doesn't have the command as the first argument
     {
         print_export(env);
         return (1);
     }
-    int i = 0;
+    int i = 1;
     while (args[i])
     {
         const char *arg = args[i];

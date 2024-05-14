@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 08:13:26 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/15 15:24:25 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/13 22:48:41 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ int unset(t_env **env, char **cmd)
                 ft_write("unset: `", 2, 0);
                 ft_write(cmd[i], 2, 0);
                 ft_write("` invalid parameter name\n", 2, 0);
+                stat(1,1);
+                exit(1);
                 return 0;
             }
             j++;

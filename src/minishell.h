@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/14 15:14:38 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/14 15:24:38 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,6 +213,7 @@ int         ft_echo(char **arg);
 int         unset(t_env **env, char **cmd);
 void        ft_env(t_env *env);
 int         cd(char **arg, t_exec *exec);
+int         ft_export(t_env *env, char **args);
 
 
 /*=======================EXECUTION=======================*/
@@ -223,19 +224,22 @@ int         cd(char **arg, t_exec *exec);
 // int execute(t_token *token, char **envp);
 // int execute_command(t_token *token, char **envp);
 // void execute_command(t_token *token, char **envp);
-int     stat(int code, int flag);
 char	**find_path(char **envp);
 void	free_2d(char **arr);
 char	*get_cmd(char *cmd, char **envp);
-void    execute_or(t_token *node, t_exec *exec);
-void    execute_and(t_token *node, t_exec *exec);
-void    execute(t_token *token, t_exec *exec);
-char    *expand_env_variable(char *input, t_env *env);
-void    handle_input_redirection(t_redir *input);
-void    handle_output_redirection(t_redir *output);
-void    handle_redirections(t_cmd *cmd);
-int	    check_builtins(t_token *node, t_exec *exec);
-void    expand_variables(t_cmd *cmd, t_env *env_list);
+void execute_or(t_token *node, t_exec *exec);
+void execute_and(t_token *node, t_exec *exec);
+void execute(t_token *token, t_exec *exec);
+int     stat(int code, int flag);
+char *expand_env_variable(char *input, t_env *env);
+void handle_input_redirection(t_redir *input);
+void handle_output_redirection(t_redir *output);
+void handle_redirections(t_cmd *cmd);
+int	check_builtins(t_token *node, t_exec *exec, char **args);
+void expand_variables(t_cmd *cmd, t_env *env_list, int *flag);
+char *expand_token(const char *token, t_env *env_list);
+char **expand_args(char **args, t_env *env_list);
+
 
 
 
