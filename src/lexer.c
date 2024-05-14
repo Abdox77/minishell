@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:22:59 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/13 20:14:42 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/14 13:42:55 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,6 +179,15 @@ static void handle_commands(t_token **root, char **line)
 	place_node(root, &tmp, CMD);
 }
 
+static void add_redirection_after_parenthsis(t_token **node, char **line)
+{
+	special_trim(line);
+	if (is_redirection_char(**line) == TRUE)
+	{
+		
+	}
+}
+
 static void handle_parenthesis(t_token **root, char **line)
 {
 	t_token *node;
@@ -193,6 +202,7 @@ static void handle_parenthesis(t_token **root, char **line)
 	}
 	if (**line == ')')
 		++(*line);
+	add_redirection_after_parenthsis(&node, line);
 	place_node(root, &node, PARENTHESIS);
 }
 

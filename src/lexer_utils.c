@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 15:14:16 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/13 20:16:08 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/14 15:15:03 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,30 +56,6 @@ void skip_spaces(char **line)
         return ;
     while (**line && is_space(**line) == TRUE)
         ++(*line);
-}
-
-void handle_quotes(t_token **token, char ** line)
-{
-    char    c;
-    int     len;
-            
-    len = 0;
-    c = (**line);
-    (*line)++;
-    while ((*line)[len] && (*line)[len] != c)
-        ++len;
-    if (!(*token)->cmd->args)
-    {
-        (*token)->cmd->args = malloc(sizeof(char *) * 2);
-        (*token)->cmd->args[0] = ft_substr((*line), 0, len);
-        (*token)->cmd->args[1] = NULL;
-        (*line) += len + 1;
-    }
-    else if (len)
-    {
-        (*token)->cmd->args = add_arg((*token)->cmd->args, ft_substr(*line, 0, len));
-        (*line) += len + 1; 
-    }
 }
 
 static char *get_token_in_between_quotes(char **line, char quote)

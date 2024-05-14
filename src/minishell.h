@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/13 20:12:31 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/14 15:14:38 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,10 +88,16 @@ typedef struct s_redir      t_redir;
 typedef struct s_env        t_env;
 typedef struct s_env_var    t_var;
 typedef struct s_exec       t_exec;
+typedef struct s_expands    t_expands;
+
 
 
 /*=======================STRUCTS============================*/
 
+struct s_expands {
+    char    **original_args;
+    char    *original_cmd;
+};
 
 struct s_token {
     TOKEN       type;
@@ -112,6 +118,8 @@ struct s_cmd
     // int         pid;
     char        *cmd;
     char        **args;
+    char        *cmd_to_be_expanded;
+    t_expands   *expanded;
     t_redir     *input;
     t_redir     *output;
 };
@@ -215,19 +223,19 @@ int         cd(char **arg, t_exec *exec);
 // int execute(t_token *token, char **envp);
 // int execute_command(t_token *token, char **envp);
 // void execute_command(t_token *token, char **envp);
+int     stat(int code, int flag);
 char	**find_path(char **envp);
 void	free_2d(char **arr);
 char	*get_cmd(char *cmd, char **envp);
-void execute_or(t_token *node, t_exec *exec);
-void execute_and(t_token *node, t_exec *exec);
-void execute(t_token *token, t_exec *exec);
-int     stat(int code, int flag);
-char *expand_env_variable(char *input, t_env *env);
-void handle_input_redirection(t_redir *input);
-void handle_output_redirection(t_redir *output);
-void handle_redirections(t_cmd *cmd);
-int	check_builtins(t_token *node, t_exec *exec);
-void expand_variables(t_cmd *cmd, t_env *env_list);
+void    execute_or(t_token *node, t_exec *exec);
+void    execute_and(t_token *node, t_exec *exec);
+void    execute(t_token *token, t_exec *exec);
+char    *expand_env_variable(char *input, t_env *env);
+void    handle_input_redirection(t_redir *input);
+void    handle_output_redirection(t_redir *output);
+void    handle_redirections(t_cmd *cmd);
+int	    check_builtins(t_token *node, t_exec *exec);
+void    expand_variables(t_cmd *cmd, t_env *env_list);
 
 
 

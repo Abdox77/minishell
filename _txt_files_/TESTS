@@ -3,8 +3,11 @@ cmd <> something                                            THIS SHOWS A SYNTAX 
 ls | (echo && make) | cat ; missed placed the nodes         THIS IS FIXED
 ls -""la""aaaaaaaaaaa   discovered a new edge case lol      THIS IS FIXED
 ls | | cat              ======> FIXED
-printf("                ====> FIXED
+printf('"'              ====> FIXED
 
 FAILED TESTED =============================
 ("ls")-la FAILED
 "ls"-la
+
+i still need to handle the redirections after the parenthesis 
+and i still need to handle the quotes that have $ in it
