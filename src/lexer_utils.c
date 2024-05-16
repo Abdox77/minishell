@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 15:14:16 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/16 22:52:40 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/16 23:43:30 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,9 +104,9 @@ char *get_token_with_quotes(char **line, int len, int *og_len)
     if (!arg)
         printf("problemo LEO\n");
     buff = NULL;
-    while(**line && **line != '&' && **line != '|' && is_space(**line) == FALSE && is_redirection_char(**line) == FALSE)
+    while(**line && **line != '&' && **line != '(' && **line != ')' && **line != '|' && is_space(**line) == FALSE && is_redirection_char(**line) == FALSE)
     {
-        if (is_quote(**line) == FALSE)
+        if (is_quote(**line) == FALSE && **line != '(' && **line != ')' && is_special_char(**line) == FALSE)
         {
             len = 0;
             while ((*line)[len] && is_special_char(**line) == FALSE)
