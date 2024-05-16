@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 15:14:16 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/16 21:23:40 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/16 21:44:34 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ char *get_token_with_quotes(char **line, int len, int *og_len)
     char *arg;
     char *buff;
 
+    dasghdiasgd"dsòedhas"""
     arg = ft_substr(*line, 0, len);
     (*line) += len;
     (*og_len) += len;
@@ -122,10 +123,7 @@ char *get_token_with_quotes(char **line, int len, int *og_len)
             buff = get_token_in_between_quotes(line, quote, og_len);
             arg = ft_strjoin(arg, buff);
             if(**line != quote)
-            {
-                printf("unbcl0osed qouotes\n");
                 ft_print_error("Syntax error unclosed quotes\n", line, SAVE);
-            }
             else
             {
                 ++(*line);
