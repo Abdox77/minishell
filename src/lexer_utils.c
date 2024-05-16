@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 15:14:16 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/16 21:44:34 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/16 21:52:16 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,6 @@ char *get_token_with_quotes(char **line, int len, int *og_len)
     char *arg;
     char *buff;
 
-    dasghdiasgd"dsòedhas"""
     arg = ft_substr(*line, 0, len);
     (*line) += len;
     (*og_len) += len;
