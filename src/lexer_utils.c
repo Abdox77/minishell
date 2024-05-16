@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 15:14:16 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/16 18:04:29 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/16 21:23:40 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,15 +105,32 @@ char *get_token_with_quotes(char **line, int len, int *og_len)
     if (!arg)
         printf("problemo LEO\n");
     buff = NULL;
-    while(**line && (**line == '"' || **line == '\''))
+    while(**line && **line != '&' && **line != '|' && is_space(**line) == FALSE && is_redirection_char(**line) == FALSE)
     {
-        quote = **line;
-        buff = get_token_in_between_quotes(line, quote, og_len);
-        arg = ft_strjoin(arg, buff);
-        if(buff)
+        if (is_quote(**line) == FALSE)
         {
-            ++(*line);
-            ++(*og_len);
+            len = 0;
+            while ((*line)[len] && is_special_char(**line) == FALSE)
+                len++;
+            arg = ft_strjoin(arg, ft_substr(*line, 0, len));
+            *og_len += len;
+            *line += len;
+        }
+        else 
+        {   
+            quote = **line;
+            buff = get_token_in_between_quotes(line, quote, og_len);
+            arg = ft_strjoin(arg, buff);
+            if(**line != quote)
+            {
+                printf("unbcl0osed qouotes\n");
+                ft_print_error("Syntax error unclosed quotes\n", line, SAVE);
+            }
+            else
+            {
+                ++(*line);
+                ++(*og_len);
+            }
         }
     }
     return (arg);

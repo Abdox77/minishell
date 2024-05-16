@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/05 05:43:18 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/16 17:39:29 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/16 21:25:47 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,8 @@ t_bool ft_print_error(char *message, char **line, t_error indicator)
         if (line && *line)
             (*line) += ft_strlen(*line); 
         is_printed = TRUE;
-        write(STDERR_FILENO, error_message, ft_strlen(message));
+        if (error_message != NULL)
+            write(STDERR_FILENO, error_message, ft_strlen(message));
     }
     return FALSE;
 }

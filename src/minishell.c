@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/16 18:14:33 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/16 21:24:34 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,6 +167,7 @@ void    minishell_loop(char **env)
         display(head_tokens);
         evaluate_syntax(head_tokens);
         // expand_heredoc_to_infiles(&head_tokens);
+        ft_print_error(NULL, NULL, PRINT);
         if (ft_print_error(NULL, NULL, RETRIEVE) == FALSE)
             execute(head_tokens, &exec);
         ft_print_error(NULL, NULL, RESET);
