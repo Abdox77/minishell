@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/14 15:24:38 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/05/16 10:23:40 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ typedef enum{
     SAVE, 
     NOT_PRINTED,
     RETRIEVE,
-    SET_TO_NOT_PRINTED,
+    RESET,
 }   t_error;
 
 typedef enum {
@@ -95,14 +95,18 @@ typedef struct s_expands    t_expands;
 /*=======================STRUCTS============================*/
 
 struct s_expands {
-    char    **original_args;
-    char    *original_cmd;
+    char        **og_args;
+    char        *og_cmd;
+    t_redir     *og_input;
+    t_redir     *og_output;
 };
 
 struct s_token {
     TOKEN       type;
     t_token     *r_token;
     t_token     *l_token;
+    t_redir     *output;
+    t_redir     *og_output;
     t_cmd       *cmd;
 } ;
 
@@ -115,11 +119,10 @@ struct s_redir {
 
 struct s_cmd
 {
-    // int         pid;
     char        *cmd;
     char        **args;
     char        *cmd_to_be_expanded;
-    t_expands   *expanded;
+    t_expands   *og_tokens; // og stands for original
     t_redir     *input;
     t_redir     *output;
 };
@@ -162,10 +165,9 @@ t_token     *new_token(TOKEN type);
 /*=====================LEXER=====================*/
 void        lexer(t_token **token, char **line);
 t_token     *handle_command(char **line);
-void        handle_quotes(t_token **token, char ** line);
-void        handle_redirection(t_token **token, char **line);
+void        handle_redirection(t_token **token, char **line, t_bool is_root);
 void        handle_input(t_token **token, char **line);
-void        handle_output(t_token **token, char **line);
+void        handle_output(t_token **token, char **line, t_bool is_root);
 
 /*=====================LEXER_UTILS=====================*/
 t_cmd       *new_cmd(void);
@@ -174,6 +176,7 @@ char	    **split(char *str, char *charset);
 char        **add_arg(char **args, char *arg);
 void        add_redirection(t_redir **redir, REDIR_MODE mode, char *file_name);
 void    	parenthesis_lexer(t_token **root, char **line);
+char        *get_token_with_quotes(char **line, int len, int *og_len);
 
 
 // duplicating cmd token
@@ -224,21 +227,21 @@ int         ft_export(t_env *env, char **args);
 // int execute(t_token *token, char **envp);
 // int execute_command(t_token *token, char **envp);
 // void execute_command(t_token *token, char **envp);
-char	**find_path(char **envp);
-void	free_2d(char **arr);
-char	*get_cmd(char *cmd, char **envp);
-void execute_or(t_token *node, t_exec *exec);
-void execute_and(t_token *node, t_exec *exec);
-void execute(t_token *token, t_exec *exec);
-int     stat(int code, int flag);
-char *expand_env_variable(char *input, t_env *env);
-void handle_input_redirection(t_redir *input);
-void handle_output_redirection(t_redir *output);
-void handle_redirections(t_cmd *cmd);
-int	check_builtins(t_token *node, t_exec *exec, char **args);
-void expand_variables(t_cmd *cmd, t_env *env_list, int *flag);
-char *expand_token(const char *token, t_env *env_list);
-char **expand_args(char **args, t_env *env_list);
+char	    **find_path(char **envp);
+void	    free_2d(char **arr);
+char	    *get_cmd(char *cmd, char **envp);
+void        execute_or(t_token *node, t_exec *exec);
+void        execute_and(t_token *node, t_exec *exec);
+void        execute(t_token *token, t_exec *exec);
+int         stat(int code, int flag);
+char        *expand_env_variable(char *input, t_env *env);
+void        handle_input_redirection(t_redir *input);
+void        handle_output_redirection(t_redir *output);
+void        handle_redirections(t_cmd *cmd);
+int	        check_builtins(t_token *node, t_exec *exec, char **args);
+void        expand_variables(t_cmd *cmd, t_env *env_list, int *flag);
+char        *expand_token(const char *token, t_env *env_list);
+char        **expand_args(char **args, t_env *env_list);
 
 
 

@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 01:45:18 by amohdi            #+#    #+#             */
-/*   Updated: 2024/04/28 22:26:35 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/16 09:15:26 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ t_token *new_token(TOKEN type)
     if (type== CMD)
     {
 	    token->cmd = new_cmd();
+        token->cmd->og_tokens = malloc(sizeof(t_expands));
 	    if(!token->cmd)
 	        ft_error("failed to create new cmd\n", EXIT_FAILURE);
     }

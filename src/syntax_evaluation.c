@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/05 05:43:18 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/13 20:17:02 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/16 10:29:41 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,10 +34,21 @@ static t_eval  check_args(char **args)
 
 t_bool ft_print_error(char *message, char **line, t_error indicator)
 {
-    static t_bool is_printed;
+    static t_bool   is_saved;
+    static t_bool   is_printed;
+    static char     *error_message;
 
-    if (indicator == SET_TO_NOT_PRINTED)
+    if (indicator == RESET)
+    {
+        is_saved = FALSE;
         is_printed = FALSE;
+        error_message = NULL;
+    }
+    else if (indicator == SAVE && is_saved == FALSE)
+    {
+        is_saved = TRUE;
+        error_message = message;
+    }
     else if (indicator == RETRIEVE)
         return (is_printed);
     else if (indicator == PRINT)
@@ -47,7 +58,7 @@ t_bool ft_print_error(char *message, char **line, t_error indicator)
         if (line && *line)
             (*line) += ft_strlen(*line); 
         is_printed = TRUE;
-        write(STDERR_FILENO, message, ft_strlen(message));
+        write(STDERR_FILENO, error_message, ft_strlen(message));
     }
     return FALSE;
 }

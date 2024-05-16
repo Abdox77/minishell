@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 15:14:16 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/14 15:15:03 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/16 10:24:48 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void skip_spaces(char **line)
         ++(*line);
 }
 
-static char *get_token_in_between_quotes(char **line, char quote)
+static char *get_token_in_between_quotes(char **line, char quote, int *og_len)
 {
     int i;
     int len;
@@ -69,13 +69,18 @@ static char *get_token_in_between_quotes(char **line, char quote)
     if (!*line || !**line)
         return NULL;
     ++(*line);
+    ++(*og_len);
     while ((*line)[len] && (*line)[len] != quote)
         len++;
+    (*og_len) += len;
     if (!(*line)[len])
     {
         ft_print_error("Syntax Error unclosed quotes\n", NULL, PRINT);
         if (0 == len && (*line)[len] == quote)
+        {
             ++(*line);
+            ++(*og_len);
+        }
         return NULL;
     }
     token = malloc(sizeof(char) * len + 1);
@@ -85,10 +90,11 @@ static char *get_token_in_between_quotes(char **line, char quote)
         token[i] = (*line)[i];
     token[i] = '\0';
     *line += len;
+    *og_len += len;
     return (token);
 }
 
-static char *get_token_with_quotes(char **line, int len)
+char *get_token_with_quotes(char **line, int len, int *og_len)
 {
     char quote;
     char *arg;
@@ -96,13 +102,14 @@ static char *get_token_with_quotes(char **line, int len)
 
     arg = ft_substr(*line, 0, len);
     (*line) += len;
+    (*og_len) += len;
     if (!arg)
         printf("problemo LEO\n");
     buff = NULL;
     while(**line && (**line == '"' || **line == '\''))
     {
         quote = **line;
-        buff = get_token_in_between_quotes(line, quote);
+        buff = get_token_in_between_quotes(line, quote, og_len);
         arg = ft_strjoin(arg, buff);
         if(buff)
             ++(*line);
@@ -113,11 +120,13 @@ static char *get_token_with_quotes(char **line, int len)
 static void get_command(t_token **token, char **line)
 {
     int len;
+    int og_len;
     char *tmp;
 
     if (!*line || !**line)
         return;
     len = 0;
+    og_len = 0;
     tmp = *line;
     special_trim(line);
     while(tmp[len] && is_special_char(tmp[len]) == FALSE && is_an_operator(line , len) == FALSE && is_parenthesis(tmp[len]) == FALSE)
@@ -126,7 +135,8 @@ static void get_command(t_token **token, char **line)
     {
         if (!*token)
             *token = new_token(CMD);
-        (*token)->cmd->cmd = get_token_with_quotes(line, len);
+        (*token)->cmd->cmd = get_token_with_quotes(line, len, &og_len);
+        (*token)->cmd->og_tokens->og_cmd = ft_substr(*line - og_len, 0, og_len);
     }
     else if (tmp[len] == ')')
     {
@@ -135,6 +145,7 @@ static void get_command(t_token **token, char **line)
             if (!*token)
                 *token = new_token(CMD);
             (*token)->cmd->cmd = ft_substr(*line, 0, len);
+            (*token)->cmd->og_tokens->og_cmd = ft_substr(*line, 0, len);
             (*line) += len;
         }
         else
@@ -148,6 +159,7 @@ static void get_command(t_token **token, char **line)
         if (!*token)
             *token = new_token(CMD);
         (*token)->cmd->cmd = ft_substr(*line, 0, len);
+        (*token)->cmd->og_tokens->og_cmd = ft_substr(*line, 0, len);
         (*line) += len;
     }
 }
@@ -176,9 +188,11 @@ static char **add_cmd_to_args(char *cmd , char **args)
 t_token *handle_command(char **line)
 {
     int len;
+    int og_len;
     t_bool quote_flag;
     t_token *token;
 
+    og_len = 0;
     token = NULL;
     quote_flag = FALSE;
     special_trim(line);
@@ -208,13 +222,20 @@ t_token *handle_command(char **line)
                 if (!token->cmd->args)
                 {
                     token->cmd->args = malloc(sizeof(char *) * 2);
-                    token->cmd->args[0] = get_token_with_quotes(line, len);
+                    token->cmd->args[0] = get_token_with_quotes(line, len, &og_len);
                     token->cmd->args[1] = NULL;
+
+                    token->cmd->og_tokens->og_args = malloc(sizeof(char *) * 2);
+                    token->cmd->og_tokens->og_args[0] = ft_substr(*line - og_len, 0, og_len);
+                    token->cmd->og_tokens->og_args[1] = NULL;
+                    og_len = 0;
                     len = 0;
                 }
                 else
                 {
-                    token->cmd->args = add_arg(token->cmd->args, get_token_with_quotes(line, len));
+                    token->cmd->args = add_arg(token->cmd->args, get_token_with_quotes(line, len, &og_len));
+                    token->cmd->og_tokens->og_args = add_arg(token->cmd->og_tokens->og_args, ft_substr(*line - og_len, 0, og_len));
+                    og_len = 0;
                     len = 0;
                 }
             }
@@ -228,16 +249,21 @@ t_token *handle_command(char **line)
                 token->cmd->args = malloc(sizeof(char *) * 2);
                 token->cmd->args[0] = ft_substr(*line, 0, len);
                 token->cmd->args[1] = NULL;
+
+                token->cmd->og_tokens->og_args = malloc(sizeof(char *) * 2);
+                token->cmd->og_tokens->og_args[0] = ft_substr(*line, 0, len);
+                token->cmd->og_tokens->og_args[1] = NULL;
                 (*line) += len;
                 len = 0;
             }
             else if (token && token->cmd->args && len)
             {
                 token->cmd->args = add_arg(token->cmd->args, ft_substr(*line, 0, len));
+                token->cmd->og_tokens->og_args = add_arg(token->cmd->og_tokens->og_args, ft_substr(*line, 0, len));
                 (*line) += len;
                 len = 0;
             }
-            if (is_redirection_char(**line) == TRUE) handle_redirection(&token, line);
+            if (is_redirection_char(**line) == TRUE) handle_redirection(&token, line, FALSE);
             if (*line && **line && **line == ')')
                 break;
         }
