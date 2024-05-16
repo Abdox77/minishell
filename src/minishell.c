@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/16 10:11:13 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/16 18:14:33 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,19 @@ int i = 0;
 
 void display_cmd(t_token *token)
 {
-    printf("THIS IS A CMD NUMBER : %d\n", i);
     if (token && token->cmd)
     {   
         i++;
         printf("\t\tCMD IS =======>  : %s\n", token->cmd->cmd);
+        printf("\t\tOG_CMD IS =======>  : %s\n", token->cmd->og_tokens->og_cmd);
         if (token->cmd->args)
         {
             printf("\t\t ARGS ARE =======>  : \n");
                 for (int j = 0; token->cmd->args[j]; j++)
                     printf ("\t\t\targ[%d] : %s\n", j, token->cmd->args[j]);
+            printf("\t\t OG_ARGS ARE =======>  : \n");
+                for (int j = 0; token->cmd->args[j]; j++)
+                    printf ("\t\t\targ[%d] : %s\n", j, token->cmd->og_tokens->og_args[j]);
         }
         if (token->cmd->input)
         {
@@ -71,6 +74,8 @@ void display(t_token *token)
             printf("OR\n");
         if (token->type == PIPE)
             printf("pipe\n");
+        if (token->og_output && token->og_output->file_name)
+            printf("og_output of the root node : %s\n", token->og_output->file_name);
         printf("==============left->node==============\n");
         display(token->l_token);
         printf("==============right->node==============\n");

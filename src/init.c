@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 01:45:18 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/16 09:15:26 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/16 17:19:19 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ t_token *new_token(TOKEN type)
     {
 	    token->cmd = new_cmd();
         token->cmd->og_tokens = malloc(sizeof(t_expands));
+        memset(token->cmd->og_tokens, 0, sizeof(t_expands));
 	    if(!token->cmd)
 	        ft_error("failed to create new cmd\n", EXIT_FAILURE);
     }
@@ -43,7 +44,7 @@ t_redir *new_cmd_redir(REDIR_MODE mode, char *file_name)
     new->mode = mode;
     new->file_name = ft_strdup(file_name);
     new->next = NULL;
-    free(file_name);
+    // free(file_name);
     return (new);
 }
 

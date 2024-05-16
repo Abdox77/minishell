@@ -8,6 +8,9 @@ printf('"'              ====> FIXED
 FAILED TESTED =============================
 ("ls")-la FAILED
 "ls"-la
+>"" FAILED TEST
+
+
 
 i still need to handle the redirections after the parenthesis 
 and i still need to handle the quotes that have $ in it

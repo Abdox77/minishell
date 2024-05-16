@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:22:59 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/16 10:15:56 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/16 18:00:08 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,7 +189,9 @@ static void add_redirection_after_parenthsis(t_token **node, char **line)
 		if ((*node)->type == CMD)
 			handle_redirection(node, line, FALSE);
 		else
-			handle_redirection(node, line, TRUE);
+		{
+			printf("line is %s\n", *line);
+			handle_redirection(node, line, TRUE);}
 	}
 }
 

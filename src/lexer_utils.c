@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 15:14:16 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/16 10:24:48 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/16 18:04:29 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,6 @@ static char *get_token_in_between_quotes(char **line, char quote, int *og_len)
     ++(*og_len);
     while ((*line)[len] && (*line)[len] != quote)
         len++;
-    (*og_len) += len;
     if (!(*line)[len])
     {
         ft_print_error("Syntax Error unclosed quotes\n", NULL, PRINT);
@@ -112,7 +111,10 @@ char *get_token_with_quotes(char **line, int len, int *og_len)
         buff = get_token_in_between_quotes(line, quote, og_len);
         arg = ft_strjoin(arg, buff);
         if(buff)
+        {
             ++(*line);
+            ++(*og_len);
+        }
     }
     return (arg);
 }

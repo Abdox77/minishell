@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 11:12:42 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/16 10:27:50 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/16 17:29:51 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void add_redirection(t_redir **redir, REDIR_MODE mode, char *file_name)
 {
     t_redir *tmp;
 
-    if (!((*redir)))
+    if (!(*redir))
 	{	
 	    *redir = new_cmd_redir(mode, file_name);
 	    if (!*redir)
@@ -25,12 +25,12 @@ void add_redirection(t_redir **redir, REDIR_MODE mode, char *file_name)
 	else
 	{
 	    tmp = *redir;
-	    while(tmp->next)
+        while(tmp->next)
 		    tmp = tmp->next;
 	    tmp->next = new_cmd_redir(mode, file_name);
 	    if (!tmp->next)
-		    ft_error("REDIR creation failed and returned null\n", EXIT_FAILURE);				
-	}
+	       ft_error("REDIR creation failed and returned null\n", EXIT_FAILURE);
+    }
 }
 
 void handle_input(t_token **token, char **line)
@@ -79,6 +79,7 @@ void handle_output(t_token **token, char **line, t_bool is_root)
 
     len = 0;
     og_len = 0;
+    file_name = NULL;
     ++(*line);
     if ((**line) == '>')
     {
@@ -90,7 +91,7 @@ void handle_output(t_token **token, char **line, t_bool is_root)
     special_trim(line);
     while((*line)[len] && is_space((*line)[len]) == FALSE && is_special_char((*line)[len]) == FALSE)
         len++;
-    if (!len || (*line)[len] == '\0')
+    if (len == 0 && is_quote((*line)[len]) == FALSE)
         ft_print_error("Syntax error unexpected error near '>'\n", line, SAVE);
     else if (is_quote((*line)[len]) == TRUE)
     {
@@ -98,11 +99,15 @@ void handle_output(t_token **token, char **line, t_bool is_root)
         len = 0;
     }
     else
-        file_name =  ft_substr(*line, 0, len);
+        file_name = ft_substr(*line, 0, len);
+    og_len += len;
+    (*line) += len;
+    printf("file_name %s %d\n", file_name, len);
     if (is_root == FALSE)
     {
         add_redirection(&((*token)->cmd->output), mode, file_name);
         add_redirection(&((*token)->cmd->og_tokens->og_output), mode, ft_substr(*line - og_len, 0, og_len));
+        printf("og_len : %s\n", (*token)->cmd->og_tokens->og_output->file_name);
     }
     else
     {

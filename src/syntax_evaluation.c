@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/05 05:43:18 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/16 10:29:41 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/16 17:39:29 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,8 @@ static t_eval check_command(t_token *root)
 {
     if (!root->cmd || (root->cmd->args && check_args(root->cmd->args) == FAILED))
         return (FAILED);
+    else if (root->cmd && (!root->cmd->cmd && (root->cmd->input || root->cmd->output)))
+        return FAILED;
     return PASSED;
 }
 
@@ -76,6 +78,8 @@ void evaluate_syntax(t_token *root)
         return ;
     if ((root->type == PIPE || root->type == OR || root->type == AND) && (!root->r_token || !root->l_token))
         ft_print_error("Syntax Error\n", NULL, PRINT);
+    if (root->type == CMD)
+        printf("its a CMD\n");
     if (root->type == CMD && check_command(root) == FAILED)
         ft_print_error("Syntax Error\n", NULL, PRINT);
     evaluate_syntax(root->l_token);
