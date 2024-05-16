@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 01:45:18 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/16 17:19:19 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/16 23:11:02 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,14 +37,18 @@ t_redir *new_cmd_redir(REDIR_MODE mode, char *file_name)
     t_redir *new;
 
     if (!file_name)
-        ft_error("file_name is NULL\n", EXIT_FAILURE);
+    {
+        ft_print_error("Syntax error near unexpected token 'new line'\n", NULL, SAVE);
+    }
     new = malloc (sizeof(t_redir));
     if (!new)
         ft_error("not new redir\n", EXIT_FAILURE);
     new->mode = mode;
-    new->file_name = ft_strdup(file_name);
+    if (file_name)
+        new->file_name = ft_strdup(file_name);
+    else
+        new->file_name = NULL;
     new->next = NULL;
-    // free(file_name);
     return (new);
 }
 

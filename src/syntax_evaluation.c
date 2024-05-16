@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/05 05:43:18 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/16 21:42:52 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/16 23:02:58 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,22 +47,22 @@ t_bool ft_print_error(char *message, char **line, t_error indicator)
     }
     else if (indicator == SAVE && is_saved == FALSE)
     {
+        if (line && *line)
+            (*line) += ft_strlen(*line); 
         is_saved = TRUE;
         error_message = ft_strdup(message);
     }
     else if (indicator == RETRIEVE)
         return (is_printed);
-    else if (indicator == PRINT)
+    else if (indicator == PRINT && is_printed == FALSE)
     {
-        if (is_printed == TRUE)
-            return FALSE;
-        if (line && *line)
-            (*line) += ft_strlen(*line); 
-        is_printed = TRUE;
         if (error_message != NULL)
+        { 
+            is_printed = TRUE;
             write(STDERR_FILENO, error_message, ft_strlen(error_message));
+        }
     }
-    return FALSE;
+    return TRUE;
 }
 
 static t_eval check_command(t_token *root)
@@ -79,11 +79,9 @@ void evaluate_syntax(t_token *root)
     if (!root)
         return ;
     if ((root->type == PIPE || root->type == OR || root->type == AND) && (!root->r_token || !root->l_token))
-        ft_print_error("Syntax Error\n", NULL, PRINT);
-    if (root->type == CMD)
-        printf("its a CMD\n");
+        ft_print_error("Syntax Error\n", NULL, SAVE);
     if (root->type == CMD && check_command(root) == FAILED)
-        ft_print_error("Syntax Error\n", NULL, PRINT);
+        ft_print_error("Syntax Error\n", NULL, SAVE);
     evaluate_syntax(root->l_token);
     evaluate_syntax(root->r_token);
 }

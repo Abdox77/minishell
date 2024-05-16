@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:22:59 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/16 18:00:08 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/16 22:39:56 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ t_bool is_an_operator(char **line, int len)
 			return TRUE;
 		if (operator == '&')
 		{
-			ft_print_error("Syntax error unexpected token near '&'\n", line, PRINT);
+			ft_print_error("Syntax error unexpected token near '&'\n", line, SAVE);
 			return FALSE;
 		} 
 		else
@@ -45,9 +45,9 @@ t_bool is_an_operator(char **line, int len)
 			if ((*line)[len + 1] == '|' || (*line)[len + 1] == '&')
 			{
 				if (operator == '|')
-					ft_print_error("Syntax error unexpected token near '|'\n", line, PRINT);
+					ft_print_error("Syntax error unexpected token near '|'\n", line, SAVE);
 				else
-					ft_print_error("Syntax error unexpected token near '&'\n", line, PRINT);
+					ft_print_error("Syntax error unexpected token near '&'\n", line, SAVE);
 				return FALSE;
 			}
 		}
@@ -143,7 +143,7 @@ static t_eval check_operator_syntax(char **line)
 		++(*line);
 		return (PASSED);
 	}
-	ft_print_error("Syntax error unexpected token near operator\n", line, PRINT);
+	ft_print_error("Syntax error unexpected token near operator\n", line, SAVE);
 	return FAILED;
 }
 
@@ -204,7 +204,7 @@ static void handle_parenthesis(t_token **root, char **line)
 	parenthesis_lexer(&node, line);
 	if (!*line || **line != ')')
 	{
-		ft_print_error("Syntax error unlosed parenthesis\n", line, PRINT);
+		ft_print_error("Syntax error unlosed parenthesis\n", line, SAVE);
 		return ;
 	}
 	if (**line == ')')

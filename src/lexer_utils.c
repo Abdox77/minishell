@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 15:14:16 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/16 21:52:16 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/16 22:52:40 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,6 @@ static char *get_token_in_between_quotes(char **line, char quote, int *og_len)
         len++;
     if (!(*line)[len])
     {
-        ft_print_error("Syntax Error unclosed quotes\n", NULL, PRINT);
         if (0 == len && (*line)[len] == quote)
         {
             ++(*line);
@@ -122,7 +121,7 @@ char *get_token_with_quotes(char **line, int len, int *og_len)
             buff = get_token_in_between_quotes(line, quote, og_len);
             arg = ft_strjoin(arg, buff);
             if(**line != quote)
-                ft_print_error("Syntax error unclosed quotes\n", line, SAVE);
+                 ft_print_error("Syntax error unclosed quotes\n", line, SAVE);
             else
             {
                 ++(*line);
@@ -233,7 +232,7 @@ t_token *handle_command(char **line)
             if (quote_flag == TRUE)
             {
                 if (!(*line)[len])
-                    ft_print_error("Syntax Error unclosed quotes here\n", line, PRINT);
+                    ft_print_error("Syntax Error unclosed quotes here\n", line, SAVE);
                 quote_flag = FALSE;
                 if (!token->cmd->args)
                 {
@@ -257,7 +256,7 @@ t_token *handle_command(char **line)
             }
             else if ((*line)[len] == '(')
             {
-                ft_print_error("Syntax Error unexpected token '('\n", line, PRINT);
+                ft_print_error("Syntax Error unexpected token '('\n", line, SAVE);
                 break;
             }
             else if (token && !token->cmd->args && len)

@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/16 21:24:34 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/16 23:11:13 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ static t_token *lexer_manager(char **line)
         special_trim(line);
     }
     if (!head)
-        ft_print_error("Syntax Error\n", line, PRINT);
+        ft_print_error("Syntax Error\n", line, SAVE);
     return head;
 }
 
@@ -157,6 +157,7 @@ void    minishell_loop(char **env)
     head_tokens = NULL;
     while(42)
     {
+        ft_print_error(NULL, NULL, RESET);
         line = readline(GREEN"minishell$ " "\033[35m");
         if (!line)
             break;
@@ -170,7 +171,6 @@ void    minishell_loop(char **env)
         ft_print_error(NULL, NULL, PRINT);
         if (ft_print_error(NULL, NULL, RETRIEVE) == FALSE)
             execute(head_tokens, &exec);
-        ft_print_error(NULL, NULL, RESET);
         // cleanup(head_tokens);
         if (*line)
             printf("line is %s\n", line);

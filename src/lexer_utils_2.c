@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 11:12:42 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/16 17:29:51 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/16 23:14:05 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ void add_redirection(t_redir **redir, REDIR_MODE mode, char *file_name)
 	{	
 	    *redir = new_cmd_redir(mode, file_name);
 	    if (!*redir)
-		    ft_error("REDIR creation failed and returned null\n", EXIT_FAILURE);
+            return ;
+		    // ft_error("REDIR creation failed and returned null\n", EXIT_FAILURE);
 	}
 	else
 	{
@@ -29,7 +30,8 @@ void add_redirection(t_redir **redir, REDIR_MODE mode, char *file_name)
 		    tmp = tmp->next;
 	    tmp->next = new_cmd_redir(mode, file_name);
 	    if (!tmp->next)
-	       ft_error("REDIR creation failed and returned null\n", EXIT_FAILURE);
+            return ;
+	    //    ft_error("REDIR creation failed and returned null\n", EXIT_FAILURE);
     }
 }
 
@@ -52,10 +54,12 @@ void handle_input(t_token **token, char **line)
     else
         mode = INFILE; // or output to check later
     special_trim(line);
+    if (!**line)
+        ft_print_error("Syntax error near unexpected token 'newline'\n", line, SAVE);
     while((*line)[len] && is_space((*line)[len]) == FALSE && is_special_char((*line)[len]) == FALSE)
         len++;
     if (!len || (*line)[len] == '\0')
-        ft_print_error("Syntax error unexpected error near '>'\n", line, SAVE);
+        ft_print_error("Syntax error unexpected error near '>'\n", NULL, SAVE);
     else if (is_quote((*line)[len]) == TRUE)
     {
         file_name = get_token_with_quotes(line, len, &og_len);
@@ -66,7 +70,7 @@ void handle_input(t_token **token, char **line)
     add_redirection(&((*token)->cmd->output), mode, file_name);
     add_redirection(&((*token)->cmd->og_tokens->og_input), mode, ft_substr(*line - og_len, 0, og_len));
     special_trim(line);
-    if (**line == '(')
+    if (**line == '(') // i can check on other special characters here
         ft_print_error ("Syntax error unexpected token near '('\n", line, SAVE);
 }
 
@@ -89,6 +93,8 @@ void handle_output(t_token **token, char **line, t_bool is_root)
     else
         mode = TRUNC; // or output to check later
     special_trim(line);
+    if (!**line)
+        ft_print_error("Syntax error near unexpected token 'newline'\n", line, SAVE);
     while((*line)[len] && is_space((*line)[len]) == FALSE && is_special_char((*line)[len]) == FALSE)
         len++;
     if (len == 0 && is_quote((*line)[len]) == FALSE)

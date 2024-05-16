@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/03 18:12:04 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/16 21:39:35 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/16 23:09:04 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ size_t	ft_strlen(const char *s)
 {
 	size_t	len;
 
-	if (!*s)
+	if (!s)
 		return 0;
 	len = 0;
 	while (s[len])
