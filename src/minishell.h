@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/17 20:12:12 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/17 22:52:41 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,9 +181,13 @@ void    	parenthesis_lexer(t_token **root, char **line);
 char        *get_token_with_quotes(char **line, int len, int *og_len);
 
 
-// duplicating cmd token
 char    **ft_dup_args(char **args);
 t_redir *ft_dup_redir(t_redir *redir);
+
+/*=====================SIGNALS=====================*/
+void singal_handler(void);
+void handle_sig(int sig);
+
 
 /*=====================SYNTAX_EVALUATOR==================*/
 void    evaluate_syntax(t_token *root);
@@ -219,6 +223,8 @@ int         unset(t_env **env, char **cmd);
 void        ft_env(t_env *env);
 int         cd(char **arg, t_exec *exec);
 int         ft_export(t_env *env, char **args);
+
+
 
 
 /*=======================EXECUTION=======================*/

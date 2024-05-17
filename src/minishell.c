@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/17 20:11:52 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/17 22:50:23 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,6 +142,8 @@ void expand_heredoc_to_infiles(t_token **root, t_bool error_flag)
     expand_heredoc_to_infiles(&(*root)->r_token, error_flag);
 }
 
+
+
 void    minishell_loop(char **env)
 {
     char *line;
@@ -153,7 +155,7 @@ void    minishell_loop(char **env)
     head_tokens = NULL;
     while(42)
     {
-        ft_print_error(NULL, NULL, RESET);
+        singal_handler();
         line = readline(GREEN"minishell$ " "\033[35m");
         if (!line)
             break;
@@ -168,6 +170,7 @@ void    minishell_loop(char **env)
         ft_print_error(NULL, NULL, PRINT);
         if (ft_print_error(NULL, NULL, RETRIEVE) == FALSE)
             execute(head_tokens, &exec);
+        ft_print_error(NULL, NULL, RESET);
         if (*line)
             printf("line is %s\n", line);
         head_tokens = NULL;
