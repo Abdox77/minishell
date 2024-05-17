@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/17 19:45:07 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/17 20:11:52 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,7 @@ static t_token *lexer_manager(char **line)
     return head;
 }
 
-void expand_heredoc_to_infiles(t_token **root)
+void expand_heredoc_to_infiles(t_token **root, t_bool error_flag)
 {
     t_redir *tmp;
 
@@ -134,12 +134,12 @@ void expand_heredoc_to_infiles(t_token **root)
         while(tmp)
         {
             if (tmp->mode == HEREDOC)
-                here_doc(&tmp);     
+                here_doc(&tmp, error_flag);     
             tmp = tmp->next;
         }
     }
-    expand_heredoc_to_infiles(&(*root)->l_token);
-    expand_heredoc_to_infiles(&(*root)->r_token);
+    expand_heredoc_to_infiles(&(*root)->l_token, error_flag);
+    expand_heredoc_to_infiles(&(*root)->r_token, error_flag);
 }
 
 void    minishell_loop(char **env)
@@ -163,7 +163,8 @@ void    minishell_loop(char **env)
         head_tokens = lexer_manager( &line);
         display(head_tokens);
         evaluate_syntax(head_tokens);
-        expand_heredoc_to_infiles(&head_tokens);
+        if (ft_print_error(NULL, NULL, RETRIEVE) == TRUE)
+            expand_heredoc_to_infiles(&head_tokens, TRUE);
         ft_print_error(NULL, NULL, PRINT);
         if (ft_print_error(NULL, NULL, RETRIEVE) == FALSE)
             execute(head_tokens, &exec);

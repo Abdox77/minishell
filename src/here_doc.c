@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 10:06:01 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/17 19:41:50 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/17 20:09:44 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,10 @@ static char *get_rand_file_name_2(void)
     char        *fname;
     static int  i;
     
-    buff = ft_itoa(i);
+    buff = ft_itoa(++i);
     if (buff == NULL)
         return (NULL);
-    fname = ft_strjoin("HERE_DOC", buff);
+    fname = ft_strjoin("HERE_DOC_", buff);
     return fname;
 }
 
@@ -31,7 +31,7 @@ static char *get_rand_file_name(void)
     int bytes;
     char *buff;
     
-    fd = open("/dev/rand", O_RDWR);
+    fd = open("/dev/random", O_RDWR);
     if (fd < 0)
         return (NULL);
     buff = malloc(sizeof(char) * 11);
@@ -63,8 +63,12 @@ void expand_heredoc(t_redir **heredoc_redir)
     fname = generate_file_name();
     if (NULL == fname) 
         return;
-    ((*heredoc_redir)->here_doc_fd[W_HEREDOC]) = open(fname, O_RDWR);
+    
+    printf("fname is %s\n", fname);
+    ((*heredoc_redir)->here_doc_fd[W_HEREDOC]) = open(fname, O_CREAT | O_RDWR | O_TRUNC, 0644);
+    printf("fd_w %d\n",  ((*heredoc_redir)->here_doc_fd[W_HEREDOC]));
     ((*heredoc_redir)->here_doc_fd[R_HEREDOC]) = open(fname, O_RDWR);
+    printf("fd_r %d\n",  ((*heredoc_redir)->here_doc_fd[R_HEREDOC]));
     unlink(fname);
     free(fname);
 }
@@ -107,9 +111,15 @@ void here_doc_helper(int w_heredoc, char *delimiter)
     close(w_heredoc);
 }
 
-void here_doc(t_redir **here_doc)
+void here_doc(t_redir **here_doc, t_bool error_flag)
 {
     expand_heredoc(here_doc);
     here_doc_helper((*here_doc)->here_doc_fd[W_HEREDOC], (*here_doc)->file_name);
-    close((*here_doc)->here_doc_fd[R_HEREDOC]);
+    char buff [200];
+    int bytes;
+    bytes = read((*here_doc)->here_doc_fd[R_HEREDOC], buff, 20);
+    buff[bytes] = '\0';
+    // to edit later
+    if (error_flag == TRUE)
+        close((*here_doc)->here_doc_fd[R_HEREDOC]);
 }

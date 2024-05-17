@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/05 05:43:18 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/17 19:45:40 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/17 20:10:45 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ t_bool ft_print_error(char *message, char **line, t_error indicator)
         error_message = ft_strdup(message);
     }
     else if (indicator == RETRIEVE)
-        return (is_printed);
+        return (is_saved);
     else if (indicator == PRINT && is_printed == FALSE)
     {
         if (error_message != NULL)

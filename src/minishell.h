@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/17 19:36:52 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/17 20:12:12 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,9 +187,9 @@ t_redir *ft_dup_redir(t_redir *redir);
 
 /*=====================SYNTAX_EVALUATOR==================*/
 void    evaluate_syntax(t_token *root);
-void    here_doc(t_redir **here_doc);
+void    here_doc(t_redir **here_doc, t_bool error_flag);
 /*=====================HERE_DOC==================*/
-void    expand_heredoc_to_infiles(t_token **root);
+void expand_heredoc_to_infiles(t_token **root, t_bool error_flag);
 
 
 /*=====================UTILS========================*/
