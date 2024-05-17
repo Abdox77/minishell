@@ -18,8 +18,14 @@ static char **initialize_args_if_null(char *cmd, char **args)
     return args;
 }
 
+static void handle_signals(void)
+{
+    signal(SIGINT, SIG_DFL);
+}
+
 void execute_command(t_token *token, t_exec *exec)
 {
+    // char *cmd = token->cmd->cmd;
     char *cmd = token->cmd->cmd;
     char **args = token->cmd->args;
     int flag = 1;
@@ -37,6 +43,7 @@ void execute_command(t_token *token, t_exec *exec)
     }
     else if (pid == 0)
     {
+        handle_signals();
         // in child process
         // handle redirections
         handle_redirections(token->cmd);
