@@ -26,12 +26,12 @@ static void handle_signals(void)
 void execute_command(t_token *token, t_exec *exec)
 {
     // char *cmd = token->cmd->cmd;
-    char *cmd = token->cmd->cmd;
+    char *cmd =  expand_arg_if_needed(token->cmd->cmd ,token->cmd->og_tokens->og_cmd, exec->env); // ik if it's supposed to be like this
     char **args = token->cmd->args;
     int flag = 1;
-    expand_variables(token->cmd, exec->env, &flag);
+    // expand_variables(token->cmd, exec->env, &flag);
     if(args)
-        args = expand_args(args, exec->env);
+        args = process_args(args, token->cmd->og_tokens->og_args, cmd, exec->env);
     args = initialize_args_if_null(cmd, args);
     // if (check_builtins(token, exec, args))
     //     return;

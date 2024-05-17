@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/17 22:52:41 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/18 00:44:04 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -247,10 +247,12 @@ void        handle_input_redirection(t_redir *input);
 void        handle_output_redirection(t_redir *output);
 void        handle_redirections(t_cmd *cmd);
 int	        check_builtins(t_token *node, t_exec *exec, char **args);
-void        expand_variables(t_cmd *cmd, t_env *env_list, int *flag);
-char        *expand_token(const char *token, t_env *env_list);
-char        **expand_args(char **args, t_env *env_list);
-
+// void        expand_variables(t_cmd *cmd, t_env *env_list, int *flag);
+// char        *expand_token(const char *token, t_env *env_list);
+// char        **expand_args(char **args, t_env *env_list);
+char **process_args(char **args, char **og_args, char *cmd, t_env *env_list);
+char *expand_string(const char *str, t_env *env_list);
+char *expand_arg_if_needed(char *arg, char *og_arg, t_env *env_list);
 
 
 
