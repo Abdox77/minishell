@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/05 05:43:18 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/16 23:02:58 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/17 19:45:40 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,6 @@ static t_eval check_command(t_token *root)
 {
     if (!root->cmd || (root->cmd->args && check_args(root->cmd->args) == FAILED))
         return (FAILED);
-    else if (root->cmd && (!root->cmd->cmd && (root->cmd->input || root->cmd->output)))
-        return FAILED;
     return PASSED;
 }
 

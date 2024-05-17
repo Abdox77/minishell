@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 11:12:42 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/16 23:20:59 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/17 19:44:21 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ void handle_input(t_token **token, char **line)
     }
     else
         file_name =  ft_substr(*line, 0, len);
+    (*line) += len;
     add_redirection(&((*token)->cmd->input), mode, file_name);
     add_redirection(&((*token)->cmd->og_tokens->og_input), mode, ft_substr(*line - og_len, 0, og_len));
     special_trim(line);

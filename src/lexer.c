@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:22:59 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/16 23:42:00 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/17 18:51:45 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,14 +186,15 @@ static void add_redirection_after_parenthsis(t_token **node, char **line)
 	{
 		if (!*node)
 			ft_print_error("Syntax error unexpected token near ')'\n", line, SAVE);
-		if ((*node)->type == CMD)
-			handle_redirection(node, line, FALSE);
-		else
+		if ((*node))
 		{
-			printf("line is %s\n", *line);
-			handle_redirection(node, line, TRUE);}
+			if ((*node)->type == CMD)
+				handle_redirection(node, line, FALSE);
+			else
+				handle_redirection(node, line, TRUE);
+		}
 	}
-	else if (is_special_char(**line) == FALSE)
+	else if(is_special_char(**line) == FALSE && **line)
 		ft_print_error("Syntax error unexpected token after ')'\n", line, SAVE);
 }
 
@@ -211,7 +212,8 @@ static void handle_parenthesis(t_token **root, char **line)
 	}
 	if (**line == ')')
 		++(*line);
-	add_redirection_after_parenthsis(&node, line);
+	while(is_redirection_char(**line) == TRUE)
+		add_redirection_after_parenthsis(&node, line);
 	place_node(root, &node, PARENTHESIS);
 }
 

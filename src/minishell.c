@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/16 23:11:13 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/17 19:45:07 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,29 +122,25 @@ static t_token *lexer_manager(char **line)
     return head;
 }
 
-// void expand_heredoc_to_infiles(t_token **root)
-// {
-//     t_redir *tmp;
+void expand_heredoc_to_infiles(t_token **root)
+{
+    t_redir *tmp;
 
-//     if (!*root)
-//         return;
-//     if ((*root)->type == CMD && (*root)->cmd && (*root)->cmd->input)
-//     {
-//         tmp = (*root)->cmd->input;
-//         while(tmp)
-//         {
-//             if (tmp->mode == HEREDOC)
-//             {
-//                 tmp->fd = expand_heredoc();
-//                 if (tmp->fd < 0)
-//                     printf("Error in creating fd\n");
-//             }
-//             tmp = tmp->next;
-//         }
-//     }
-//     expand_heredoc_to_infiles(&(*root)->l_token);
-//     expand_heredoc_to_infiles(&(*root)->r_token);
-// }
+    if (!*root)
+        return;
+    if ((*root)->type == CMD && (*root)->cmd && (*root)->cmd->input)
+    {
+        tmp = (*root)->cmd->input;
+        while(tmp)
+        {
+            if (tmp->mode == HEREDOC)
+                here_doc(&tmp);     
+            tmp = tmp->next;
+        }
+    }
+    expand_heredoc_to_infiles(&(*root)->l_token);
+    expand_heredoc_to_infiles(&(*root)->r_token);
+}
 
 void    minishell_loop(char **env)
 {
@@ -167,11 +163,10 @@ void    minishell_loop(char **env)
         head_tokens = lexer_manager( &line);
         display(head_tokens);
         evaluate_syntax(head_tokens);
-        // expand_heredoc_to_infiles(&head_tokens);
+        expand_heredoc_to_infiles(&head_tokens);
         ft_print_error(NULL, NULL, PRINT);
         if (ft_print_error(NULL, NULL, RETRIEVE) == FALSE)
             execute(head_tokens, &exec);
-        // cleanup(head_tokens);
         if (*line)
             printf("line is %s\n", line);
         head_tokens = NULL;

@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/16 10:23:40 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/17 19:36:52 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "../libft/libft.h"
-// # include <linux/limits.h>
+# include <linux/limits.h>
 
 /*==========================MACROS============================*/
 
@@ -33,7 +33,8 @@
 # define GREEN "\033[36m"
 # define HEREDOC_LOCATION "/var/tmp/"
 # define BUFFER_SIZE 1000
-
+# define W_HEREDOC 1
+# define R_HEREDOC 0
 /*===========================enum=========================*/
 
 typedef enum{
@@ -112,6 +113,7 @@ struct s_token {
 
 struct s_redir {
     int         fd;
+    int         here_doc_fd[2];
     char        *file_name;
     t_redir     *next; // later
     REDIR_MODE  mode;
@@ -185,10 +187,10 @@ t_redir *ft_dup_redir(t_redir *redir);
 
 /*=====================SYNTAX_EVALUATOR==================*/
 void    evaluate_syntax(t_token *root);
-void    here_doc(int fd, char *delimiter);
+void    here_doc(t_redir **here_doc);
 /*=====================HERE_DOC==================*/
-int     expand_heredoc(void);
-void    here_doc(int fd, char *delimiter);
+void    expand_heredoc_to_infiles(t_token **root);
+
 
 /*=====================UTILS========================*/
 int         strs_len(char **args);
