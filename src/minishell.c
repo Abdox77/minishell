@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/17 22:50:23 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/18 18:26:35 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,17 +125,20 @@ static t_token *lexer_manager(char **line)
 void expand_heredoc_to_infiles(t_token **root, t_bool error_flag)
 {
     t_redir *tmp;
+    t_redir *tmp_og;
 
     if (!*root)
         return;
     if ((*root)->type == CMD && (*root)->cmd && (*root)->cmd->input)
     {
         tmp = (*root)->cmd->input;
+        tmp_og = (*root)->cmd->og_tokens->og_input;
         while(tmp)
         {
             if (tmp->mode == HEREDOC)
-                here_doc(&tmp, error_flag);     
+                here_doc(&tmp_og, &tmp, error_flag);     
             tmp = tmp->next;
+            tmp_og = tmp_og->next;
         }
     }
     expand_heredoc_to_infiles(&(*root)->l_token, error_flag);
@@ -155,7 +158,7 @@ void    minishell_loop(char **env)
     head_tokens = NULL;
     while(42)
     {
-        singal_handler();
+        // singal_handler();
         line = readline(GREEN"minishell$ " "\033[35m");
         if (!line)
             break;

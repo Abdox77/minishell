@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/18 00:47:49 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/18 20:52:23 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@
 # define PURPLE "\033[0;35m"
 # define GREEN "\033[36m"
 # define HEREDOC_LOCATION "/var/tmp/"
+# define YELLOW "\033[33m"
+# define RESET_COLORS "\033[0m"
 # define BUFFER_SIZE 1000
 # define W_HEREDOC 1
 # define R_HEREDOC 0
@@ -193,9 +195,9 @@ void handle_sig(int sig);
 
 /*=====================SYNTAX_EVALUATOR==================*/
 void    evaluate_syntax(t_token *root);
-void    here_doc(t_redir **here_doc, t_bool error_flag);
+void    here_doc(t_redir **og_redir, t_redir **here_doc, t_bool error_flag);
 /*=====================HERE_DOC==================*/
-void expand_heredoc_to_infiles(t_token **root, t_bool error_flag);
+void    expand_heredoc_to_infiles(t_token **root, t_bool error_flag);
 
 
 /*=====================UTILS========================*/

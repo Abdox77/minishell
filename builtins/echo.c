@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 08:11:05 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/13 20:29:27 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/05/18 21:08:14 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ int	ft_echo(char **arg)
 	}
 	while (arg[i])
 	{
-		dprintf(STDERR_FILENO, "heeeeeere\n"); 
 		if (arg[i][0] == '-')
 		{
 			if (arg[i][1] == 'n' && n_exists(arg[i]))
@@ -52,7 +51,7 @@ int	ft_echo(char **arg)
 				continue ;
 			}
 		}
-		if (arg[i][0] == '$' && arg[i][1] == '?')
+		if (arg[i][0] == '$' && arg[i][1] == '?') // && !arg[i][2]
 		{
             ft_write(ft_itoa(stat(0,0)), 1, 1);
 			return (1);

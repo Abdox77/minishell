@@ -4,12 +4,12 @@ ls | (echo && make) | cat ; missed placed the nodes         THIS IS FIXED
 ls -""la""aaaaaaaaaaa   discovered a new edge case lol      THIS IS FIXED
 ls | | cat              ======> FIXED
 printf('"'              ====> FIXED
+("ls")-la               ====> FIXED
+"ls"-la
 
 
 
 FAILED TESTED =============================
-("ls")-la FAILED
-"ls"-la
 
 STILL NEED A FIX TESTS ===========================
 >""  FIXED BUT SHOULDN'T SISPLAY ERROR SHOULD OPEN THE INFILE INSTEAD

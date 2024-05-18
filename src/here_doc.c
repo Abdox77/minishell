@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 10:06:01 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/17 20:09:44 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/18 20:59:29 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,32 +89,67 @@ static t_bool is_delimiter(char *buffer, char *delimiter)
     return (FALSE);
 }
 
-void here_doc_helper(int w_heredoc, char *delimiter)
+static t_bool ft_check_for_quotes(char *og_delimiter)
 {
-    ssize_t r_bytes;
-    char    buffer[BUFFER_SIZE];
+    int     i;
+    t_bool  to_be_expanded;
+    
+    i = -1;
+    while(og_delimiter[++i])
+        if (is_quote(og_delimiter[++i]) == TRUE)
+            return TRUE;
+    return FALSE;
+}
 
-    write(STDOUT_FILENO , "> ", ft_strlen("> "));
-    r_bytes = read(STDIN_FILENO, buffer, BUFFER_SIZE);
-    if (r_bytes < 0)
-        return;
-    buffer[r_bytes] = '\0';
+static char *expand_in_heredoc(char *line)
+{
+    int i;
+    int len;
+    char *env_variable;
+
+    i = -1;
+    len = 0;
+    while(line [++i])
+    {
+        if (line[i] == '$')
+        {
+            ++i;
+            while(line[len] && is_space(line[len]) == FALSE && is_quote(line[len]) == FALSE && line[len] == '$')
+                ++len;
+            if (len)
+            {
+                env_variable = ft_get_expanded_version(ft_substr(line, 0, len));
+            }
+        }
+        ++line;
+    }
+}
+
+void here_doc_helper(int w_heredoc, char *og_delimiter, char *delimiter)
+{
+    char    *line;
+    char    *buffer;
+    t_bool  to_be_expanded;
+    
+    to_be_expanded = ft_check_for_quotes(og_delimiter);
     while(is_delimiter(buffer, delimiter) == FALSE)
     {
-        write(w_heredoc, buffer, r_bytes);
-        write(STDOUT_FILENO, "> ", ft_strlen("> "));
-        r_bytes = read(STDIN_FILENO, buffer, BUFFER_SIZE);
-        if (r_bytes < 0)
-            return;
-        buffer[r_bytes] = '\0';
+        printf(">");
+        line = readline(YELLOW"Heredoc>"RESET_COLORS);
+        if (to_be_expanded == TRUE)
+            buffer = expand_in_heredoc(line);
+        else
+            buffer = ft_strdup(line);
+        write(w_heredoc, buffer, ft_strlen(buffer));
+        free(buffer);
     }
     close(w_heredoc);
 }
 
-void here_doc(t_redir **here_doc, t_bool error_flag)
+void here_doc(t_redir **og_redir, t_redir **here_doc, t_bool error_flag)
 {
     expand_heredoc(here_doc);
-    here_doc_helper((*here_doc)->here_doc_fd[W_HEREDOC], (*here_doc)->file_name);
+    here_doc_helper((*here_doc)->here_doc_fd[W_HEREDOC], here_doc);
     char buff [200];
     int bytes;
     bytes = read((*here_doc)->here_doc_fd[R_HEREDOC], buff, 20);
@@ -122,4 +157,4 @@ void here_doc(t_redir **here_doc, t_bool error_flag)
     // to edit later
     if (error_flag == TRUE)
         close((*here_doc)->here_doc_fd[R_HEREDOC]);
-}
+ }
