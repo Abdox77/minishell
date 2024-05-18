@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:23:05 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/05 09:05:01 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/18 01:01:47 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ t_bool      is_quote(char c)
 
 t_bool      is_special_char(char c)
 {
-    if (is_redirection_char(c) || is_space(c) || is_quote(c) || c == '|')
+    if (is_redirection_char(c) == TRUE || is_space(c) == TRUE || is_quote(c) == TRUE || c == '|')
         return (TRUE);
     return (FALSE);
 }

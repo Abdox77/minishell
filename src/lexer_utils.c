@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 15:14:16 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/17 22:39:07 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/18 01:05:09 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,26 +102,26 @@ char *get_token_with_quotes(char **line, int len, int *og_len)
     (*line) += len;
     (*og_len) += len;
     if (!arg)
-        printf("problemo LEO\n");
+        printf("problemo LEO\n"); // to edit later
     buff = NULL;
     while(**line && **line != '&' && **line != '(' && **line != ')' && **line != '|' && is_space(**line) == FALSE && is_redirection_char(**line) == FALSE)
     {
         if (is_quote(**line) == FALSE && **line != '(' && **line != ')' && is_special_char(**line) == FALSE)
         {
             len = 0;
-            while ((*line)[len] && is_special_char(**line) == FALSE)
+            while ((*line)[len] && is_special_char((*line)[len]) == FALSE)
                 len++;
             arg = ft_strjoin(arg, ft_substr(*line, 0, len));
             *og_len += len;
             *line += len;
         }
-        else 
+        else if (is_quote(**line) == TRUE)
         {   
             quote = **line;
             buff = get_token_in_between_quotes(line, quote, og_len);
             arg = ft_strjoin(arg, buff);
             if(**line != quote)
-                 ft_print_error("Syntax error unclosed quotes\n", line, SAVE);
+                ft_print_error("Syntax error unclosed quotes\n", line, SAVE);
             else
             {
                 ++(*line);
