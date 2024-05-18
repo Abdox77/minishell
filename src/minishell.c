@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/18 18:26:35 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/18 22:19:55 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,7 @@ static t_token *lexer_manager(char **line)
     return head;
 }
 
-void expand_heredoc_to_infiles(t_token **root, t_bool error_flag)
+void expand_heredoc_to_infiles(t_exec *exec, t_token **root, t_bool error_flag)
 {
     t_redir *tmp;
     t_redir *tmp_og;
@@ -144,8 +144,6 @@ void expand_heredoc_to_infiles(t_token **root, t_bool error_flag)
     expand_heredoc_to_infiles(&(*root)->l_token, error_flag);
     expand_heredoc_to_infiles(&(*root)->r_token, error_flag);
 }
-
-
 
 void    minishell_loop(char **env)
 {
@@ -169,7 +167,7 @@ void    minishell_loop(char **env)
         display(head_tokens);
         evaluate_syntax(head_tokens);
         if (ft_print_error(NULL, NULL, RETRIEVE) == TRUE)
-            expand_heredoc_to_infiles(&head_tokens, TRUE);
+            expand_heredoc_to_infiles(&exec, &head_tokens, TRUE);
         ft_print_error(NULL, NULL, PRINT);
         if (ft_print_error(NULL, NULL, RETRIEVE) == FALSE)
             execute(head_tokens, &exec);
