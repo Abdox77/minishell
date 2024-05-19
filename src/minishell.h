@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/18 20:52:23 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/19 00:49:19 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,9 +195,9 @@ void handle_sig(int sig);
 
 /*=====================SYNTAX_EVALUATOR==================*/
 void    evaluate_syntax(t_token *root);
-void    here_doc(t_redir **og_redir, t_redir **here_doc, t_bool error_flag);
+void    here_doc(t_exec *exec, t_redir *og_redir, t_redir *here_doc, t_bool error_flag);
 /*=====================HERE_DOC==================*/
-void    expand_heredoc_to_infiles(t_token **root, t_bool error_flag);
+void    expand_heredoc_to_infiles(t_exec *exec, t_token **root, t_bool error_flag);
 
 
 /*=====================UTILS========================*/

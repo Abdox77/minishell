@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 10:06:01 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/18 20:59:29 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/19 01:34:34 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,8 @@ static t_bool is_delimiter(char *buffer, char *delimiter)
     int i;
 
     i = 0;
+    if (!buffer || !delimiter)
+        return FALSE;
     while(buffer[i] && delimiter[i])
     {  
         if (buffer[i] != delimiter[i])
@@ -92,8 +94,9 @@ static t_bool is_delimiter(char *buffer, char *delimiter)
 static t_bool ft_check_for_quotes(char *og_delimiter)
 {
     int     i;
-    t_bool  to_be_expanded;
-    
+
+    if (!og_delimiter)
+        return FALSE;
     i = -1;
     while(og_delimiter[++i])
         if (is_quote(og_delimiter[++i]) == TRUE)
@@ -101,60 +104,83 @@ static t_bool ft_check_for_quotes(char *og_delimiter)
     return FALSE;
 }
 
-static char *expand_in_heredoc(char *line)
+char *ft_get_value(t_exec *exec, char *key)
+{
+    t_env *env;
+    if (!exec || (exec && !exec->env))
+        return (free(key), NULL);
+    env = exec->env;
+    while(exec)
+    {
+        if (ft_strcmp(env->key, key) == 0)
+            return (free(key), ft_strdup(env->value));
+        env = env->next;
+    }
+    return (NULL);
+}
+
+static char *expand_in_heredoc(t_exec *exec, char *line)
 {
     int i;
     int len;
     char *env_variable;
+    char *expanded_line;
 
     i = -1;
     len = 0;
+    expanded_line = NULL;
+    env_variable = NULL;
     while(line [++i])
     {
+        len = 0;
+        while (line[i + len] && line[i + len] != '$')
+            len++;
+        if (line[i + len] && line[i + len + 1])
+            expanded_line = ft_strjoin(expanded_line, ft_substr(line, i, len));
+        else if (line[i + len] && !line[i + len + 1])
+            expanded_line = ft_strjoin(expanded_line, ft_substr(line, i, len + 1));
+        i += len;
         if (line[i] == '$')
         {
-            ++i;
-            while(line[len] && is_space(line[len]) == FALSE && is_quote(line[len]) == FALSE && line[len] == '$')
+            while(line[i + len] && is_space(line[i + len]) == FALSE && is_quote(line[i + len]) == FALSE && line[i + len] == '$')
                 ++len;
             if (len)
             {
-                env_variable = ft_get_expanded_version(ft_substr(line, 0, len));
+                env_variable = ft_get_value(exec, ft_substr(line, i, len));
+                expanded_line = ft_strjoin(expanded_line, env_variable);
             }
         }
-        ++line;
     }
+    printf("line is after got expanded : %s\n", expanded_line);
+    return expanded_line;
 }
 
-void here_doc_helper(int w_heredoc, char *og_delimiter, char *delimiter)
+static void here_doc_helper(t_exec *exec, int w_heredoc, char *og_delimiter, char *delimiter)
 {
     char    *line;
     char    *buffer;
     t_bool  to_be_expanded;
     
+    buffer = NULL;
     to_be_expanded = ft_check_for_quotes(og_delimiter);
     while(is_delimiter(buffer, delimiter) == FALSE)
     {
-        printf(">");
+        free(buffer);
         line = readline(YELLOW"Heredoc>"RESET_COLORS);
-        if (to_be_expanded == TRUE)
-            buffer = expand_in_heredoc(line);
+        if (to_be_expanded == TRUE && exec)
+            buffer = expand_in_heredoc(exec, line);
         else
             buffer = ft_strdup(line);
         write(w_heredoc, buffer, ft_strlen(buffer));
-        free(buffer);
     }
     close(w_heredoc);
 }
 
-void here_doc(t_redir **og_redir, t_redir **here_doc, t_bool error_flag)
+void here_doc(t_exec *exec, t_redir *og_redir, t_redir *here_doc, t_bool error_flag)
 {
-    expand_heredoc(here_doc);
-    here_doc_helper((*here_doc)->here_doc_fd[W_HEREDOC], here_doc);
-    char buff [200];
-    int bytes;
-    bytes = read((*here_doc)->here_doc_fd[R_HEREDOC], buff, 20);
-    buff[bytes] = '\0';
+    expand_heredoc(&here_doc);
+    here_doc_helper(exec , here_doc->here_doc_fd[W_HEREDOC], og_redir->file_name, here_doc->file_name);
     // to edit later
     if (error_flag == TRUE)
-        close((*here_doc)->here_doc_fd[R_HEREDOC]);
+        close(here_doc->here_doc_fd[R_HEREDOC]);
  }

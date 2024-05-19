@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/18 22:19:55 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/19 00:49:11 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,13 +136,13 @@ void expand_heredoc_to_infiles(t_exec *exec, t_token **root, t_bool error_flag)
         while(tmp)
         {
             if (tmp->mode == HEREDOC)
-                here_doc(&tmp_og, &tmp, error_flag);     
+                here_doc(exec , tmp_og, tmp, error_flag);     
             tmp = tmp->next;
             tmp_og = tmp_og->next;
         }
     }
-    expand_heredoc_to_infiles(&(*root)->l_token, error_flag);
-    expand_heredoc_to_infiles(&(*root)->r_token, error_flag);
+    expand_heredoc_to_infiles(exec , &(*root)->l_token, error_flag);
+    expand_heredoc_to_infiles(exec , &(*root)->r_token, error_flag);
 }
 
 void    minishell_loop(char **env)

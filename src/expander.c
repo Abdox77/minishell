@@ -163,6 +163,8 @@ char *expand_string(const char *str, t_env *env_list)
 
 char *expand_arg_if_needed(char *arg, char *og_arg, t_env *env_list)
 {
+    if (!arg)
+        return NULL;
     if (ft_strchr(arg, '$'))
         return expand_string(og_arg, env_list); // Need to do this with og_args
     return strdup(arg);
