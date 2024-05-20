@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 10:06:01 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/19 13:13:57 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/20 00:16:42 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,10 +64,11 @@ void expand_heredoc(t_redir **heredoc_redir)
     if (NULL == fname) 
         return;
     
+    unlink(fname);
     printf("fname is %s\n", fname);
-    ((*heredoc_redir)->here_doc_fd[W_HEREDOC]) = open(fname, O_CREAT | O_RDWR | O_TRUNC, 0644);
+    ((*heredoc_redir)->here_doc_fd[W_HEREDOC]) = open(fname, (O_CREAT & O_WRONLY) | O_TRUNC, 0644);
     printf("fd_w %d\n",  ((*heredoc_redir)->here_doc_fd[W_HEREDOC]));
-    ((*heredoc_redir)->here_doc_fd[R_HEREDOC]) = open(fname, O_RDWR);
+    ((*heredoc_redir)->here_doc_fd[R_HEREDOC]) = open(fname, O_RDONLY);
     printf("fd_r %d\n",  ((*heredoc_redir)->here_doc_fd[R_HEREDOC]));
     unlink(fname);
     free(fname);
@@ -115,10 +116,38 @@ char *ft_get_value(t_exec *exec, char *key)
     return (NULL);
 }
 
+static char *get_value_in_between_quotes(char *line, char quote)
+{
+    int i;
+    int len;
+    char *token;
+
+    i = -1;
+    len = 0;
+    if (!line || !*line)
+        return NULL;
+    while (line[len] && line[len] != quote)
+        len++;
+    if (!line[len])
+    {
+        if (0 == len && line[len] == quote)
+            ++line;
+        return NULL;
+    }
+    token = malloc(sizeof(char) * len + 1);
+    if(!token)
+        return (NULL);
+    while(++i < len)
+        token[i] = line[i];
+    token[i] = '\0';
+    return (token);
+}
+
 static char *expand_in_heredoc(t_exec *exec, char *line)
 {
     int i;
     int len;
+    char *buff;
     char *env_variable;
     char *expanded_line;
 
@@ -128,20 +157,31 @@ static char *expand_in_heredoc(t_exec *exec, char *line)
     len = 0;
     expanded_line = NULL;
     env_variable = NULL;
-    printf("line is before SEGV %s\n", line);
-    if (!line)
-        printf("oooops\n");
     while(line[i])
     {
         len = 0;
-        while (line[i + len] && line[i + len] != '$')
+        while (line[i + len] && line[i + len] != '$' && is_quote(line[i + len]) == FALSE)
             len++;
-        if (len && line[i + len] && line[i + len + 1])
-            expanded_line = ft_strjoin(expanded_line, ft_substr(line, i, len));
-        else if (line[i + len] && !line[i + len + 1])
+        if (is_quote(line[i + len]) == TRUE)
+        {
             expanded_line = ft_strjoin(expanded_line, ft_substr(line, i, len + 1));
-        i += len;
-        if (line[i] == '$')
+            i += len + 1;
+            buff = get_value_in_between_quotes(line + i, line[i - 1]);
+            i += ft_strlen(buff);
+            buff = expand_in_heredoc(exec, buff);
+        }
+        if (len)
+        {
+            expanded_line = ft_strjoin(expanded_line, ft_substr(line, i, len));
+            i += len;
+            printf("%d and %s\n", len, &line[i]);
+        }
+        if (line[i] == '$' && line[i + 1]== '$')
+        {
+            expanded_line = ft_strjoin(expanded_line, ft_substr(line, i, 2));
+            i += 2;
+        }       
+        else if (line[i] == '$')
         {
             ++i;
             len = 0;
@@ -149,18 +189,17 @@ static char *expand_in_heredoc(t_exec *exec, char *line)
                 ++len;
             if (line[i + len] != '$')
             {
-                char *buff = ft_substr(line, i, len);
+                buff = ft_substr(line, i, len);
                 printf("buff is %s\n", buff);
                 env_variable = ft_get_value(exec, buff);
                 expanded_line = ft_strjoin(expanded_line, env_variable);
             }
-            else if (!len)
-
+            i += len;
         }
         // if (line[i])
             // ++i;
     }
-    printf("line is after got expanded : env_var %s || %s\n", env_variable, expanded_line);
+    printf("line is after got expanded : env_var |%s| \n |%s|\n", env_variable, expanded_line);
     return expanded_line;
 }
 
@@ -178,7 +217,6 @@ static void here_doc_helper(t_exec *exec, int w_heredoc, char *og_delimiter, cha
         if (buffer)
             free(buffer);
         line = readline(YELLOW"Heredoc>"RESET_COLORS);
-        printf("line is |%s|     |%s|\n", line, delimiter);
         if (!line)
             {
                 printf("\n");
