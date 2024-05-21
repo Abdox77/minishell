@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/21 21:00:38 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/21 21:54:23 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,27 +122,55 @@ static t_token *lexer_manager(char **line)
     return head;
 }
 
+// static void    ft_handle_sigint(int sig)
+// {
+//     // int    *p;
+
+//     if (sig != SIGINT)
+//         return ;
+//     printf("\n");
+//     rl_replace_line("", 0);
+//     rl_on_new_line();
+//     rl_redisplay();
+//     // p = ft_global_exit_status();
+//     // *p = 1;
+// }
+
+static void child_singal_handler()
+{
+    // rl_replace_line("", 0);
+    signal(SIGINT, SIG_DFL);
+    // signal(SIGINT, ft_handle_sigint);
+}
+
 void expand_heredoc_to_infiles(t_exec *exec, t_token **root, t_bool error_flag)
 {
     t_redir *tmp;
     t_redir *tmp_og;
+    
+    pid_t pid = fork();
 
-    if (!*root)
-        return;
-    if ((*root)->type == CMD && (*root)->cmd && (*root)->cmd->input)
+    if (pid == 0)
     {
-        tmp = (*root)->cmd->input;
-        tmp_og = (*root)->cmd->og_tokens->og_input;
-        while(tmp)
+        child_singal_handler();
+        if (!*root)
+            return;
+        if ((*root)->type == CMD && (*root)->cmd && (*root)->cmd->input)
         {
-            if (tmp->mode == HEREDOC)
-                here_doc(exec , tmp_og, tmp, error_flag);     
-            tmp = tmp->next;
-            tmp_og = tmp_og->next;
+            tmp = (*root)->cmd->input;
+            tmp_og = (*root)->cmd->og_tokens->og_input;
+            while(tmp)
+            {
+                if (tmp->mode == HEREDOC)
+                    here_doc(exec , tmp_og, tmp, error_flag);     
+                tmp = tmp->next;
+                tmp_og = tmp_og->next;
+            }
         }
+        expand_heredoc_to_infiles(exec , &(*root)->l_token, error_flag);
+        expand_heredoc_to_infiles(exec , &(*root)->r_token, error_flag);
     }
-    expand_heredoc_to_infiles(exec , &(*root)->l_token, error_flag);
-    expand_heredoc_to_infiles(exec , &(*root)->r_token, error_flag);
+    waitpid(pid, NULL, WUNTRACED);
 }
 
 void    minishell_loop(char **env)
@@ -173,7 +201,7 @@ void    minishell_loop(char **env)
             execute(head_tokens, &exec);
         ft_print_error(NULL, NULL, RESET);
         if (*line)
-            printf("line is %s\n", line);
+            printf("WTF LINE ISN'T EMPTY : line is %s\n", line);
         head_tokens = NULL;
     }
 }
