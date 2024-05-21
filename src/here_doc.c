@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 10:06:01 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/20 00:16:42 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/21 19:33:19 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ static t_bool ft_check_for_quotes(char *og_delimiter)
         return FALSE;
     i = -1;
     while(og_delimiter[++i])
-        if (is_quote(og_delimiter[++i]) == TRUE)
+        if (is_quote(og_delimiter[i]) == TRUE)
             return FALSE;
     return TRUE;
 }
@@ -159,6 +159,7 @@ static char *expand_in_heredoc(t_exec *exec, char *line)
     env_variable = NULL;
     while(line[i])
     {
+        printf("i is %d %c\n", i, line[i]);
         len = 0;
         while (line[i + len] && line[i + len] != '$' && is_quote(line[i + len]) == FALSE)
             len++;
@@ -167,37 +168,46 @@ static char *expand_in_heredoc(t_exec *exec, char *line)
             expanded_line = ft_strjoin(expanded_line, ft_substr(line, i, len + 1));
             i += len + 1;
             buff = get_value_in_between_quotes(line + i, line[i - 1]);
-            i += ft_strlen(buff);
+            if (buff)
+                i += ft_strlen(buff);
             buff = expand_in_heredoc(exec, buff);
+            expanded_line = ft_strjoin(expanded_line , buff);
         }
-        if (len)
+        else if (len)
         {
             expanded_line = ft_strjoin(expanded_line, ft_substr(line, i, len));
             i += len;
-            printf("%d and %s\n", len, &line[i]);
         }
-        if (line[i] == '$' && line[i + 1]== '$')
+        else if (line[i] == '$' && (line[i + 1]== '$'|| (ft_isalpha(line[i + 1]) == 0 && line[i + 1] != '_')))
         {
-            expanded_line = ft_strjoin(expanded_line, ft_substr(line, i, 2));
-            i += 2;
+            if (line[i + 1]== '$')
+            {
+                expanded_line = ft_strjoin(expanded_line, ft_substr(line, i, 2));
+                i += 2;
+            }
+            else 
+            {
+                expanded_line = ft_strjoin(expanded_line, ft_substr(line, i, 1));
+                ++i;
+            }
         }       
         else if (line[i] == '$')
         {
-            ++i;
+            i++;
             len = 0;
-            while(line[i + len] && is_space(line[i + len]) == FALSE && line[i + len] != '$')
+            while(line[i + len] && is_space(line[i + len]) == FALSE && is_quote(line[i + len]) == FALSE && line[i + len] != '$')
                 ++len;
-            if (line[i + len] != '$')
+            if (len)
             {
                 buff = ft_substr(line, i, len);
-                printf("buff is %s\n", buff);
                 env_variable = ft_get_value(exec, buff);
+                // if (buff)
+                //     printf("buff is %s and value \n", buff );
                 expanded_line = ft_strjoin(expanded_line, env_variable);
+                i += len;
+                printf("line rest %s\n", &line[i]);
             }
-            i += len;
         }
-        // if (line[i])
-            // ++i;
     }
     printf("line is after got expanded : env_var |%s| \n |%s|\n", env_variable, expanded_line);
     return expanded_line;
@@ -218,19 +228,14 @@ static void here_doc_helper(t_exec *exec, int w_heredoc, char *og_delimiter, cha
             free(buffer);
         line = readline(YELLOW"Heredoc>"RESET_COLORS);
         if (!line)
-            {
-                printf("\n");
-                break;}
+        {
+            printf("\n");
+            break;
+        }
         if (to_be_expanded == TRUE && exec && is_delimiter(line, delimiter) == FALSE)
-        {
             buffer = expand_in_heredoc(exec, line);
-            printf("got here and to_be_expanded is TRUE\n");
-        }
         else if (is_delimiter(line, delimiter) == FALSE)
-        {
-            printf("line is %s buff %s", line, buffer);
             buffer = ft_strdup(line);
-        }
         if (buffer)
             write(w_heredoc, buffer, ft_strlen(buffer));
     }
