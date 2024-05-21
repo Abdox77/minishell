@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/19 00:49:11 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/21 21:00:38 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,7 +156,7 @@ void    minishell_loop(char **env)
     head_tokens = NULL;
     while(42)
     {
-        // singal_handler();
+        singal_handler();
         line = readline(GREEN"minishell$ " "\033[35m");
         if (!line)
             break;
