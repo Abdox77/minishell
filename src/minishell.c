@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/21 21:54:23 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/21 22:13:33 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,10 +136,19 @@ static t_token *lexer_manager(char **line)
 //     // *p = 1;
 // }
 
+static void _exit_child(int sign)
+{
+    (void)sign;
+    rl_replace_line("", 1);
+    // rl_on_new_line();
+    rl_redisplay();
+    exit(120);
+}
+
 static void child_singal_handler()
 {
     // rl_replace_line("", 0);
-    signal(SIGINT, SIG_DFL);
+    signal(SIGINT, _exit_child);
     // signal(SIGINT, ft_handle_sigint);
 }
 
@@ -149,6 +158,7 @@ void expand_heredoc_to_infiles(t_exec *exec, t_token **root, t_bool error_flag)
     t_redir *tmp_og;
     
     pid_t pid = fork();
+    int status;
 
     if (pid == 0)
     {
@@ -169,8 +179,12 @@ void expand_heredoc_to_infiles(t_exec *exec, t_token **root, t_bool error_flag)
         }
         expand_heredoc_to_infiles(exec , &(*root)->l_token, error_flag);
         expand_heredoc_to_infiles(exec , &(*root)->r_token, error_flag);
+        exit (0);
     }
-    waitpid(pid, NULL, WUNTRACED);
+    waitpid(pid, &status, WUNTRACED);
+    if (WEXITSTATUS(status) == 120)
+        ft_print_error(NULL, NULL, RESET_HEREDOC);
+    // printf("%d\n", WEXITSTATUS(status));
 }
 
 void    minishell_loop(char **env)

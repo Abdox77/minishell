@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/05 05:43:18 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/17 20:10:45 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/21 22:11:17 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,21 @@ t_bool ft_print_error(char *message, char **line, t_error indicator)
 {
     static t_bool   is_saved;
     static t_bool   is_printed;
+    static t_bool err_here_doc;
     static char     *error_message;
 
     if (indicator == RESET)
     {
         is_saved = FALSE;
         is_printed = FALSE;
+        err_here_doc = FALSE;
         free(error_message);
         error_message = NULL;
+    }
+    else if (indicator == RESET_HEREDOC)
+    {
+        err_here_doc = TRUE;
+        is_saved = TRUE;
     }
     else if (indicator == SAVE && is_saved == FALSE)
     {
@@ -54,7 +61,7 @@ t_bool ft_print_error(char *message, char **line, t_error indicator)
     }
     else if (indicator == RETRIEVE)
         return (is_saved);
-    else if (indicator == PRINT && is_printed == FALSE)
+    else if (indicator == PRINT && is_printed == FALSE && err_here_doc == FALSE)
     {
         if (error_message != NULL)
         { 

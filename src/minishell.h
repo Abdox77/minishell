@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/19 00:49:19 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/21 22:08:08 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ typedef enum{
     NOT_PRINTED,
     RETRIEVE,
     RESET,
+    RESET_HEREDOC ,
 }   t_error;
 
 typedef enum {
