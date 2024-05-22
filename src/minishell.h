@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/21 22:08:08 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/22 11:54:55 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,20 @@
 # define BUFFER_SIZE 1000
 # define W_HEREDOC 1
 # define R_HEREDOC 0
+# define FNAME "_MINISHELL_HEREDOC__FILE_NAMING_"
 /*===========================enum=========================*/
+
+typedef enum {
+    _SAVE,
+    _RETRIEVE,
+} t_sigops;
+
+typedef enum
+{
+    _NO_STATE_, 
+    SET_SIGS,   
+    UNSET_SIGS,
+} t_sigstate;
 
 typedef enum{
     PRINT,
@@ -190,6 +203,7 @@ char    **ft_dup_args(char **args);
 t_redir *ft_dup_redir(t_redir *redir);
 
 /*=====================SIGNALS=====================*/
+t_sigstate sig_state(t_sigstate state, t_sigops operation);
 void singal_handler(void);
 void handle_sig(int sig);
 

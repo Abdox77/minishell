@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/22 10:14:55 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/22 12:20:03 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,17 +139,27 @@ static t_token *lexer_manager(char **line)
 static void _exit_child(int sign)
 {
     (void)sign;
-    // rl_replace_line("", 1);
-    // rl_redisplay();
-    // rl_on_new_line();
+    printf("\n");
+    rl_replace_line("", 1);
     exit(120);
 }
 
 static void child_singal_handler()
 {
-    // rl_replace_line("", 0);
+ 
     signal(SIGINT, _exit_child);
-    // signal(SIGINT, ft_handle_sigint);
+    signal(SIGQUIT, SIG_IGN);
+}
+
+t_sigstate sig_state(t_sigstate state, t_sigops operation)
+{
+    static int sig_state;
+    
+    if (operation == _SAVE)
+        sig_state = state;
+    else if (operation == _RETRIEVE)
+        return (sig_state);
+    return SET_SIGS;
 }
 
 void expand_heredoc_to_infiles(t_exec *exec, t_token **root, t_bool error_flag)
@@ -160,6 +170,7 @@ void expand_heredoc_to_infiles(t_exec *exec, t_token **root, t_bool error_flag)
     pid_t pid = fork();
     int status;
 
+    sig_state(UNSET_SIGS, _SAVE);
     if (pid == 0)
     {
         child_singal_handler();
@@ -182,6 +193,7 @@ void expand_heredoc_to_infiles(t_exec *exec, t_token **root, t_bool error_flag)
         exit (0);
     }
     waitpid(pid, &status, WUNTRACED);
+    sig_state(SET_SIGS, _SAVE);
     if (WEXITSTATUS(status) == 120)
     {
         ft_print_error(NULL, NULL, RESET_HEREDOC);
@@ -200,7 +212,7 @@ void    minishell_loop(char **env)
     head_tokens = NULL;
     while(42)
     {
-        singal_handler();
+        singal_handler(); 
         char *og_line = readline(GREEN"minishell$ " "\033[35m");
         line = og_line;
         if (!line)
@@ -227,7 +239,6 @@ void    minishell_loop(char **env)
 int main(int ac, char **av, char **env)
 {
     (void)av;
-    // (void)env;
     if (ac == 1)
         minishell_loop(env);
 }

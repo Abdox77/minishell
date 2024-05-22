@@ -6,72 +6,18 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 10:06:01 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/21 19:33:19 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/22 11:55:41 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char *get_rand_file_name_2(void)
-{
-    char        *buff;
-    char        *fname;
-    static int  i;
-    
-    buff = ft_itoa(++i);
-    if (buff == NULL)
-        return (NULL);
-    fname = ft_strjoin("HERE_DOC_", buff);
-    return fname;
-}
-
-static char *get_rand_file_name(void)
-{
-    int fd;
-    int bytes;
-    char *buff;
-    
-    fd = open("/dev/random", O_RDWR);
-    if (fd < 0)
-        return (NULL);
-    buff = malloc(sizeof(char) * 11);
-    if (NULL == buff)
-        return (close(fd), NULL);
-    bytes = read(fd, buff, 10);
-    if (bytes <= 0)
-        return (close(fd), free(buff), NULL);
-    buff[bytes] = '\0';
-    return (close(fd), buff);
-}
-
-char *generate_file_name(void)
-{
-    char    *fname;
-
-    fname = get_rand_file_name();
-    if (fname == NULL)
-        fname = get_rand_file_name_2();
-    if (fname == NULL)
-        ft_print_error("May god be with you\n", NULL, SAVE);
-    return fname;
-}
-
 void expand_heredoc(t_redir **heredoc_redir)
 {
-    char *fname;
-
-    fname = generate_file_name();
-    if (NULL == fname) 
-        return;
-    
-    unlink(fname);
-    printf("fname is %s\n", fname);
-    ((*heredoc_redir)->here_doc_fd[W_HEREDOC]) = open(fname, (O_CREAT & O_WRONLY) | O_TRUNC, 0644);
-    printf("fd_w %d\n",  ((*heredoc_redir)->here_doc_fd[W_HEREDOC]));
-    ((*heredoc_redir)->here_doc_fd[R_HEREDOC]) = open(fname, O_RDONLY);
-    printf("fd_r %d\n",  ((*heredoc_redir)->here_doc_fd[R_HEREDOC]));
-    unlink(fname);
-    free(fname);
+    unlink(FNAME);
+    ((*heredoc_redir)->here_doc_fd[W_HEREDOC]) = open(FNAME, (O_CREAT | O_WRONLY) | O_TRUNC, 0644);
+    ((*heredoc_redir)->here_doc_fd[R_HEREDOC]) = open(FNAME, O_RDONLY | O_TRUNC);
+    unlink(FNAME);
 }
 
 static t_bool is_delimiter(char *buffer, char *delimiter)
@@ -246,7 +192,6 @@ void here_doc(t_exec *exec, t_redir *og_redir, t_redir *here_doc, t_bool error_f
 {
     expand_heredoc(&here_doc);
     here_doc_helper(exec , here_doc->here_doc_fd[W_HEREDOC], og_redir->file_name, here_doc->file_name);
-    // to edit later
     if (error_flag == TRUE)
         close(here_doc->here_doc_fd[R_HEREDOC]);
  }
