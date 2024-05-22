@@ -58,7 +58,7 @@ t_bool is_an_operator(char **line, int len)
 static void place_cmd_node(t_token **root, t_token **to_put)
 {
 	if (!*root)
-		*root = *to_put;
+			*root = *to_put;
 	else if ((*root)->type != CMD)
 	{
 		if (!((*root)->l_token))
@@ -181,7 +181,6 @@ static void handle_commands(t_token **root, char **line)
 
 static void add_redirection_after_parenthsis(t_token **node, char **line)
 {
-	special_trim(line);
 	if (is_redirection_char(**line) == TRUE)
 	{
 		if (!*node)
@@ -205,16 +204,21 @@ static void handle_parenthesis(t_token **root, char **line)
 	++(*line);
 	node = NULL;
 	parenthesis_lexer(&node, line);
+	printf("node is\n");
 	if (!*line || **line != ')')
 	{
-		ft_print_error("Syntax error unlosed parenthesis looool\n", line, SAVE);
+		ft_print_error("Syntax error unlosed parenthesis\n", line, SAVE);
 		return ;
 	}
-	if (**line == ')')
-		++(*line);
+	++(*line);
+	special_trim(line);
 	while(is_redirection_char(**line) == TRUE)
+	{
 		add_redirection_after_parenthsis(&node, line);
+		special_trim(line);
+	}
 	place_node(root, &node, PARENTHESIS);
+	// printf("cmd after  %s %s\n", node->cmd->cmd, node->cmd->output->file_name);
 }
 
 void	parenthesis_lexer(t_token **token, char **line)

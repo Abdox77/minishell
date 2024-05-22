@@ -18,6 +18,8 @@ void display_cmd(t_token *token)
 {
     if (token && token->cmd)
     {   
+        if (token->output && token->output->file_name)
+            printf("og_output of the root node : %s\n", token->output->file_name);
         i++;
         printf("\t\tCMD IS =======>  : %s\n", token->cmd->cmd);
         printf("\t\tOG_CMD IS =======>  : %s\n", token->cmd->og_tokens->og_cmd);

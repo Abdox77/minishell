@@ -155,7 +155,6 @@ static char *expand_in_heredoc(t_exec *exec, char *line)
             }
         }
     }
-    printf("line is after got expanded : env_var |%s| \n |%s|\n", env_variable, expanded_line);
     return expanded_line;
 }
 
