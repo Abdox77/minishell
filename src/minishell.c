@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/21 22:13:33 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/05/22 10:14:55 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,9 +139,9 @@ static t_token *lexer_manager(char **line)
 static void _exit_child(int sign)
 {
     (void)sign;
-    rl_replace_line("", 1);
+    // rl_replace_line("", 1);
+    // rl_redisplay();
     // rl_on_new_line();
-    rl_redisplay();
     exit(120);
 }
 
@@ -183,8 +183,10 @@ void expand_heredoc_to_infiles(t_exec *exec, t_token **root, t_bool error_flag)
     }
     waitpid(pid, &status, WUNTRACED);
     if (WEXITSTATUS(status) == 120)
+    {
         ft_print_error(NULL, NULL, RESET_HEREDOC);
-    // printf("%d\n", WEXITSTATUS(status));
+        rl_replace_line("", 1);
+    }
 }
 
 void    minishell_loop(char **env)
@@ -199,7 +201,8 @@ void    minishell_loop(char **env)
     while(42)
     {
         singal_handler();
-        line = readline(GREEN"minishell$ " "\033[35m");
+        char *og_line = readline(GREEN"minishell$ " "\033[35m");
+        line = og_line;
         if (!line)
             break;
         if (line)
@@ -217,6 +220,7 @@ void    minishell_loop(char **env)
         if (*line)
             printf("WTF LINE ISN'T EMPTY : line is %s\n", line);
         head_tokens = NULL;
+        free(og_line);
     }
 }
 
