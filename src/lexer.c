@@ -18,12 +18,10 @@ void handle_pipe(t_token **token, char **line)
         printf("token is not null\n");
     *token = set_pipe_head();
     if (!*token)
-        ft_error("failed to create token", EXIT_FAILURE);
+        printf("failed to create token");
     ++(*line);
     lexer(token, line);
 }
-
-
 
 t_bool is_an_operator(char **line, int len)
 {

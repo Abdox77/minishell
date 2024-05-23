@@ -284,7 +284,11 @@ void        minishell_loop(char **env);
 
 /*=====================CLEANUP=====================*/
 void        free_strs(char **strs);
+void        free_redirections(t_redir *redir);
+void        free_expands(t_expands *expands);
+void        free_cmd(t_token *root);
+void        free_token(t_token *root);
+void        cleanup(t_token *root);
 t_bool      ft_print_error(char *message, char **line, t_error indicator);
-void        ft_error(char *error_message, int exit_code);
 
 #endif

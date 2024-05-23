@@ -195,10 +195,7 @@ void expand_heredoc_to_infiles(t_exec *exec, t_token **root, t_bool error_flag)
     waitpid(pid, &status, WUNTRACED);
     sig_state(SET_SIGS, _SAVE);
     if (WEXITSTATUS(status) == 120)
-    {
         ft_print_error(NULL, NULL, RESET_HEREDOC);
-        rl_replace_line("", 1);
-    }
     expand_heredoc_to_infiles(exec , &(*root)->l_token, error_flag);
     expand_heredoc_to_infiles(exec , &(*root)->r_token, error_flag);
 }
@@ -224,9 +221,10 @@ static void heredoc_to_fds(t_token **root)
 
 void    minishell_loop(char **env)
 {
-    char *line;
+    char    *line;
+    char    *og_line;
+    t_exec  exec;
     t_token *head_tokens;
-    t_exec exec;
     
     exec.env = parse_env(env);
     exec.envp = env_to_envp(&exec);
@@ -234,7 +232,7 @@ void    minishell_loop(char **env)
     while(42)
     {
         singal_handler(); 
-        char *og_line = readline(GREEN"minishell$ " "\033[35m");
+        og_line = readline(GREEN"minishell$ " "\033[35m");
         line = og_line;
         if (!line)
             break;
@@ -253,8 +251,9 @@ void    minishell_loop(char **env)
         ft_print_error(NULL, NULL, RESET);
         if (*line)
             printf("WTF LINE ISN'T EMPTY : line is %s\n", line);
-        head_tokens = NULL;
         free(og_line);
+        cleanup(head_tokens);
+        head_tokens = NULL;
     }
 }
 

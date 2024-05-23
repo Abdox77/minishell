@@ -127,7 +127,7 @@ void handle_output(t_token **token, char **line, t_bool is_root)
 void handle_redirection(t_token **token, char **line, t_bool is_root)
 {
     if (!*line || !**line)
-        ft_error("WHAT HAPPENED ?\n", EXIT_FAILURE); // not possible for line to be null
+        printf("WHAT HAPPENED ?\n"); // not possible for line to be null
     if (!*token)
         *token = new_token(CMD);
 	else if (**line == '<')

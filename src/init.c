@@ -27,7 +27,7 @@ t_token *new_token(TOKEN type)
         token->cmd->og_tokens = malloc(sizeof(t_expands));
         memset(token->cmd->og_tokens, 0, sizeof(t_expands));
 	    if(!token->cmd)
-	        ft_error("failed to create new cmd\n", EXIT_FAILURE);
+            printf("failed to create new cmd\n");
     }
     return (token);
 }
@@ -37,12 +37,10 @@ t_redir *new_cmd_redir(REDIR_MODE mode, char *file_name)
     t_redir *new;
 
     if (!file_name)
-    {
         ft_print_error("Syntax error near unexpected token 'new line'\n", NULL, SAVE);
-    }
     new = malloc (sizeof(t_redir));
     if (!new)
-        ft_error("not new redir\n", EXIT_FAILURE);
+        printf("not new redir\n");
     new->mode = mode;
     if (file_name)
         new->file_name = ft_strdup(file_name);
