@@ -105,7 +105,6 @@ static char *expand_in_heredoc(t_exec *exec, char *line)
     env_variable = NULL;
     while(line[i])
     {
-        printf("i is %d %c\n", i, line[i]);
         len = 0;
         while (line[i + len] && line[i + len] != '$' && is_quote(line[i + len]) == FALSE)
             len++;
@@ -189,8 +188,7 @@ static void here_doc_helper(t_exec *exec, int w_heredoc, char *og_delimiter, cha
 
 void here_doc(t_exec *exec, t_redir *og_redir, t_redir *here_doc, t_bool error_flag)
 {
-    expand_heredoc(&here_doc);
     here_doc_helper(exec , here_doc->here_doc_fd[W_HEREDOC], og_redir->file_name, here_doc->file_name);
     if (error_flag == TRUE)
         close(here_doc->here_doc_fd[R_HEREDOC]);
- }
+}

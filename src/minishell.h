@@ -212,8 +212,8 @@ void handle_sig(int sig);
 void    evaluate_syntax(t_token *root);
 void    here_doc(t_exec *exec, t_redir *og_redir, t_redir *here_doc, t_bool error_flag);
 /*=====================HERE_DOC==================*/
+void    expand_heredoc(t_redir **heredoc_redir);
 void    expand_heredoc_to_infiles(t_exec *exec, t_token **root, t_bool error_flag);
-
 
 /*=====================UTILS========================*/
 int         strs_len(char **args);

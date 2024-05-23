@@ -218,7 +218,6 @@ static void handle_parenthesis(t_token **root, char **line)
 		special_trim(line);
 	}
 	place_node(root, &node, PARENTHESIS);
-	// printf("cmd after  %s %s\n", node->cmd->cmd, node->cmd->output->file_name);
 }
 
 void	parenthesis_lexer(t_token **token, char **line)

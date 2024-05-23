@@ -166,19 +166,19 @@ t_sigstate sig_state(t_sigstate state, t_sigops operation)
 
 void expand_heredoc_to_infiles(t_exec *exec, t_token **root, t_bool error_flag)
 {
+    // expand_heredoc(&here_doc);
+    int     status;
     t_redir *tmp;
     t_redir *tmp_og;
     
-    pid_t pid = fork();
-    int status;
-
+    if (!*root)
+        return;
     sig_state(UNSET_SIGS, _SAVE);
+    pid_t pid = fork();
     if (pid == 0)
     {
         child_singal_handler();
-        if (!*root)
-            return;
-        if ((*root)->type == CMD && (*root)->cmd && (*root)->cmd->input)
+        if ((*root)->type == CMD && (*root)->cmd->input) // removed the check for (*root)->cmd if it exists
         {
             tmp = (*root)->cmd->input;
             tmp_og = (*root)->cmd->og_tokens->og_input;
@@ -190,8 +190,6 @@ void expand_heredoc_to_infiles(t_exec *exec, t_token **root, t_bool error_flag)
                 tmp_og = tmp_og->next;
             }
         }
-        expand_heredoc_to_infiles(exec , &(*root)->l_token, error_flag);
-        expand_heredoc_to_infiles(exec , &(*root)->r_token, error_flag);
         exit (0);
     }
     waitpid(pid, &status, WUNTRACED);
@@ -201,6 +199,27 @@ void expand_heredoc_to_infiles(t_exec *exec, t_token **root, t_bool error_flag)
         ft_print_error(NULL, NULL, RESET_HEREDOC);
         rl_replace_line("", 1);
     }
+    expand_heredoc_to_infiles(exec , &(*root)->l_token, error_flag);
+    expand_heredoc_to_infiles(exec , &(*root)->r_token, error_flag);
+}
+
+static void heredoc_to_fds(t_token **root)
+{
+    t_redir *tmp;
+    if (!*root)
+        return;
+    if((*root)->type == CMD && (*root)->cmd->input)
+    {
+        tmp =  (*root)->cmd->input;
+        while(tmp)
+        {
+            if (tmp->mode == HEREDOC)
+                expand_heredoc(&tmp);
+            tmp = tmp->next;
+        }
+    }
+    heredoc_to_fds(&((*root)->l_token));
+    heredoc_to_fds(&((*root)->r_token));
 }
 
 void    minishell_loop(char **env)
@@ -225,6 +244,7 @@ void    minishell_loop(char **env)
         head_tokens = lexer_manager( &line);
         display(head_tokens);
         evaluate_syntax(head_tokens);
+        heredoc_to_fds(&head_tokens);
         if (ft_print_error(NULL, NULL, RETRIEVE) == TRUE)
             expand_heredoc_to_infiles(&exec, &head_tokens, TRUE);
         ft_print_error(NULL, NULL, PRINT);
