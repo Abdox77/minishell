@@ -89,22 +89,26 @@ void display(t_token *token)
 
 void special_trim(char **line)
 {
-    int len;
-    char *new_line;
+    // int len;
+    // char *new_line;
 
     if (!*line || !**line)
         return ;
     skip_spaces(line);
-    len = ft_strlen(*line);
-    if (len > 1)
-    {
-        while (len - 1 && is_space(*(*line + len - 1)))
-            len--;
-        new_line = ft_substr(*line, 0, len);
-        if (!new_line)
-            return ; //error
-        line = &new_line;          
-    }      
+    // while(is_space(**line) == TRUE)
+    //     ++(*line);
+    // len = ft_strlen(*line);
+    // if (len > 1)
+    // {
+    //     while (len - 1 && is_space(*(*line + len - 1)))
+    //         len--;
+    //     new_line = ft_substr(*line, 0, len);
+    //     if (!new_line)
+    //         return ; //error
+    //     free(*line);
+    //     *line = NULL;
+    //     *line = new_line;          
+    // }      
 }
 
 static t_token *lexer_manager(char **line)
@@ -114,29 +118,11 @@ static t_token *lexer_manager(char **line)
     t_token *head;
 
     head = NULL;
-	while (**line)
-    {
-        lexer(&head, line);
-        special_trim(line);
-    }
+    lexer(&head, line);
     if (!head)
         ft_print_error("Syntax Error\n", line, SAVE);
     return head;
 }
-
-// static void    ft_handle_sigint(int sig)
-// {
-//     // int    *p;
-
-//     if (sig != SIGINT)
-//         return ;
-//     printf("\n");
-//     rl_replace_line("", 0);
-//     rl_on_new_line();
-//     rl_redisplay();
-//     // p = ft_global_exit_status();
-//     // *p = 1;
-// }
 
 static void _exit_child(int sign)
 {
@@ -148,7 +134,6 @@ static void _exit_child(int sign)
 
 static void child_singal_handler()
 {
- 
     signal(SIGINT, _exit_child);
     signal(SIGQUIT, SIG_IGN);
 }

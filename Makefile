@@ -1,5 +1,5 @@
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g3 -fsanitize=address 
+CFLAGS = -Wall -Wextra -Werror -g #3 -fsanitize=address 
 SRC = 	src/minishell.c \
 		src/init.c \
 		src/lexer.c 	 \

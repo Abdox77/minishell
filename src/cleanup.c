@@ -36,6 +36,7 @@ void free_expands(t_expands *expands)
     free_strs(expands->og_args);
     free_redirections(expands->og_input);
     free_redirections(expands->og_output);
+    free(expands);
 }
 
 void free_cmd(t_token *root)
@@ -48,7 +49,9 @@ void free_cmd(t_token *root)
     free_expands(root->cmd->og_tokens);
     free_redirections(root->cmd->input);
     free_redirections(root->cmd->output);
+    free(root->cmd);
     free(root);
+    root = NULL;
 }
 
 void free_token(t_token *root)
@@ -59,11 +62,13 @@ void free_token(t_token *root)
     free_redirections(root->og_output);
 }
 
+int glob_i = -1;
+
 void cleanup(t_token *root)
 {
     if (!root)
         return;
-    printf("got here\n");    
+    printf("time i entered this function %d", ++glob_i);
     if (root && !root->l_token && !root->r_token)
     {
         if (root->type == CMD)

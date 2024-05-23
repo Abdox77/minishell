@@ -33,3 +33,17 @@ with the cleanup function
 ==22357== 
 ==22357== For lists of detected and suppressed errors, rerun with: -s
 ==22357== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+
+
+new_token leak fix
+
+==33052== 185 (48 direct, 137 indirect) bytes in 1 blocks are definitely lost in loss record 31 of 80
+==33052==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==33052==    by 0x109EC1: new_token (init.c:19)
+==33052==    by 0x10B350: get_command (lexer_utils.c:175)
+==33052==    by 0x10B584: handle_command (lexer_utils.c:216)
+==33052==    by 0x10A6FA: handle_commands (lexer.c:176)
+==33052==    by 0x10AADF: lexer (lexer.c:248)
+==33052==    by 0x1099BF: lexer_manager (minishell.c:121)
+==33052==    by 0x109D96: minishell_loop (minishell.c:227)
+==33052==    by 0x109EA0: main (minishell.c:249)
