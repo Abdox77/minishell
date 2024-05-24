@@ -1,5 +1,5 @@
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g #3 -fsanitize=address 
+CFLAGS = -Wall -Wextra -Werror -g3 #-fsanitize=address 
 SRC = 	src/minishell.c \
 		src/init.c \
 		src/lexer.c 	 \
@@ -18,6 +18,7 @@ SRC = 	src/minishell.c \
 		builtins/env.c \
 		builtins/pwd.c \
 		builtins/unset.c \
+		builtins/exit.c \
 		src/env_to_envp.c \
 		builtins/cd.c \
 		src/execution.c \
@@ -30,6 +31,8 @@ SRC = 	src/minishell.c \
 		builtins/echo.c \
 		src/expandv2.c \
 		builtins/export.c \
+		src/ambiguous_redirect.c \
+		src/wildcards.c \
 
 OBJ = $(SRC:.c=.o)
 RM = rm -rf

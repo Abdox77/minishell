@@ -14,7 +14,7 @@ char **ft_dup_args(char **args)
 		printf("len is 0 in dup_args\n");
 	new = malloc (sizeof(char *) * (len + 1));
 	if (!new)
-		printf("malloc failed in dup args\n");
+		ft_error("malloc failed in dup args\n", EXIT_FAILURE);
 	while(++i < len)
 		new[i] = args[i];
 	new[i] = NULL;
@@ -30,7 +30,7 @@ t_redir *ft_dup_redir(t_redir *redir)
 		return NULL;
 	new = malloc(sizeof(t_redir));
 	if (!new)
-		printf("malloc failed\n");
+		ft_error("malloc failed\n", EXIT_FAILURE);
 	new = new_cmd_redir(redir->mode, redir->file_name);
 	tmp = new;
 	redir = redir->next;
@@ -38,7 +38,7 @@ t_redir *ft_dup_redir(t_redir *redir)
 	{
 		tmp->next = new_cmd_redir(redir->mode, redir->file_name);
 		if (!tmp->next)
-			printf("failed in dup redir\n");
+			ft_error("failed in dup redir\n", EXIT_FAILURE);
 		redir = redir->next;
 		tmp = tmp->next;
 	}
@@ -46,3 +46,24 @@ t_redir *ft_dup_redir(t_redir *redir)
 	return (new);
 }
 
+char *ft_strndup(const char *s1, size_t n)
+{
+    size_t i;
+    char *p;
+
+    i = 0;
+    size_t len = 0;
+    while (len < n && s1[len] != '\0')
+        len++;
+    p = (char *)malloc(sizeof(char) * (len + 1));
+    if (!p)
+        return (NULL);
+
+    while (i < len)
+    {
+        p[i] = s1[i];
+        i++;
+    }
+    p[i] = '\0';
+    return (p);
+}

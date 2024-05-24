@@ -88,3 +88,10 @@ void cleanup(t_token *root)
             free_token(root);
     }
 }
+
+
+void    ft_error(char *error_message, int exit_code)
+{
+    ft_putstr_fd(error_message, STDERR_FILENO);
+    exit(exit_code);
+}
