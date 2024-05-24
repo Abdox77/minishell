@@ -55,11 +55,17 @@ void handle_input(t_token **token, char **line, t_bool is_root)
         mode = INFILE; // or output to check later
     special_trim(line);
     if (!**line)
+    {
         ft_print_error("Syntax error near unexpected token 'newline'\n", line, SAVE);
+        return;
+    }
     while((*line)[len] && is_space((*line)[len]) == FALSE && is_special_char((*line)[len]) == FALSE)
         len++;
     if (!len && (*line)[len] == '\0')
+    {
         ft_print_error("Syntax error unexpected error near '>'\n", NULL, SAVE);
+        return;
+    }
     else if (is_quote((*line)[len]) == TRUE)
     {
         printf("file name is %s\n", file_name);
@@ -104,11 +110,17 @@ void handle_output(t_token **token, char **line, t_bool is_root)
         mode = TRUNC; // or output to check later
     special_trim(line);
     if (!**line)
+    {
         ft_print_error("Syntax error near unexpected token 'newline'\n", line, SAVE);
+        return;
+    }
     while((*line)[len] && is_space((*line)[len]) == FALSE && is_special_char((*line)[len]) == FALSE)
         len++;
     if (len == 0 && is_quote((*line)[len]) == FALSE)
+    {
         ft_print_error("Syntax error unexpected error near '>'\n", line, SAVE);
+        return;
+    }
     else if (is_quote((*line)[len]) == TRUE)
     {
         file_name = get_token_with_quotes(line, len, &og_len);

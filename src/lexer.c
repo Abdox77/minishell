@@ -34,7 +34,7 @@ t_bool is_an_operator(char **line, int len)
 		if (operator == '&')
 		{
 			ft_print_error("Syntax error unexpected token near '&'\n", line, SAVE);
-			return FALSE;
+			return TRUE;
 		} 
 		else
 		{
@@ -46,7 +46,7 @@ t_bool is_an_operator(char **line, int len)
 					ft_print_error("Syntax error unexpected token near '|'\n", line, SAVE);
 				else
 					ft_print_error("Syntax error unexpected token near '&'\n", line, SAVE);
-				return FALSE;
+				return TRUE;
 			}
 		}
 	}
