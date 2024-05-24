@@ -216,6 +216,8 @@ void    minishell_loop(char **env)
     head_tokens = NULL;
     while(42)
     {
+        exec.env = parse_env(env);
+        exec.envp = env_to_envp(&exec);
         singal_handler(); 
         og_line = readline(GREEN"minishell$ " "\033[35m");
         line = og_line;

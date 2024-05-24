@@ -305,7 +305,7 @@ void execute(t_token *token, t_exec *exec)
         return;
     int status = 0;
     (void)status;
-    if (token->type == CMD)
+    if (token->type == CMD && token->cmd->cmd)
         // execute a simple command
         execute_command(token, exec);
     else if (token->type == PIPE)
