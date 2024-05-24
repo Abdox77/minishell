@@ -35,7 +35,7 @@ void add_redirection(t_redir **redir, REDIR_MODE mode, char *file_name)
     }
 }
 
-void handle_input(t_token **token, char **line)
+void handle_input(t_token **token, char **line, t_bool is_root)
 {
     int			len;
     int         og_len;
@@ -69,8 +69,16 @@ void handle_input(t_token **token, char **line)
     else
         file_name =  ft_substr(*line, 0, len);
     (*line) += len;
-    add_redirection(&((*token)->cmd->input), mode, file_name);
-    add_redirection(&((*token)->cmd->og_tokens->og_input), mode, ft_substr(*line - og_len, 0, og_len));
+    if (is_root == FALSE)
+    {
+        add_redirection(&((*token)->cmd->input), mode, file_name);
+        add_redirection(&((*token)->cmd->og_tokens->og_input), mode, ft_substr(*line - og_len, 0, og_len));
+    }
+    else
+    {
+        add_redirection(&((*token)->input), mode, file_name);
+        add_redirection(&((*token)->og_input), mode, ft_substr(*line - og_len, 0, og_len));
+    }
     special_trim(line);
     if (**line == '(') // i can check on other special characters here
         ft_print_error ("Syntax error unexpected token near '('\n", line, SAVE);
@@ -131,7 +139,7 @@ void handle_redirection(t_token **token, char **line, t_bool is_root)
     if (!*token)
         *token = new_token(CMD);
 	else if (**line == '<')
-        handle_input(token, line);
+        handle_input(token, line, is_root);
     else
         handle_output(token, line, is_root);
 }

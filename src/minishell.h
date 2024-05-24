@@ -126,6 +126,8 @@ struct s_token {
     t_token     *l_token;
     t_redir     *output;
     t_redir     *og_output;
+    t_redir     *input;
+    t_redir     *og_input;
     t_cmd       *cmd;
 } ;
 
@@ -186,7 +188,7 @@ t_token     *new_token(TOKEN type);
 void        lexer(t_token **token, char **line);
 t_token     *handle_command(char **line);
 void        handle_redirection(t_token **token, char **line, t_bool is_root);
-void        handle_input(t_token **token, char **line);
+void        handle_input(t_token **token, char **line, t_bool is_root);
 void        handle_output(t_token **token, char **line, t_bool is_root);
 
 /*=====================LEXER_UTILS=====================*/

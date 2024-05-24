@@ -62,13 +62,10 @@ void free_token(t_token *root)
     free_redirections(root->og_output);
 }
 
-int glob_i = -1;
-
 void cleanup(t_token *root)
 {
     if (!root)
         return;
-    printf("time i entered this function %d", ++glob_i);
     if (root && !root->l_token && !root->r_token)
     {
         if (root->type == CMD)
