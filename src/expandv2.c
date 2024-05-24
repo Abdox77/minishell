@@ -220,7 +220,7 @@ char **process_args(char **args, char **og_args, char *og_cmd, char *cmd, t_env 
     int i =0;
     while(for_cmd[i])
         i++;
-    char **processed_args = (char **)malloc(sizeof(char *) * i);
+    char **processed_args = (char **)malloc(sizeof(char *) * (i + 1));
     if (processed_args == NULL) {
         perror("malloc failed");
         exit(EXIT_FAILURE);

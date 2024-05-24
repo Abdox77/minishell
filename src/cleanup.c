@@ -60,6 +60,8 @@ void free_token(t_token *root)
         return;
     free_redirections(root->output);
     free_redirections(root->og_output);
+    free_redirections(root->input);
+    free_redirections(root->og_input);
 }
 
 void cleanup(t_token *root)
