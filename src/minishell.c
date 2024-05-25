@@ -77,7 +77,7 @@ void display(t_token *token)
         if (token->type == PIPE)
             printf("pipe\n");
         if (token->og_output && token->og_output->file_name)
-            printf("og_output of the root node : %s\n", token->og_output->file_name);
+            printf("output : %s og_output : %s\n", token->output->file_name, token->og_output->file_name);
         printf("==============left->node==============\n");
         display(token->l_token);
         printf("==============right->node==============\n");

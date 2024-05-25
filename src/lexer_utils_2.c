@@ -59,7 +59,7 @@ void handle_input(t_token **token, char **line, t_bool is_root)
         ft_print_error("Syntax error near unexpected token 'newline'\n", line, SAVE);
         return;
     }
-    while((*line)[len] && is_space((*line)[len]) == FALSE && is_special_char((*line)[len]) == FALSE)
+    while((*line)[len] && is_space((*line)[len]) == FALSE && is_special_char((*line)[len]) == FALSE && (*line)[len] != ')' && (*line)[len] != '(')
         len++;
     if (!len && (*line)[len] == '\0')
     {
@@ -114,7 +114,7 @@ void handle_output(t_token **token, char **line, t_bool is_root)
         ft_print_error("Syntax error near unexpected token 'newline'\n", line, SAVE);
         return;
     }
-    while((*line)[len] && is_space((*line)[len]) == FALSE && is_special_char((*line)[len]) == FALSE)
+    while((*line)[len] && is_space((*line)[len]) == FALSE && is_special_char((*line)[len]) == FALSE && (*line)[len] != ')' && (*line)[len] != '(')
         len++;
     if (len == 0 && is_quote((*line)[len]) == FALSE)
     {
@@ -130,11 +130,11 @@ void handle_output(t_token **token, char **line, t_bool is_root)
         file_name = ft_substr(*line, 0, len);
     og_len += len;
     (*line) += len;
-    printf("file_name %s %d\n", file_name, len);
+    printf("file_name %c %s %d %d\n", **line, file_name, len, og_len);
     if (is_root == FALSE)
     {
         add_redirection(&((*token)->cmd->output), mode, file_name);
-        add_redirection(&((*token)->cmd->og_tokens->og_output), mode, ft_substr(*line - og_len, 0, og_len));
+        add_redirection(&((*token)->cmd->og_tokens->og_output), mode, ft_substr(*line - og_len, 0, og_len - 1));
         printf("og_len : %s\n", (*token)->cmd->og_tokens->og_output->file_name);
     }
     else
