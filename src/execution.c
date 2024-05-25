@@ -206,7 +206,7 @@ void execute_command(t_token *token, t_exec *exec)
         cmd = args[0];
     else
         cmd = "";
-    if (check_builtins(token, exec, args))
+    if (token->cmd->cmd && check_builtins(token, exec, args))
         return;
     pid_t pid = fork();
     if (pid < 0)
@@ -303,9 +303,9 @@ void execute(t_token *token, t_exec *exec)
 {
     if (token == NULL)
         return;
-    int status = 0;
-    (void)status;
-    if (token->type == CMD && token->cmd->cmd)
+    if (token && token->output && token->output->file_name)
+        printf("heeer======%s========%d=======+++++++++\n", token->output->file_name, token->type);
+    if (token->type == CMD && token->cmd->cmd) //put && instead of || or idk to cj=heck later
         // execute a simple command
         execute_command(token, exec);
     else if (token->type == PIPE)

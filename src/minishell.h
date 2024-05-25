@@ -96,7 +96,7 @@ typedef enum
     NONE,
     CMD,
     PARENTHESIS,
-    PIPE     
+    PIPE,
 }   TOKEN;
 
 /*=======================TYPEDEFS=========================*/
@@ -157,6 +157,8 @@ struct s_exec
 	char	**envp;
 	int		o_in;
 	int		o_out;
+    int     in;
+    int     out;
 };
 
 
@@ -268,6 +270,7 @@ void        handle_input_redirection(t_redir *input, t_env *env);
 void        handle_output_redirection(t_redir *output, t_env *env);
 void        handle_redirections(t_cmd *cmd, t_env *env);
 int	        check_builtins(t_token *node, t_exec *exec, char **args);
+void handle_output_redirections(t_redir *output, t_env *env);
 // void        expand_variables(t_cmd *cmd, t_env *env_list, int *flag);
 // char        *expand_token(const char *token, t_env *env_list);
 // char        **expand_args(char **args, t_env *env_list);

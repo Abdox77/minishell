@@ -333,6 +333,12 @@ void handle_output_redirections(t_redir *output, t_env *env)
 
 void handle_redirections(t_cmd *cmd, t_env *env)
 {
+    int in;
+    int out;
+    in = dup(STDIN_FILENO);
+    out = dup(STDOUT_FILENO);
     handle_input_redirections(cmd->input, env);
     handle_output_redirections(cmd->output, env);
+    dup2(STDIN_FILENO, in);
+    dup2(STDOUT_FILENO, out);
 }

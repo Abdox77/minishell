@@ -210,12 +210,14 @@ void    minishell_loop(char **env)
     char    *og_line;
     t_exec  exec;
     t_token *head_tokens;
-    
+
     exec.env = parse_env(env);
     exec.envp = env_to_envp(&exec);
     head_tokens = NULL;
     while(42)
     {
+        exec.out = dup(STDIN_FILENO);
+        exec.out = dup(STDOUT_FILENO);    
         exec.env = parse_env(env);
         exec.envp = env_to_envp(&exec);
         singal_handler(); 
@@ -241,6 +243,8 @@ void    minishell_loop(char **env)
         free(og_line);
         cleanup(head_tokens);
         head_tokens = NULL;
+        // close(exec.in);
+        // close(exec.out);
     }
 }
 
