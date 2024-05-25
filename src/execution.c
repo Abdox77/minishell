@@ -193,6 +193,56 @@ static void handle_signals(void)
     signal(SIGINT, SIG_DFL);
 }
 
+// void execute_command(t_token *token, t_exec *exec)
+// {
+//     exec->envp = env_to_envp(exec);
+//     char *cmd = token->cmd->cmd;
+//     char **args = token->cmd->args;
+//     int flag = check_to_expand(token->cmd->og_tokens->og_cmd, exec->env);
+//     args = initialize_args_if_null(cmd, args);
+//     args = process_args(args, token->cmd->og_tokens->og_args, token->cmd->og_tokens->og_cmd, cmd, exec->env);
+//     args = expand_wildcards(args);
+//     if(args)
+//         cmd = args[0];
+//     else
+//         cmd = "";
+//     if (token->cmd->cmd && check_builtins(token, exec, args))
+//         return;
+//     pid_t pid = fork();
+//     if (pid < 0)
+//         perror("Fork failed");
+//     else if (pid == 0)
+//     {
+//         handle_signals();
+//         handle_redirections(token->cmd, exec->env);
+//     printf("flag is ________________--%d================== \n ", flag); /////////////////////////////////now i need you to create an another thing please which is i.e     args[0]=ls args[1]=*.c args[2]=-la (the directory has test.c and 1.c); you give a 2d array args[0]=ls args[1]=test.c ags[2]=1.c args[3]=-la i hope you understand
+
+//         if(!flag)
+//         {
+//             stat(0, 1);
+//             exit(0);
+//             return;
+//         }
+//             printf("args are========%s \n", args[0]);
+//             // else
+//             // {
+//                 char *cmd_path = get_cmd(cmd, exec->envp);
+//                 printf("===============executing======= %s \n \n", cmd_path);
+//                 execve(cmd_path, args, exec->envp);
+//                 ft_write(cmd,2,0);
+//                 ft_write(": command not found", 2, 1);
+//                 stat(127, 1);
+//                 exit(127);
+//             // }
+//     }
+//     else
+//     {
+//         int status;
+//         waitpid(pid, &status, 0);
+//         stat(WEXITSTATUS(status), 1);
+//     }
+// }
+
 void execute_command(t_token *token, t_exec *exec)
 {
     exec->envp = env_to_envp(exec);
@@ -202,12 +252,14 @@ void execute_command(t_token *token, t_exec *exec)
     args = initialize_args_if_null(cmd, args);
     args = process_args(args, token->cmd->og_tokens->og_args, token->cmd->og_tokens->og_cmd, cmd, exec->env);
     args = expand_wildcards(args);
-    if(args)
+    if (args)
         cmd = args[0];
     else
         cmd = "";
+
     if (token->cmd->cmd && check_builtins(token, exec, args))
         return;
+
     pid_t pid = fork();
     if (pid < 0)
         perror("Fork failed");
@@ -215,25 +267,24 @@ void execute_command(t_token *token, t_exec *exec)
     {
         handle_signals();
         handle_redirections(token->cmd, exec->env);
-    printf("flag is ________________--%d================== \n ", flag); /////////////////////////////////now i need you to create an another thing please which is i.e     args[0]=ls args[1]=*.c args[2]=-la (the directory has test.c and 1.c); you give a 2d array args[0]=ls args[1]=test.c ags[2]=1.c args[3]=-la i hope you understand
+        printf("flag is ________________--%d================== \n ", flag);
 
-        if(!flag)
+        if (!flag)
         {
             stat(0, 1);
             exit(0);
             return;
         }
-            printf("args are========%s \n", args[0]);
-            // else
-            // {
-                char *cmd_path = get_cmd(cmd, exec->envp);
-                printf("===============executing======= %s \n \n", cmd_path);
-                execve(cmd_path, args, exec->envp);
-                ft_write(cmd,2,0);
-                ft_write(": command not found", 2, 1);
-                stat(127, 1);
-                exit(127);
-            // }
+
+        printf("args are========%s \n", args[0]);
+        char *cmd_path = get_cmd(cmd, exec->envp);
+        printf("===============executing======= %s \n \n", cmd_path);
+        execve(cmd_path, args, exec->envp);
+        perror("execve failed");
+        ft_write(cmd, 2, 0);
+        ft_write(": command not found", 2, 1);
+        stat(127, 1);
+        exit(127);
     }
     else
     {
@@ -299,38 +350,212 @@ static void execute_pipe(t_token *node, t_exec *exec)
     stat(WEXITSTATUS(status2), 1);
 }
 
+// void execute_subtree(t_token *token, t_exec *exec)
+// {
+//     int saved_stdin = dup(STDIN_FILENO);
+//     int saved_stdout = dup(STDOUT_FILENO);
+
+//     if (saved_stdin == -1 || saved_stdout == -1)
+//     {
+//         perror("Failed to duplicate file descriptor");
+//         exit(EXIT_FAILURE);
+//     }
+
+//     if (token->input)
+//     {
+//         handle_input_redirections(token->input, exec->env);
+//     }
+
+//     if (token->output)
+//     {
+//         handle_output_redirections(token->output, exec->env);
+//     }
+
+//     execute(token, exec);
+
+//     if (dup2(saved_stdin, STDIN_FILENO) == -1)
+//     {
+//         perror("Failed to restore stdin");
+//         exit(EXIT_FAILURE);
+//     }
+//     if (dup2(saved_stdout, STDOUT_FILENO) == -1)
+//     {
+//         perror("Failed to restore stdout");
+//         exit(EXIT_FAILURE);
+//     }
+
+//     close(saved_stdin);
+//     close(saved_stdout);
+// }
+// void execute_subtree(t_token *root, t_exec *exec) {
+//     if (root == NULL) {
+//         return;
+//     }
+
+//     // Save original stdin and stdout file descriptors
+//     int original_stdin = dup(STDIN_FILENO);
+//     int original_stdout = dup(STDOUT_FILENO);
+
+//     // Redirect stdin if necessary
+//     if (root->input) {
+//         handle_input_redirections(root->input, exec->env);
+//     }
+
+//     // Redirect stdout if necessary
+//     if (root->output) {
+//         handle_output_redirections(root->output, exec->env);
+//     }
+
+//     // Execute the command or further traverse the tree
+//     if (root->type == CMD) {
+//         if (fork() == 0)
+//         {
+//             execute_command(root, exec);
+//             _exit(1); // Only exit the child process
+//         }
+//         else
+//         {
+//             wait(NULL); // Wait for the child process to finish
+//         }
+//     }
+//     else
+//     {
+//         execute_subtree(root->l_token, exec);
+//         execute_subtree(root->r_token, exec);
+//     }
+
+//     dup2(original_stdin, STDIN_FILENO);
+//     dup2(original_stdout, STDOUT_FILENO);
+
+//     close(original_stdin);
+//     close(original_stdout);
+// }
+
+// void execute(t_token *token, t_exec *exec)
+// {
+//     if (token == NULL)
+//         return;
+
+//     if (token->input || token->output)
+//     {
+//         execute_subtree(token, exec);
+//         return;
+//     }
+
+//     if (token->type == CMD && token->cmd->cmd) // Execute a simple command
+//     {
+//         execute_command(token, exec);
+//     }
+//     else if (token->type == PIPE)
+//     {
+//         execute_pipe(token, exec);
+//     }
+//     else if (token->type == AND)
+//     {
+//         execute(token->l_token, exec);
+//         if (stat(0, 0) == 0)
+//             execute(token->r_token, exec);
+//     }
+//     else if (token->type == OR)
+//     {
+//         execute(token->l_token, exec);
+//         if (stat(0, 0) != 0)
+//             execute(token->r_token, exec);
+//     }
+// }
+
+
+// void execute_and(t_token *node, t_exec *exec)
+// {
+//     execute(node->l_token, exec);
+//     if (stat(0, 0) == 0)
+//         execute(node->r_token, exec);
+//     // return status;
+// }
+
+// void execute_or(t_token *node, t_exec *exec)
+// {
+//     execute(node->l_token, exec);
+//     if (stat(0, 0) != 0)
+//         execute(node->r_token, exec);
+//     // return status;
+// }
+
+void execute_subtree(t_token *root, t_exec *exec)
+{
+    if (root == NULL) 
+        return;
+    int original_stdin = dup(STDIN_FILENO);
+    int original_stdout = dup(STDOUT_FILENO);
+    if (root->input)
+        handle_input_redirections(root->input, exec->env);
+    if (root->output)
+        handle_output_redirections(root->output, exec->env);
+    if (root->type == CMD) {
+        if (fork() == 0)
+        {
+            execute_command(root, exec);
+            _exit(1);
+        }
+        else
+            wait(NULL);
+    }
+    else if (root->type == PIPE)
+    {
+        execute_pipe(root, exec);
+    }
+    else if (root->type == AND)
+    {
+        execute_subtree(root->l_token, exec);
+        if (stat(0, 0) == 0)
+            execute_subtree(root->r_token, exec);
+    }
+    else if (root->type == OR)
+    {
+        execute_subtree(root->l_token, exec);
+        if (stat(0, 0) != 0)
+            execute_subtree(root->r_token, exec);
+    }
+    dup2(original_stdin, STDIN_FILENO);
+    dup2(original_stdout, STDOUT_FILENO);
+    close(original_stdin);
+    close(original_stdout);
+}
+
 void execute(t_token *token, t_exec *exec)
 {
     if (token == NULL)
         return;
-    if (token && token->output && token->output->file_name)
-        printf("heeer======%s========%d=======+++++++++\n", token->output->file_name, token->type);
-    if (token->type == CMD && token->cmd->cmd) //put && instead of || or idk to cj=heck later
-        // execute a simple command
+
+    if (token->input || token->output)
+    {
+        execute_subtree(token, exec);
+        return;
+    }
+
+    if (token->type == CMD && token->cmd->cmd)
+    {
         execute_command(token, exec);
+    }
     else if (token->type == PIPE)
+    {
         execute_pipe(token, exec);
+    }
     else if (token->type == AND)
     {
-       execute(token->l_token, exec);
-        if (stat(0, 0) == 0)
-            execute(token->r_token, exec);
+        execute_and(token, exec);
     }
     else if (token->type == OR)
     {
-        execute(token->l_token, exec);
-        if (stat(0, 0) != 0)
-            execute(token->r_token, exec);
+        execute_or(token, exec);
     }
 }
-
 
 void execute_and(t_token *node, t_exec *exec)
 {
     execute(node->l_token, exec);
     if (stat(0, 0) == 0)
         execute(node->r_token, exec);
-    // return status;
 }
 
 void execute_or(t_token *node, t_exec *exec)
@@ -338,5 +563,4 @@ void execute_or(t_token *node, t_exec *exec)
     execute(node->l_token, exec);
     if (stat(0, 0) != 0)
         execute(node->r_token, exec);
-    // return status;
 }

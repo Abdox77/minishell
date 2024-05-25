@@ -289,6 +289,7 @@ int check_to_expand(char *cmd, t_env *env_list);
 void	ft_exit(char **cmd);
 char *ft_strndup(const char *s1, size_t n);
 char **expand_wildcards(char **args);
+void handle_input_redirections(t_redir *input, t_env *env);
 
 
 
