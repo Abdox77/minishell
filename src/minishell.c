@@ -169,8 +169,8 @@ void expand_heredoc_to_infiles(t_exec *exec, t_token **root, t_bool error_flag)
             tmp_og = (*root)->cmd->og_tokens->og_input;
             while(tmp)
             {
-                if (tmp->mode == HEREDOC)
-                    here_doc(exec , tmp_og, tmp, error_flag);     
+                if (tmp->mode == HEREDOC && tmp->file_name)
+                        here_doc(exec , tmp_og, tmp, error_flag);
                 tmp = tmp->next;
                 tmp_og = tmp_og->next;
             }
@@ -228,7 +228,7 @@ void    minishell_loop(char **env)
         if (line)
 		    add_history(line);
         special_trim(&line);
-        head_tokens = lexer_manager( &line);
+        head_tokens = lexer_manager(&line);
         display(head_tokens);
         evaluate_syntax(head_tokens);
         heredoc_to_fds(&head_tokens);
