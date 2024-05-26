@@ -285,6 +285,7 @@ void handle_input_redirections(t_redir *input, t_redir *og_input, t_env *env, t_
         }
         else if (input->mode == HEREDOC)
         {
+            expanded_filename = ft_strdup(input->file_name);
             open_heredoc(exec, input->here_doc_fd[1],input->file_name, og_input->file_name);
             if (dup2(input->here_doc_fd[0], STDIN_FILENO) < 0)
             {
