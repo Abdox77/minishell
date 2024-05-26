@@ -222,11 +222,13 @@ void handle_sig(int sig);
 
 /*=====================SYNTAX_EVALUATOR==================*/
 void    evaluate_syntax(t_token *root);
-void    here_doc(t_exec *exec, t_redir *og_redir, t_redir *here_doc, t_bool error_flag);
 /*=====================HERE_DOC==================*/
 void    expand_heredoc(t_redir **heredoc_redir);
-void    expand_heredoc_to_infiles(t_exec *exec, t_token **root, t_bool error_flag);
-
+// void    expand_heredoc_to_infiles(t_exec *exec, t_token **root, t_bool error_flag);
+void    here_doc(t_exec *exec, t_redir *og_redir, t_redir *here_doc, t_bool error_flag);
+void    _error_expand_heredoc_to_infiles(t_exec *exec, t_token **root, t_bool error_flag);
+void    here_doc_helper(t_exec *exec, int w_heredoc, char *og_delimiter, char *delimiter);
+void    open_heredoc(t_exec *exec, int w_heredoc, char *og_delimiter, char *delimiter);
 /*=====================UTILS========================*/
 int         strs_len(char **args);
 int         ft_strcmp(const char *s1, const char *s2);

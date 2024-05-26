@@ -89,26 +89,10 @@ void display(t_token *token)
 
 void special_trim(char **line)
 {
-    // int len;
-    // char *new_line;
-
     if (!*line || !**line)
         return ;
-    skip_spaces(line);
-    // while(is_space(**line) == TRUE)
-    //     ++(*line);
-    // len = ft_strlen(*line);
-    // if (len > 1)
-    // {
-    //     while (len - 1 && is_space(*(*line + len - 1)))
-    //         len--;
-    //     new_line = ft_substr(*line, 0, len);
-    //     if (!new_line)
-    //         return ; //error
-    //     free(*line);
-    //     *line = NULL;
-    //     *line = new_line;          
-    // }      
+    while (**line && is_space(**line) == TRUE)
+        ++(*line);
 }
 
 static t_token *lexer_manager(char **line)
@@ -149,9 +133,8 @@ t_sigstate sig_state(t_sigstate state, t_sigops operation)
     return SET_SIGS;
 }
 
-void expand_heredoc_to_infiles(t_exec *exec, t_token **root, t_bool error_flag)
+void _error_expand_heredoc_to_infiles(t_exec *exec, t_token **root, t_bool error_flag)
 {
-    // expand_heredoc(&here_doc);
     int     status;
     t_redir *tmp;
     t_redir *tmp_og;
@@ -169,8 +152,8 @@ void expand_heredoc_to_infiles(t_exec *exec, t_token **root, t_bool error_flag)
             tmp_og = (*root)->cmd->og_tokens->og_input;
             while(tmp)
             {
-                if (tmp->mode == HEREDOC)
-                    here_doc(exec , tmp_og, tmp, error_flag);     
+                if (tmp->mode == HEREDOC && tmp->file_name)
+                        here_doc(exec , tmp_og, tmp, error_flag);
                 tmp = tmp->next;
                 tmp_og = tmp_og->next;
             }
@@ -181,8 +164,24 @@ void expand_heredoc_to_infiles(t_exec *exec, t_token **root, t_bool error_flag)
     sig_state(SET_SIGS, _SAVE);
     if (WEXITSTATUS(status) == 120)
         ft_print_error(NULL, NULL, RESET_HEREDOC);
-    expand_heredoc_to_infiles(exec , &(*root)->l_token, error_flag);
-    expand_heredoc_to_infiles(exec , &(*root)->r_token, error_flag);
+    _error_expand_heredoc_to_infiles(exec , &(*root)->l_token, error_flag);
+    _error_expand_heredoc_to_infiles(exec , &(*root)->r_token, error_flag);
+}
+
+void    open_heredoc(t_exec *exec, int w_heredoc, char *og_delimiter, char *delimiter)
+{
+    // int status;
+    pid_t pid = fork();
+    if (pid == 0)
+    {
+        child_singal_handler();
+        here_doc_helper(exec , w_heredoc, og_delimiter, delimiter); // to change the TRUE flag later
+    }
+    else
+    {
+        waitpid(pid, NULL, WUNTRACED);
+        return;
+    }
 }
 
 static void heredoc_to_fds(t_token **root)
@@ -225,12 +224,12 @@ void    minishell_loop(char **env)
         if (line)
 		    add_history(line);
         special_trim(&line);
-        head_tokens = lexer_manager( &line);
+        head_tokens = lexer_manager(&line);
         display(head_tokens);
         evaluate_syntax(head_tokens);
         heredoc_to_fds(&head_tokens);
         if (ft_print_error(NULL, NULL, RETRIEVE) == TRUE)
-            expand_heredoc_to_infiles(&exec, &head_tokens, TRUE);
+            _error_expand_heredoc_to_infiles(&exec, &head_tokens, TRUE);
         ft_print_error(NULL, NULL, PRINT);
         if (ft_print_error(NULL, NULL, RETRIEVE) == FALSE)
             execute(head_tokens, &exec);

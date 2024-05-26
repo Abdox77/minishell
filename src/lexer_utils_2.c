@@ -54,7 +54,7 @@ void handle_input(t_token **token, char **line, t_bool is_root)
     else
         mode = INFILE; // or output to check later
     special_trim(line);
-    if (!**line)
+    if (!**line || is_redirection_char(**line) == TRUE || (is_special_char(**line) == FALSE && is_quote(**line) == FALSE))
     {
         ft_print_error("Syntax error near unexpected token 'newline'\n", line, SAVE);
         return;
@@ -75,6 +75,12 @@ void handle_input(t_token **token, char **line, t_bool is_root)
     else
         file_name =  ft_substr(*line, 0, len);
     (*line) += len;
+    if (ft_print_error(NULL, NULL, RETRIEVE) == TRUE)
+    {
+        printf("entered here\n");
+        free(file_name);
+        file_name = NULL;
+    }
     if (is_root == FALSE)
     {
         add_redirection(&((*token)->cmd->input), mode, file_name);
