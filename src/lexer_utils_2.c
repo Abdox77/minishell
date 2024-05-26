@@ -54,8 +54,9 @@ void handle_input(t_token **token, char **line, t_bool is_root)
     else
         mode = INFILE; // or output to check later
     special_trim(line);
-    if (!**line || is_redirection_char(**line) == TRUE || (is_special_char(**line) == FALSE && is_quote(**line) == FALSE))
+    if (!**line || is_redirection_char(**line) == TRUE || (is_special_char(**line) == TRUE && is_quote(**line) == FALSE))
     {
+        printf("here\n");
         ft_print_error("Syntax error near unexpected token 'newline'\n", line, SAVE);
         return;
     }
