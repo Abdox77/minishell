@@ -283,6 +283,10 @@ void handle_input_redirections(t_redir *input, t_env *env)
             }
             close(fd);
         }
+        // else if (input->mode == HEREDOC)
+        // {
+                // void    open_heredoc(t_exec *exec, int w_heredoc, char *og_delimiter, char *delimiter)
+        // }
         free(expanded_filename);
         input = input->next;
     }

@@ -157,7 +157,7 @@ static char *expand_in_heredoc(t_exec *exec, char *line)
     return expanded_line;
 }
 
-static void here_doc_helper(t_exec *exec, int w_heredoc, char *og_delimiter, char *delimiter)
+void here_doc_helper(t_exec *exec, int w_heredoc, char *og_delimiter, char *delimiter)
 {
     char    *line;
     char    *buffer;
