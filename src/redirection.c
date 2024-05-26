@@ -258,16 +258,16 @@ static char *expand_arg_if_needed1(char *arg, char *og_arg, t_env *env_list) {
 
 
 
-void handle_input_redirections(t_redir *input, t_env *env)
+void handle_input_redirections(t_redir *input, t_redir *og_input, t_env *env, t_exec *exec)
 {
     int fd;
     char *expanded_filename;
 
     while (input)
     {
-        expanded_filename = expand_arg_if_needed1(input->file_name, input->file_name, env);
         if (input->mode == INFILE)
         {
+            expanded_filename = expand_arg_if_needed1(input->file_name, og_input->file_name, env);
             fd = open(expanded_filename, O_RDONLY);
             if (fd < 0)
             {
@@ -283,16 +283,24 @@ void handle_input_redirections(t_redir *input, t_env *env)
             }
             close(fd);
         }
-        // else if (input->mode == HEREDOC)
-        // {
-                // void    open_heredoc(t_exec *exec, int w_heredoc, char *og_delimiter, char *delimiter)
-        // }
+        else if (input->mode == HEREDOC)
+        {
+            open_heredoc(exec, input->here_doc_fd[1],input->file_name, og_input->file_name);
+            if (dup2(input->here_doc_fd[0], STDIN_FILENO) < 0)
+            {
+                perror("dup2 failed for input redirection");
+                exit(1);
+            }
+            close(input->here_doc_fd[0]);
+
+        }
         free(expanded_filename);
         input = input->next;
+        og_input = og_input->next;
     }
 }
 
-void handle_output_redirections(t_redir *output, t_env *env)
+void handle_output_redirections(t_redir *output, t_redir *og_output, t_env *env)
 {
     int fd;
     char *expanded_filename;
@@ -332,17 +340,18 @@ void handle_output_redirections(t_redir *output, t_env *env)
         close(fd);
         free(expanded_filename);
         output = output->next;
+        og_output = og_output->next;
     }
 }
 
-void handle_redirections(t_cmd *cmd, t_env *env)
+void handle_redirections(t_cmd *cmd, t_env *env, t_exec *exec)
 {
     int in;
     int out;
     in = dup(STDIN_FILENO);
     out = dup(STDOUT_FILENO);
-    handle_input_redirections(cmd->input, env);
-    handle_output_redirections(cmd->output, env);
+    handle_input_redirections(cmd->input, cmd->og_tokens->og_input, env, exec);
+    handle_output_redirections(cmd->output, cmd->og_tokens->og_output, env);
     dup2(STDIN_FILENO, in);
     dup2(STDOUT_FILENO, out);
 }
