@@ -12,6 +12,16 @@
 
 #include "minishell.h"
 
+
+static void	set_empty_env(t_env **head)
+{
+    char *str;
+	append_node(head, "SHLVL", "1");
+	append_node(head, "PWD", getcwd(NULL, 0));
+	str = ft_strjoin(getcwd(NULL, 0), "/minishell");
+	append_node(head, "_", str);
+	append_node(head, "PATH", "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin");
+}
 void	ft_write(char *str, int fd, int new_line)
 {
 	while (*str)
@@ -41,6 +51,8 @@ t_env    *parse_env(char **env)
 
     head = NULL;
     var.i = 0;
+    if (!*env)
+		return (set_empty_env(&head), head);
     while (env[var.i])
     {
         var.j = 0;

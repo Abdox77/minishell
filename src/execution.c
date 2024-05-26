@@ -252,21 +252,19 @@ void execute_command(t_token *token, t_exec *exec)
     args = initialize_args_if_null(cmd, args);
     args = process_args(args, token->cmd->og_tokens->og_args, token->cmd->og_tokens->og_cmd, cmd, exec->env);
     args = expand_wildcards(args);
-    if (args)
+    if (*args)
         cmd = args[0];
     else
-        cmd = "";
-
+        cmd = "\0";
     if (token->cmd->cmd && check_builtins(token, exec, args))
         return;
-
     pid_t pid = fork();
     if (pid < 0)
         perror("Fork failed");
     else if (pid == 0)
     {
-        handle_signals();
         handle_redirections(token->cmd, exec->env);
+        handle_signals();
         printf("flag is ________________--%d================== \n ", flag);
 
         if (!flag)
@@ -275,22 +273,27 @@ void execute_command(t_token *token, t_exec *exec)
             exit(0);
             return;
         }
-
-        printf("args are========%s \n", args[0]);
-        char *cmd_path = get_cmd(cmd, exec->envp);
-        printf("===============executing======= %s \n \n", cmd_path);
-        execve(cmd_path, args, exec->envp);
-        perror("execve failed");
-        ft_write(cmd, 2, 0);
-        ft_write(": command not found", 2, 1);
-        stat(127, 1);
-        exit(127);
+        if (cmd)
+        {
+            printf("args are========%s \n", args[0]);
+            char *cmd_path = get_cmd(cmd, exec->envp);
+            printf("===============executing======= %s \n \n", cmd_path);
+            execve(cmd_path, args, exec->envp);
+            perror("execve failed");
+            ft_write(cmd, 2, 0);
+            ft_write(": command not found", 2, 1);
+            stat(127, 1);
+            free(cmd_path);
+            free_2d(args);
+            exit(127);
+        }
     }
     else
     {
         int status;
         waitpid(pid, &status, 0);
         stat(WEXITSTATUS(status), 1);
+        free_2d(args);
     }
 }
 
@@ -533,7 +536,7 @@ void execute(t_token *token, t_exec *exec)
         return;
     }
 
-    if (token->type == CMD && token->cmd->cmd)
+    if (token->type == CMD)
     {
         execute_command(token, exec);
     }

@@ -51,11 +51,6 @@ int	ft_echo(char **arg)
 				continue ;
 			}
 		}
-		if (arg[i][0] == '$' && arg[i][1] == '?') // && !arg[i][2]
-		{
-            ft_write(ft_itoa(stat(0,0)), 1, 1);
-			return (1);
-		}
 		if (arg[i])
 		{
 			printf("%s",arg[i]);
@@ -67,6 +62,6 @@ int	ft_echo(char **arg)
 	if (flag == 0)
 		printf("\n");
 	stat(0, 1);
-	exit(0);
+	// exit(0);
 	return (0);
 }

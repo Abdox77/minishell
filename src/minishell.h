@@ -159,6 +159,7 @@ struct s_exec
 	int		o_out;
     int     in;
     int     out;
+    
 };
 
 
@@ -178,6 +179,13 @@ struct s_env_var {
     int rem;
 } ;
 
+struct s_exec_var {
+    char **tmp_key;
+    char **nullo;
+    char ** pro;
+    int j;
+    int rem;
+} ;
 
 /*=====================INIT=====================*/
 t_token     *init_token(void);

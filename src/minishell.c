@@ -215,12 +215,9 @@ void    minishell_loop(char **env)
     exec.envp = env_to_envp(&exec);
     head_tokens = NULL;
     while(42)
-    {
-        exec.out = dup(STDIN_FILENO);
-        exec.out = dup(STDOUT_FILENO);    
-        exec.env = parse_env(env);
+    { 
         exec.envp = env_to_envp(&exec);
-        singal_handler(); 
+        singal_handler();
         og_line = readline(GREEN"minishell$ " "\033[35m");
         line = og_line;
         if (!line)
@@ -241,10 +238,9 @@ void    minishell_loop(char **env)
         if (*line)
             printf("WTF LINE ISN'T EMPTY : line is %s\n", line);
         free(og_line);
+        free_strs(exec.envp);
         cleanup(head_tokens);
         head_tokens = NULL;
-        // close(exec.in);
-        // close(exec.out);
     }
 }
 

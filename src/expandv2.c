@@ -330,8 +330,8 @@ char **process_args(char **args, char **og_args, char *og_cmd, char *cmd, t_env 
 
 
 static char *find_env_value(const char *var_name, t_env *env_list) {
-    if (ft_strcmp(var_name, "?") == 0) {;
-        return (ft_itoa(stat(0,0)));
+    if (ft_strcmp(var_name, "?") == 0) {
+        return (ft_itoa(stat(0, 0)));
     }
 
     while (env_list != NULL) {
@@ -343,6 +343,93 @@ static char *find_env_value(const char *var_name, t_env *env_list) {
     return NULL;
 }
 
+// static size_t get_expanded_length(const char *str, t_env *env_list) {
+//     size_t length = 0;
+//     int in_single_quotes = 0;
+//     int in_double_quotes = 0;
+
+//     while (*str) {
+//         if (*str == '\'') {
+//             in_single_quotes = !in_single_quotes;
+//             str++;
+//         } else if (*str == '"') {
+//             in_double_quotes = !in_double_quotes;
+//             str++;
+//         } else if (*str == '$' && !in_single_quotes) {
+//             str++;
+//             const char *var_start = str;
+//             if (*str == '?') {
+//                 length += strlen(find_env_value("?", env_list));
+//                 str++;
+//             } else {
+//                 while (*str && (isalnum(*str) || *str == '_')) {
+//                     str++;
+//                 }
+//                 size_t var_len = str - var_start;
+//                 char *var_name = strndup(var_start, var_len);
+//                 char *var_value = find_env_value(var_name, env_list);
+//                 free(var_name);
+//                 if (var_value) {
+//                     length += strlen(var_value);
+//                 }
+//             }
+//         } else {
+//             length++;
+//             str++;
+//         }
+//     }
+//     return length;
+// }
+
+// // Function to expand environment variables in the input string
+// char *expand_string(const char *str, t_env *env_list) {
+//     size_t result_size = get_expanded_length(str, env_list) + 1;
+//     char *result = (char *)malloc(result_size);
+//     if (!result) {
+//         perror("malloc failed");
+//         exit(EXIT_FAILURE);
+//     }
+//     result[0] = '\0';
+//     char *result_ptr = result;
+//     int in_single_quotes = 0;
+//     int in_double_quotes = 0;
+
+//     while (*str) {
+//         if (*str == '\'') {
+//             in_single_quotes = !in_single_quotes;
+//             str++;
+//         } else if (*str == '"') {
+//             in_double_quotes = !in_double_quotes;
+//             str++;
+//         } else if (*str == '$' && !in_single_quotes) {
+//             str++;
+//             const char *var_start = str;
+//             if (*str == '?') {
+//                 char *var_value = find_env_value("?", env_list);
+//                 strcpy(result_ptr, var_value);
+//                 result_ptr += strlen(var_value);
+//                 str++;
+//             } else {
+//                 while (*str && (isalnum(*str) || *str == '_')) {
+//                     str++;
+//                 }
+//                 size_t var_len = str - var_start;
+//                 char *var_name = strndup(var_start, var_len);
+//                 char *var_value = find_env_value(var_name, env_list);
+//                 free(var_name);
+//                 if (var_value) {
+//                     strcpy(result_ptr, var_value);
+//                     result_ptr += strlen(var_value);
+//                 }
+//             }
+//         } else {
+//             *result_ptr++ = *str++;
+//         }
+//     }
+//     *result_ptr = '\0';
+//     return result;
+// }
+// // this is my expander when i give "$VAR1'$VAR2" (the value of var1 is hello, the value of var2 is world) it gives me hello$VAR2 instead of hello'world
 static size_t get_expanded_length(const char *str, t_env *env_list) {
     size_t length = 0;
     int in_single_quotes = 0;
@@ -351,18 +438,27 @@ static size_t get_expanded_length(const char *str, t_env *env_list) {
     while (*str) {
         if (*str == '\'') {
             in_single_quotes = !in_single_quotes;
+            length++;
             str++;
         } else if (*str == '"') {
             in_double_quotes = !in_double_quotes;
+            length++;
             str++;
         } else if (*str == '$' && !in_single_quotes) {
             str++;
+            if (*str == '\0' || isspace((unsigned char)*str) || (!isalnum((unsigned char)*str) && *str != '_')) {
+                length++;  // Count the literal '$'
+                continue;
+            }
             const char *var_start = str;
             if (*str == '?') {
-                length += strlen(find_env_value("?", env_list));
+                char *var_value = find_env_value("?", env_list);
+                if (var_value) {
+                    length += strlen(var_value);
+                }
                 str++;
             } else {
-                while (*str && (isalnum(*str) || *str == '_')) {
+                while (*str && (isalnum((unsigned char)*str) || *str == '_')) {
                     str++;
                 }
                 size_t var_len = str - var_start;
@@ -381,7 +477,6 @@ static size_t get_expanded_length(const char *str, t_env *env_list) {
     return length;
 }
 
-// Function to expand environment variables in the input string
 char *expand_string(const char *str, t_env *env_list) {
     size_t result_size = get_expanded_length(str, env_list) + 1;
     char *result = (char *)malloc(result_size);
@@ -397,20 +492,26 @@ char *expand_string(const char *str, t_env *env_list) {
     while (*str) {
         if (*str == '\'') {
             in_single_quotes = !in_single_quotes;
-            str++;
+            *result_ptr++ = *str++;
         } else if (*str == '"') {
             in_double_quotes = !in_double_quotes;
-            str++;
+            *result_ptr++ = *str++;
         } else if (*str == '$' && !in_single_quotes) {
             str++;
+            if (*str == '\0' || isspace((unsigned char)*str) || (!isalnum((unsigned char)*str) && *str != '_')) {
+                *result_ptr++ = '$';
+                continue;
+            }
             const char *var_start = str;
             if (*str == '?') {
                 char *var_value = find_env_value("?", env_list);
-                strcpy(result_ptr, var_value);
-                result_ptr += strlen(var_value);
+                if (var_value) {
+                    strcpy(result_ptr, var_value);
+                    result_ptr += strlen(var_value);
+                }
                 str++;
             } else {
-                while (*str && (isalnum(*str) || *str == '_')) {
+                while (*str && (isalnum((unsigned char)*str) || *str == '_')) {
                     str++;
                 }
                 size_t var_len = str - var_start;
