@@ -168,8 +168,6 @@ void here_doc_helper(t_exec *exec, int w_heredoc, char *og_delimiter, char *deli
     to_be_expanded = ft_check_for_quotes(og_delimiter);
     while(is_delimiter(line, delimiter) == FALSE)
     {
-        if (buffer)
-            free(buffer);
         line = readline(YELLOW"Heredoc>"RESET_COLORS);
         if (!line)
         {
@@ -180,8 +178,10 @@ void here_doc_helper(t_exec *exec, int w_heredoc, char *og_delimiter, char *deli
             buffer = expand_in_heredoc(exec, line);
         else if (is_delimiter(line, delimiter) == FALSE)
             buffer = ft_strdup(line);
-        if (buffer)
+        if (buffer && is_delimiter(line, delimiter) == FALSE)
             write(w_heredoc, buffer, ft_strlen(buffer));
+        if (buffer)
+            free(buffer);
     }
     close(w_heredoc);
 }
