@@ -168,6 +168,7 @@ void here_doc_helper(t_exec *exec, int w_heredoc, char *og_delimiter, char *deli
     to_be_expanded = ft_check_for_quotes(og_delimiter);
     while(is_delimiter(line, delimiter) == FALSE)
     {
+        free(line);
         line = readline(YELLOW"Heredoc>"RESET_COLORS);
         if (!line)
         {
@@ -175,13 +176,21 @@ void here_doc_helper(t_exec *exec, int w_heredoc, char *og_delimiter, char *deli
             break;
         }
         if (to_be_expanded == TRUE && exec && is_delimiter(line, delimiter) == FALSE)
-            buffer = expand_in_heredoc(exec, line);
+                buffer = expand_in_heredoc(exec, line);
         else if (is_delimiter(line, delimiter) == FALSE)
+        {
             buffer = ft_strdup(line);
+        }
         if (buffer && is_delimiter(line, delimiter) == FALSE)
+        {
             write(w_heredoc, buffer, ft_strlen(buffer));
+            write(w_heredoc, "\n", 1);
+        }
         if (buffer)
+        {
             free(buffer);
+            buffer = NULL;
+        }
     }
     close(w_heredoc);
 }
