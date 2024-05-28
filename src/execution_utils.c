@@ -27,31 +27,62 @@ void	free_2d(char **arr)
 	free(arr);
 }
 
-char	*get_cmd(char *cmd, char **envp)
-{
-	char	**tab;
-	char	*pathcmd;
-	int		j;
+// char	*get_cmd(char *cmd, char **envp)
+// {
+// 	char	**tab;
+// 	char	*pathcmd;
+// 	int		j;
 
-	j = 0;
-	if (ft_strchr(cmd, '/'))
-	{
-		if (access(cmd, F_OK | X_OK) != -1)
-			return (ft_strdup(cmd));
-		return (NULL);
-	}
-	tab = find_path(envp);
-	if (!tab)
-		return (printf("path not found\n"),
-			exit(EXIT_FAILURE), NULL);
-	while (tab[j] && tab)
-	{
-		pathcmd = ft_strjoin("/", cmd);
-		pathcmd = ft_strjoin(tab[j], pathcmd);
-		if (access(pathcmd, F_OK | X_OK) != -1)
-			return (free_2d(tab), pathcmd);
-		free(pathcmd);
-		j++;
-	}
-	return (free_2d(tab), NULL);
+// 	j = 0;
+// 	if (ft_strchr(cmd, '/'))
+// 	{
+// 		if (access(cmd, F_OK | X_OK) != -1)
+// 			return (ft_strdup(cmd));
+// 		return (NULL);
+// 	}
+// 	tab = find_path(envp);
+// 	if (!tab)
+// 		return (printf("path not found\n"),
+// 			exit(EXIT_FAILURE), NULL);
+// 	while (tab[j] && tab)
+// 	{
+// 		pathcmd = ft_strjoin("/", cmd);
+// 		pathcmd = ft_strjoin(tab[j], pathcmd);
+// 		if (access(pathcmd, F_OK | X_OK) != -1)
+// 			return (free_strs(tab), pathcmd);
+// 		free(pathcmd);
+// 		j++;
+// 	}
+// 	return (free_strs(tab), NULL);
+// }
+
+char *get_cmd(char *cmd, char **envp) {
+    char **tab;
+    char *pathcmd;
+    char *tmp_pathcmd;
+    int j;
+
+    j = 0;
+    if (ft_strchr(cmd, '/')) {
+        if (access(cmd, F_OK | X_OK) != -1)
+            return ft_strdup(cmd);
+        return NULL;
+    }
+    tab = find_path(envp);
+    if (!tab)
+        return (printf("path not found\n"), exit(EXIT_FAILURE), NULL);
+
+    while (tab[j] && tab) {
+        tmp_pathcmd = ft_strjoin("/", cmd);
+        pathcmd = ft_strjoin(tab[j], tmp_pathcmd);
+        free(tmp_pathcmd);
+        if (access(pathcmd, F_OK | X_OK) != -1) {
+            free_strs(tab);
+            return pathcmd;
+        }
+        free(pathcmd);
+        j++;
+    }
+    free_strs(tab);
+    return NULL;
 }

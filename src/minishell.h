@@ -159,7 +159,7 @@ struct s_exec
 	int		o_out;
     int     in;
     int     out;
-    
+    char    **to_free;
 };
 
 
@@ -279,7 +279,8 @@ char        *expand_env_variable(char *input, t_env *env);
 void        handle_input_redirection(t_redir *input, t_env *env);
 void        handle_output_redirection(t_redir *output, t_env *env);
 void        handle_redirections(t_cmd *cmd, t_env *env, t_exec *exec);
-int	        check_builtins(t_token *node, t_exec *exec, char **args);
+// int	        check_builtins(t_token *node, t_exec *exec, char **args);
+int	check_builtins(char *cmd, t_exec *exec, char **args);
 void handle_output_redirections(t_redir *output, t_redir *og_output, t_env *env);
 // void        expand_variables(t_cmd *cmd, t_env *env_list, int *flag);
 // char        *expand_token(const char *token, t_env *env_list);
@@ -319,6 +320,7 @@ void        free_cmd(t_token *root);
 void        free_token(t_token *root);
 void        cleanup(t_token *root);
 t_bool      ft_print_error(char *message, char **line, t_error indicator);
-void    ft_error(char *error_message, int exit_code);
+void        ft_error(char *error_message, int exit_code);
+void        free_env_list(t_env *head);
 
 #endif

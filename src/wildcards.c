@@ -105,11 +105,7 @@ char **expand_wildcards(char **args)
     size_t total_size = calculate_total_size(args);
     char **expanded_args = (char **)malloc((total_size + 1) * sizeof(char *));
     if (!expanded_args)
-    {
-        perror("malloc failed");
-        return NULL;
-    }
-
+        return (perror("malloc failed"),NULL);
     int i = 0;
     int count = 0;
 
@@ -134,7 +130,6 @@ char **expand_wildcards(char **args)
             expanded_args[count++] = strdup(args[i]);
         i++;
     }
-
     expanded_args[count] = NULL;
     return expanded_args;
 }

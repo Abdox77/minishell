@@ -1,15 +1,32 @@
 #include "minishell.h"
 
+// void free_strs(char **strs)
+// {
+//     int i;
+
+//     if (!strs)
+//         return;
+//     i = -1;
+//     while(strs[++i])
+//         free(strs[i]);
+//     free(strs);        
+// }
+
 void free_strs(char **strs)
 {
-    int i;
-
-    if (!strs)
-        return;
-    i = -1;
-    while(strs[++i])
-        free(strs[i]);
-    free(strs);        
+    int i; 
+    i = 0;
+    if (strs)
+    {
+        while (strs[i])
+        {
+            free(strs[i]);
+            strs[i] = NULL;  // Set the pointer to NULL after freeing
+            i++;
+        }
+        free(strs);
+        strs = NULL;  // Set the pointer to NULL after freeing
+    }
 }
 
 void free_redirections(t_redir *redir)
@@ -94,3 +111,19 @@ void    ft_error(char *error_message, int exit_code)
     ft_putstr_fd(error_message, STDERR_FILENO);
     exit(exit_code);
 }
+
+void free_env_list(t_env *head)
+{
+
+    t_env *tmp;
+    
+    while (head != NULL)
+    {
+        tmp = head;
+        head = head->next;
+        free(tmp->key);
+        free(tmp->value);
+        free(tmp);
+    }
+}
+

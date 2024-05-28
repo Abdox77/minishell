@@ -146,41 +146,78 @@ static int is_inside_quotes(const char *str, const char *pos) {
 
 
 // Function to expand a single argument if it contains a $
+// char **expand_arg_if_needed(char *arg, char *og_arg, t_env *env_list) {
+//     if (arg)
+//     {
+//             if (strchr(arg, '$')) {
+//                 char *expanded = expand_string(og_arg, env_list);
+//                 char **split_expanded;
+
+//                 if (is_inside_quotes(og_arg, strchr(og_arg, '$'))) {
+//                     // If the variable is inside quotes, do not split
+//                     split_expanded = (char **)malloc(2 * sizeof(char *));
+//                     if (split_expanded == NULL) {
+//                         perror("malloc failed");
+//                         exit(EXIT_FAILURE);
+//                     }
+//                     split_expanded[0] = expanded;
+//                     split_expanded[1] = NULL;
+//                 } else {
+//                     // Otherwise, split by spaces
+//                     split_expanded = split_by_spaces(expanded);
+//                     free(expanded);
+//                 }
+//                 return split_expanded;
+//             }
+
+//             char **single_arg = (char **)malloc(2 * sizeof(char *));
+//             if (single_arg == NULL) {
+//                 perror("malloc failed");
+//                 exit(EXIT_FAILURE);
+//             }
+//             single_arg[0] = strdup(arg);
+//             single_arg[1] = NULL;
+//             return single_arg;
+//     }
+//     else
+//         return NULL;
+// }
+
 char **expand_arg_if_needed(char *arg, char *og_arg, t_env *env_list) {
-    if (arg)
-    {
-            if (strchr(arg, '$')) {
-                char *expanded = expand_string(og_arg, env_list);
-                char **split_expanded;
+    if (arg) {
+        if (strchr(arg, '$')) {
+            char *expanded = expand_string(og_arg, env_list);
+            char **split_expanded;
 
-                if (is_inside_quotes(og_arg, strchr(og_arg, '$'))) {
-                    // If the variable is inside quotes, do not split
-                    split_expanded = (char **)malloc(2 * sizeof(char *));
-                    if (split_expanded == NULL) {
-                        perror("malloc failed");
-                        exit(EXIT_FAILURE);
-                    }
-                    split_expanded[0] = expanded;
-                    split_expanded[1] = NULL;
-                } else {
-                    // Otherwise, split by spaces
-                    split_expanded = split_by_spaces(expanded);
+            if (is_inside_quotes(og_arg, strchr(og_arg, '$'))) {
+                // If the variable is inside quotes, do not split
+                split_expanded = (char **)malloc(2 * sizeof(char *));
+                if (split_expanded == NULL) {
+                    perror("malloc failed");
                     free(expanded);
+                    exit(EXIT_FAILURE);
                 }
-                return split_expanded;
+                split_expanded[0] = expanded;
+                split_expanded[1] = NULL;
+            } else {
+                // Otherwise, split by spaces
+                split_expanded = split_by_spaces(expanded);
+                free(expanded);
             }
+            return split_expanded;
+        }
 
-            char **single_arg = (char **)malloc(2 * sizeof(char *));
-            if (single_arg == NULL) {
-                perror("malloc failed");
-                exit(EXIT_FAILURE);
-            }
-            single_arg[0] = strdup(arg);
-            single_arg[1] = NULL;
-            return single_arg;
-    }
-    else
+        char **single_arg = (char **)malloc(2 * sizeof(char *));
+        if (single_arg == NULL) {
+            perror("malloc failed");
+            exit(EXIT_FAILURE);
+        }
+        single_arg[0] = strdup(arg);
+        single_arg[1] = NULL;
+        return single_arg;
+    } else {
         return NULL;
+    }
 }
 
 // Function to concatenate two arrays of strings
@@ -238,7 +275,7 @@ char **process_args(char **args, char **og_args, char *og_cmd, char *cmd, t_env 
     {
         while(for_cmd[i])
         {
-            processed_args[i] = for_cmd[i];
+            processed_args[i] = strdup(for_cmd[i]);
             i++;
         }
     }
@@ -256,7 +293,7 @@ char **process_args(char **args, char **og_args, char *og_cmd, char *cmd, t_env 
         i++;
     }
 
-    return processed_args;
+    return (free_strs(for_cmd), processed_args);
 }
 
 // this i smy expander

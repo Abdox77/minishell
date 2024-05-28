@@ -70,8 +70,12 @@ t_env    *parse_env(char **env)
             exit(2);
         }
         append_node(&head, var.tmp_key, var.tmp_val);
+        free(var.tmp_val);
+        free(var.tmp_key);
         var.i++;
     }
+    // free(var.tmp_val);
+    // free(var.tmp_key);
     return (head);
 }
 

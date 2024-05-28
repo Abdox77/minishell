@@ -683,19 +683,33 @@ static int is_quoted(const char *str) {
     }
     return 0;
 }
-
-int check_to_expand(char *cmd, t_env *env_list) {
+int check_to_expand(char *cmd, t_env *env_list)
+{
+    int result;
+    char *str;
+    result = 1;
     if (!cmd || cmd[0] != '$')
         return 1;
-    if (is_quoted(cmd))
+    else if (is_quoted(cmd))
         return 1;
-    int i = 1;
-    while (cmd[i]) {
-        if (!is_expandable_char(cmd[i]))
-            return 1;
-        i++;
+    else {
+        int i = 1;
+        while (cmd[i])
+        {
+            if (!is_expandable_char(cmd[i]))
+            {
+                result = 1;
+                break;
+            }
+            i++;
+        }
+        str = expand_string1(cmd, env_list);
+        if (str)
+            result = 1;
+        else
+            result = 0;
     }
-    return expand_string1(cmd, env_list) ? 1 : 0;
+    return (free(str), str = NULL, result);
 }
 
 static char **initialize_args_if_null(char *cmd, char **args) {
@@ -705,7 +719,7 @@ static char **initialize_args_if_null(char *cmd, char **args) {
             perror("Failed to allocate memory for args");
             exit(EXIT_FAILURE);
         }
-        args[0] = cmd;
+        args[0] = strdup(cmd);
         args[1] = NULL;
     }
     return args;
@@ -715,31 +729,184 @@ static void handle_signals(void) {
     signal(SIGINT, SIG_DFL);
 }
 
-void execute_command(t_token *token, t_exec *exec)
+char **expander(t_token *token, t_exec *exec, char *cmd)
 {
-    exec->envp = env_to_envp(exec);
+    // char **args;
+    char **processed_args;
+    char **expanded_wildcards;
+
+    exec->to_free = initialize_args_if_null(cmd, token->cmd->args);
+    processed_args = process_args(exec->to_free, token->cmd->og_tokens->og_args, token->cmd->og_tokens->og_cmd, cmd, exec->env);
+    // free_strs(args);
+    expanded_wildcards = expand_wildcards(processed_args);
+    free_strs(processed_args);
+    return expanded_wildcards;
+}
+
+// void execute_command(t_token *token, t_exec *exec)
+// {
+//     exec->envp = env_to_envp(exec);
+//     char *cmd = token->cmd->cmd;
+//     // char **args = initialize_args_if_null(cmd, token->cmd->args);
+//     // args = process_args(args, token->cmd->og_tokens->og_args, token->cmd->og_tokens->og_cmd, cmd, exec->env);
+//     // args = expand_wildcards(args);
+//     char **args = expander(token, exec, cmd);
+//     int flag = check_to_expand(token->cmd->og_tokens->og_cmd, exec->env);
+//     if (args[0])
+//         cmd = args[0];
+//     else
+//         cmd = "\0";
+//     if (check_builtins(cmd, exec, args))
+//         return;
+//     if (fork() == 0) {
+//         handle_signals();
+//         handle_redirections(token->cmd, exec->env, exec);
+//         if (!flag) {
+//             stat(0, 1);
+//             exit(0);
+//         }
+//         char *cmd_path = get_cmd(cmd, exec->envp);
+//         execve(cmd_path, args, exec->envp);
+//         perror("execve failed");
+//         free(cmd_path);
+//         free_strs(args);
+//         exit(127);
+//     }
+//     int status;
+//     free_strs(args);
+//     wait(&status);
+//     stat(WEXITSTATUS(status), 1);
+// }
+
+// void execute_command(t_token *token, t_exec *exec) {
+//     exec->envp = env_to_envp(exec);
+//     char *cmd = token->cmd->cmd;
+//     char **args = expander(token, exec, cmd);
+//     int flag = check_to_expand(token->cmd->og_tokens->og_cmd, exec->env);
+
+//     if (args[0])
+//         cmd = args[0];
+//     else
+//         cmd = "\0";
+
+//     if (check_builtins(cmd, exec, args)) {
+//         free_strs(exec->envp);
+//         free_strs(args);
+//         return;
+//     }
+
+//     if (fork() == 0) {
+//         handle_signals();
+//         handle_redirections(token->cmd, exec->env, exec);
+
+//         if (!flag) {
+//             stat(0, 1);
+//             exit(0);
+//         }
+
+//         char *cmd_path = get_cmd(cmd, exec->envp);
+//         if (cmd_path)
+//             execve(cmd_path, args, exec->envp);
+//         perror("execve failed");
+//         free(cmd_path);
+//         free_strs(args);
+//         free_strs(exec->envp);
+//         exit(127);
+//     }
+
+//     int status;
+//     wait(&status);
+//     free_strs(args);
+//     free_strs(exec->envp);
+//     stat(WEXITSTATUS(status), 1);
+// }
+
+// void execute_command(t_token *token, t_exec *exec) {
+//     exec->envp = env_to_envp(exec);
+//     char *cmd = token->cmd->cmd;
+//     char **args = expander(token, exec, cmd);
+//     int flag = check_to_expand(token->cmd->og_tokens->og_cmd, exec->env);
+
+//     if (args[0])
+//         cmd = args[0];
+//     else
+//         cmd = "\0";
+
+//     if (check_builtins(cmd, exec, args)) {
+//         free_strs(exec->envp);
+//         free_strs(args);
+//         return;
+//     }
+
+//     if (fork() == 0) {
+//         handle_signals();
+//         handle_redirections(token->cmd, exec->env, exec);
+
+//         if (!flag) {
+//             stat(0, 1);
+//             exit(0);
+//         }
+
+//         char *cmd_path = get_cmd(cmd, exec->envp);
+//         execve(cmd_path, args, exec->envp);
+//         perror("execve failed");
+//         free(cmd_path);
+//         free_strs(args);
+//         free_strs(exec->envp);
+//         exit(127);
+//     }
+
+//     int status;
+//     wait(&status);
+//     free_strs(args);
+//     free_strs(exec->envp);
+//     stat(WEXITSTATUS(status), 1);
+// }
+
+void execute_command(t_token *token, t_exec *exec) {
+    // exec->envp = env_to_envp(exec);
     char *cmd = token->cmd->cmd;
-    char **args = initialize_args_if_null(cmd, token->cmd->args);
+    char **args = expander(token, exec, cmd);
     int flag = check_to_expand(token->cmd->og_tokens->og_cmd, exec->env);
-    args = process_args(args, token->cmd->og_tokens->og_args, token->cmd->og_tokens->og_cmd, cmd, exec->env);
-    args = expand_wildcards(args);
-    cmd = args[0] ? args[0] : "\0";
-    if (check_builtins(token, exec, args))
+
+    if (args[0])
+        cmd = args[0];
+    else
+        cmd = "\0";
+
+    if (check_builtins(cmd, exec, args)) {
+        free_strs(exec->envp);
+        exec->envp = NULL;  // Set envp to NULL after freeing
+        free_strs(args);
         return;
+    }
+
     if (fork() == 0) {
-        handle_redirections(token->cmd, exec->env, exec);
         handle_signals();
+        handle_redirections(token->cmd, exec->env, exec);
+
         if (!flag) {
             stat(0, 1);
             exit(0);
         }
+
         char *cmd_path = get_cmd(cmd, exec->envp);
         execve(cmd_path, args, exec->envp);
         perror("execve failed");
+        free(cmd_path);
+        free_strs(args);
+        free_strs(exec->envp);
+        exec->envp = NULL;  // Set envp to NULL after freeing
         exit(127);
     }
+
     int status;
     wait(&status);
+    free_strs(args);
+    free_strs(exec->envp);
+    exec->envp = NULL;  // Set envp to NULL after freeing
+    free_strs(exec->to_free);
+
     stat(WEXITSTATUS(status), 1);
 }
 

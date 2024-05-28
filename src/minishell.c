@@ -203,26 +203,66 @@ static void heredoc_to_fds(t_token **root)
     heredoc_to_fds(&((*root)->r_token));
 }
 
-void    minishell_loop(char **env)
-{
-    char    *line;
-    char    *og_line;
-    t_exec  exec;
+// void    minishell_loop(char **env)
+// {
+//     char    *line;
+//     char    *og_line;
+//     t_exec  exec;
+//     t_token *head_tokens;
+
+//     exec.env = parse_env(env);
+//     // exec.envp = env_to_envp(&exec);
+//     head_tokens = NULL;
+//     while(42)
+//     { 
+//         exec.envp = env_to_envp(&exec);
+//         singal_handler();
+//         og_line = readline(GREEN"minishell$ " "\033[35m");
+//         line = og_line;
+//         if (!line)
+//             break;
+//         if (line)
+// 		    add_history(line);
+//         special_trim(&line);
+//         head_tokens = lexer_manager(&line);
+//         display(head_tokens);
+//         evaluate_syntax(head_tokens);
+//         heredoc_to_fds(&head_tokens);
+//         if (ft_print_error(NULL, NULL, RETRIEVE) == TRUE)
+//             _error_expand_heredoc_to_infiles(&exec, &head_tokens, TRUE);
+//         ft_print_error(NULL, NULL, PRINT);
+//         if (ft_print_error(NULL, NULL, RETRIEVE) == FALSE)
+//             execute(head_tokens, &exec);
+//         free_strs(exec.envp);
+//         cleanup(head_tokens);
+//         ft_print_error(NULL, NULL, RESET);
+//         if (*line)
+//             printf("WTF LINE ISN'T EMPTY : line is %s\n", line);
+//         free(og_line);
+//         head_tokens = NULL;
+//     }
+//     free_strs(exec.envp);
+//     free_env_list(exec.env);
+// }
+
+void minishell_loop(char **env) {
+    char *line;
+    char *og_line;
+    t_exec exec;
     t_token *head_tokens;
 
     exec.env = parse_env(env);
-    exec.envp = env_to_envp(&exec);
     head_tokens = NULL;
-    while(42)
-    { 
+
+    while (42) { 
         exec.envp = env_to_envp(&exec);
         singal_handler();
-        og_line = readline(GREEN"minishell$ " "\033[35m");
+        og_line = readline(GREEN "minishell$ " "\033[35m");
         line = og_line;
         if (!line)
             break;
         if (line)
-		    add_history(line);
+            add_history(line);
         special_trim(&line);
         head_tokens = lexer_manager(&line);
         display(head_tokens);
@@ -233,15 +273,23 @@ void    minishell_loop(char **env)
         ft_print_error(NULL, NULL, PRINT);
         if (ft_print_error(NULL, NULL, RETRIEVE) == FALSE)
             execute(head_tokens, &exec);
+        
+        free_strs(exec.envp);
+        exec.envp = NULL;  // Ensure envp is set to NULL after freeing
+        cleanup(head_tokens);
         ft_print_error(NULL, NULL, RESET);
         if (*line)
-            printf("WTF LINE ISN'T EMPTY : line is %s\n", line);
+            printf("WTF LINE ISN'T EMPTY: line is %s\n", line);
         free(og_line);
-        free_strs(exec.envp);
-        cleanup(head_tokens);
         head_tokens = NULL;
     }
+
+    free_strs(exec.envp);  // Ensure envp is freed at the end
+    exec.envp = NULL;
+    free_env_list(exec.env);
 }
+
+
 
 int main(int ac, char **av, char **env)
 {
