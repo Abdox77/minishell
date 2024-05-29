@@ -293,7 +293,7 @@ char **process_args(char **args, char **og_args, char *og_cmd, char *cmd, t_env 
         i++;
     }
 
-    return (free_strs(for_cmd), processed_args);
+    return (free_strs(for_cmd),for_cmd = NULL, processed_args);
 }
 
 // this i smy expander

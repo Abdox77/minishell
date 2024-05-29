@@ -292,7 +292,7 @@ void handle_input_redirections(t_redir *input, t_redir *og_input, t_env *env, t_
                 perror("dup2 failed for input redirection");
                 exit(1);
             }
-            close(input->here_doc_fd[0]);
+            // close(input->here_doc_fd[0]);
 
         }
         free(expanded_filename);
@@ -351,8 +351,8 @@ void handle_redirections(t_cmd *cmd, t_env *env, t_exec *exec)
     int out;
     in = dup(STDIN_FILENO);
     out = dup(STDOUT_FILENO);
-    handle_input_redirections(cmd->input, cmd->og_tokens->og_input, env, exec);
     handle_output_redirections(cmd->output, cmd->og_tokens->og_output, env);
+    handle_input_redirections(cmd->input, cmd->og_tokens->og_input, env, exec);
     dup2(STDIN_FILENO, in);
     dup2(STDOUT_FILENO, out);
 }

@@ -197,6 +197,7 @@ static char **add_cmd_to_args(char *cmd , char **args)
         new_args[i] = ft_strdup(args[i - 1]);
     new_args[i] = NULL;
     free_strs(args);
+    args = NULL;
     return (new_args);
 }
 

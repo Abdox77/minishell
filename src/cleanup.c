@@ -21,11 +21,11 @@ void free_strs(char **strs)
         while (strs[i])
         {
             free(strs[i]);
-            strs[i] = NULL;  // Set the pointer to NULL after freeing
+            strs[i] = NULL;
             i++;
         }
         free(strs);
-        strs = NULL;  // Set the pointer to NULL after freeing
+        strs = NULL;
     }
 }
 
@@ -51,6 +51,7 @@ void free_expands(t_expands *expands)
         return;
     free(expands->og_cmd);
     free_strs(expands->og_args);
+    expands->og_args = NULL;
     free_redirections(expands->og_input);
     free_redirections(expands->og_output);
     free(expands);
@@ -63,6 +64,7 @@ void free_cmd(t_token *root)
     free(root->cmd->cmd);
     free(root->cmd->cmd_to_be_expanded);
     free_strs(root->cmd->args);
+    root->cmd->args = NULL;
     free_expands(root->cmd->og_tokens);
     free_redirections(root->cmd->input);
     free_redirections(root->cmd->output);
@@ -88,7 +90,8 @@ void cleanup(t_token *root)
     if (root && !root->l_token && !root->r_token)
     {
         if (root->type == CMD)
-            free_cmd(root);
+            (void)root;
+            // free_cmd(root);
         else
             free_token(root);    
     }
