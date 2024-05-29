@@ -86,11 +86,15 @@ void handle_input(t_token **token, char **line, t_bool is_root)
     {
         add_redirection(&((*token)->cmd->input), mode, file_name);
         add_redirection(&((*token)->cmd->og_tokens->og_input), mode, ft_substr(*line - og_len, 0, og_len));
+        if (mode == HEREDOC && ft_check_for_quotes((*token)->cmd->og_tokens->og_input->file_name) == TRUE)
+            (*token)->cmd->og_tokens->og_input->to_be_expanded = TRUE;
     }
     else
     {
         add_redirection(&((*token)->input), mode, file_name);
         add_redirection(&((*token)->og_input), mode, ft_substr(*line - og_len, 0, og_len));
+        if (mode == HEREDOC && ft_check_for_quotes((*token)->og_input->file_name) == TRUE)
+            (*token)->cmd->og_tokens->og_input->to_be_expanded = TRUE;
     }
     special_trim(line);
     if (**line == '(') // i can check on other special characters here

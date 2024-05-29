@@ -133,12 +133,11 @@ t_sigstate sig_state(t_sigstate state, t_sigops operation)
     return SET_SIGS;
 }
 
-void _error_expand_heredoc_to_infiles(t_exec *exec, t_token **root, t_bool error_flag)
+void expand_heredoc_to_infiles(t_token **root, t_bool error_flag)
 {
     int     status;
     t_redir *tmp;
-    t_redir *tmp_og;
-    
+
     if (!*root)
         return;
     sig_state(UNSET_SIGS, _SAVE);
@@ -149,13 +148,11 @@ void _error_expand_heredoc_to_infiles(t_exec *exec, t_token **root, t_bool error
         if ((*root)->type == CMD && (*root)->cmd->input) // removed the check for (*root)->cmd if it exists
         {
             tmp = (*root)->cmd->input;
-            tmp_og = (*root)->cmd->og_tokens->og_input;
             while(tmp)
             {
                 if (tmp->mode == HEREDOC && tmp->file_name)
-                        here_doc(exec , tmp_og, tmp, error_flag);
+                        here_doc(tmp, error_flag);
                 tmp = tmp->next;
-                tmp_og = tmp_og->next;
             }
         }
         exit (0);
@@ -164,25 +161,25 @@ void _error_expand_heredoc_to_infiles(t_exec *exec, t_token **root, t_bool error
     sig_state(SET_SIGS, _SAVE);
     if (WEXITSTATUS(status) == 120)
         ft_print_error(NULL, NULL, RESET_HEREDOC);
-    _error_expand_heredoc_to_infiles(exec , &(*root)->l_token, error_flag);
-    _error_expand_heredoc_to_infiles(exec , &(*root)->r_token, error_flag);
+    expand_heredoc_to_infiles(&(*root)->l_token, error_flag);
+    expand_heredoc_to_infiles(&(*root)->r_token, error_flag);
 }
 
-void    open_heredoc(t_exec *exec, int w_heredoc, char *og_delimiter, char *delimiter)
-{
-    // int status;
-    pid_t pid = fork();
-    if (pid == 0)
-    {
-        child_singal_handler();
-        here_doc_helper(exec , w_heredoc, og_delimiter, delimiter); // to change the TRUE flag later
-    }
-    else
-    {
-        waitpid(pid, NULL, WUNTRACED);
-        return;
-    }
-}
+// void    open_heredoc(t_exec *exec, int w_heredoc, char *og_delimiter, char *delimiter)
+// {
+//     // int status;
+//     pid_t pid = fork();
+//     if (pid == 0)
+//     {
+//         child_singal_handler();
+//         here_doc_helper(w_heredoc, og_delimiter, delimiter); // to change the TRUE flag later
+//     }
+//     else
+//     {
+//         waitpid(pid, NULL, WUNTRACED);
+//         return;
+//     }
+// }
 
 static void heredoc_to_fds(t_token **root)
 {
@@ -253,7 +250,6 @@ void minishell_loop(char **env) {
 
     exec.env = parse_env(env);
     head_tokens = NULL;
-
     while (42) { 
         exec.envp = env_to_envp(&exec);
         singal_handler();
@@ -269,11 +265,14 @@ void minishell_loop(char **env) {
         evaluate_syntax(head_tokens);
         heredoc_to_fds(&head_tokens);
         if (ft_print_error(NULL, NULL, RETRIEVE) == TRUE)
-            _error_expand_heredoc_to_infiles(&exec, &head_tokens, TRUE);
+            expand_heredoc_to_infiles(&head_tokens, TRUE);
+        else
+            expand_heredoc_to_infiles(&head_tokens, FALSE);
         ft_print_error(NULL, NULL, PRINT);
         if (ft_print_error(NULL, NULL, RETRIEVE) == FALSE)
+        {
             execute(head_tokens, &exec);
-        
+        }
         free_strs(exec.envp);
         exec.envp = NULL;  // Ensure envp is set to NULL after freeing
         cleanup(head_tokens);

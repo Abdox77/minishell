@@ -17,6 +17,7 @@ void expand_heredoc(t_redir **heredoc_redir)
     unlink(FNAME);
     ((*heredoc_redir)->here_doc_fd[W_HEREDOC]) = open(FNAME, (O_CREAT | O_WRONLY) | O_TRUNC, 0644);
     ((*heredoc_redir)->here_doc_fd[R_HEREDOC]) = open(FNAME, O_RDONLY | O_TRUNC);
+    ((*heredoc_redir)->here_doc_fd[_HEREDOC_EXPAND_FD]) = open(FNAME, O_RDONLY | O_TRUNC);
     unlink(FNAME);
 }
 
@@ -34,7 +35,7 @@ static t_bool is_delimiter(char *buffer, char *delimiter)
     return (TRUE);
 }
 
-static t_bool ft_check_for_quotes(char *og_delimiter)
+t_bool ft_check_for_quotes(char *og_delimiter)
 {
     int     i;
 
@@ -89,7 +90,7 @@ static char *get_value_in_between_quotes(char *line, char quote)
     return (token);
 }
 
-static char *expand_in_heredoc(t_exec *exec, char *line)
+char *expand_in_heredoc(t_exec *exec, char *line)
 {
     int i;
     int len;
@@ -157,16 +158,12 @@ static char *expand_in_heredoc(t_exec *exec, char *line)
     return expanded_line;
 }
 
-void here_doc_helper(t_exec *exec, int w_heredoc, char *og_delimiter, char *delimiter)
+void here_doc_helper(int w_heredoc, char *delimiter)
 {
     char    *line;
-    char    *buffer;
-    t_bool  to_be_expanded;
-    
+
     line = NULL;
-    buffer = NULL;
-    to_be_expanded = ft_check_for_quotes(og_delimiter);
-    while(is_delimiter(line, delimiter) == FALSE)
+    while(1337)
     {
         free(line);
         line = readline(YELLOW"Heredoc>"RESET_COLORS);
@@ -175,29 +172,26 @@ void here_doc_helper(t_exec *exec, int w_heredoc, char *og_delimiter, char *deli
             printf("\n");
             break;
         }
-        if (to_be_expanded == TRUE && exec && is_delimiter(line, delimiter) == FALSE)
-                buffer = expand_in_heredoc(exec, line);
-        else if (is_delimiter(line, delimiter) == FALSE)
+        if (is_delimiter(line, delimiter) == FALSE)
         {
-            buffer = ft_strdup(line);
-        }
-        if (buffer && is_delimiter(line, delimiter) == FALSE)
-        {
-            write(w_heredoc, buffer, ft_strlen(buffer));
+            write(w_heredoc, line, ft_strlen(line));
             write(w_heredoc, "\n", 1);
         }
-        if (buffer)
+        else
         {
-            free(buffer);
-            buffer = NULL;
+            free(line);
+            break;
         }
     }
     close(w_heredoc);
 }
 
-void here_doc(t_exec *exec, t_redir *og_redir, t_redir *here_doc, t_bool error_flag)
+void here_doc(t_redir *here_doc, t_bool error_flag)
 {
-    here_doc_helper(exec , here_doc->here_doc_fd[W_HEREDOC], og_redir->file_name, here_doc->file_name);
+    here_doc_helper(here_doc->here_doc_fd[W_HEREDOC], here_doc->file_name);
     if (error_flag == TRUE)
+    {
         close(here_doc->here_doc_fd[R_HEREDOC]);
+        close(here_doc->here_doc_fd[_HEREDOC_EXPAND_FD]);
+    }
 }

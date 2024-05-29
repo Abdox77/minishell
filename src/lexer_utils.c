@@ -92,6 +92,16 @@ static char *get_token_in_between_quotes(char **line, char quote, int *og_len)
     return (token);
 }
 
+static char *ft_special_join(char *arg, char *buff)
+{
+    char *joined;
+
+    joined = NULL;
+    joined = ft_strjoin(arg, buff);
+    free(arg);
+    return (joined);
+}
+
 char *get_token_with_quotes(char **line, int len, int *og_len)
 {
     char quote;
@@ -111,7 +121,7 @@ char *get_token_with_quotes(char **line, int len, int *og_len)
             len = 0;
             while ((*line)[len] && is_special_char((*line)[len]) == FALSE)
                 len++;
-            arg = ft_strjoin(arg, ft_substr(*line, 0, len));
+            arg = ft_special_join(arg, ft_substr(*line, 0, len));
             *og_len += len;
             *line += len;
         }
@@ -119,7 +129,8 @@ char *get_token_with_quotes(char **line, int len, int *og_len)
         {   
             quote = **line;
             buff = get_token_in_between_quotes(line, quote, og_len);
-            arg = ft_strjoin(arg, buff);
+            arg = ft_special_join(arg, buff);
+            free(buff);
             if(**line != quote)
                 ft_print_error("Syntax error unclosed quotes\n", line, SAVE);
             else

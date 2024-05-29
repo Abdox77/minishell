@@ -285,13 +285,14 @@ void handle_input_redirections(t_redir *input, t_redir *og_input, t_env *env, t_
         }
         else if (input->mode == HEREDOC)
         {
-            expanded_filename = ft_strdup(input->file_name);
-            open_heredoc(exec, input->here_doc_fd[1], og_input->file_name, input->file_name);
-            if (dup2(input->here_doc_fd[0], STDIN_FILENO) < 0)
-            {
-                perror("dup2 failed for input redirection");
-                exit(1);
-            }
+            (void)exec;
+            // expanded_filename = ft_strdup(input->file_name);
+            // open_heredoc(exec, input->here_doc_fd[1], og_input->file_name, input->file_name);
+            // if (dup2(input->here_doc_fd[0], STDIN_FILENO) < 0)
+            // {
+            //     perror("dup2 failed for input redirection");
+            //     exit(1);
+            // }
             // close(input->here_doc_fd[0]);
 
         }

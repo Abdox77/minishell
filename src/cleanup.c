@@ -20,12 +20,23 @@ void free_strs(char **strs)
     {
         while (strs[i])
         {
-            free(strs[i]);
+            safe_free(strs[i]);
             strs[i] = NULL;
             i++;
         }
-        free(strs);
+        safe_free(strs);
         strs = NULL;
+    }
+}
+
+void safe_free(void *ptr)
+{
+    if (!ptr)
+        return;
+    else
+    {
+        free(ptr);
+        ptr = NULL;
     }
 }
 
@@ -39,8 +50,8 @@ void free_redirections(t_redir *redir)
     while(tmp)
     {
         tmp = redir->next;
-        free(redir->file_name);
-        free(redir);
+        safe_free(redir->file_name);
+        safe_free(redir);
         redir = tmp;
     }
 }
@@ -49,27 +60,27 @@ void free_expands(t_expands *expands)
 {
     if (!expands)
         return;
-    free(expands->og_cmd);
+    safe_free(expands->og_cmd);
     free_strs(expands->og_args);
     expands->og_args = NULL;
     free_redirections(expands->og_input);
     free_redirections(expands->og_output);
-    free(expands);
+    safe_free(expands);
 }
 
 void free_cmd(t_token *root)
 {
     if (!root)
         return;
-    free(root->cmd->cmd);
-    free(root->cmd->cmd_to_be_expanded);
+    safe_free(root->cmd->cmd);
+    safe_free(root->cmd->cmd_to_be_expanded);
     free_strs(root->cmd->args);
     root->cmd->args = NULL;
     free_expands(root->cmd->og_tokens);
     free_redirections(root->cmd->input);
     free_redirections(root->cmd->output);
-    free(root->cmd);
-    free(root);
+    safe_free(root->cmd);
+    safe_free(root);
     root = NULL;
 }
 
@@ -90,8 +101,7 @@ void cleanup(t_token *root)
     if (root && !root->l_token && !root->r_token)
     {
         if (root->type == CMD)
-            (void)root;
-            // free_cmd(root);
+            free_cmd(root);
         else
             free_token(root);    
     }
@@ -124,9 +134,9 @@ void free_env_list(t_env *head)
     {
         tmp = head;
         head = head->next;
-        free(tmp->key);
-        free(tmp->value);
-        free(tmp);
+        safe_free(tmp->key);
+        safe_free(tmp->value);
+        safe_free(tmp);
     }
 }
 

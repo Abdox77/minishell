@@ -42,8 +42,12 @@ t_redir *new_cmd_redir(REDIR_MODE mode, char *file_name)
     if (!new)
         printf("not new redir\n");
     new->mode = mode;
+    new->to_be_expanded = FALSE;
     if (file_name)
+    {
         new->file_name = ft_strdup(file_name);
+        free(file_name);
+    }
     else
         new->file_name = NULL;
     new->next = NULL;

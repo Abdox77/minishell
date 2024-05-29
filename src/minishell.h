@@ -37,8 +37,9 @@
 # define YELLOW "\033[33m"
 # define RESET_COLORS "\033[0m"
 # define BUFFER_SIZE 1000
-# define W_HEREDOC 1
 # define R_HEREDOC 0
+# define W_HEREDOC 1
+# define _HEREDOC_EXPAND_FD 2
 # define FNAME "_MINISHELL_HEREDOC__FILE_NAMING_"
 /*===========================enum=========================*/
 
@@ -133,7 +134,8 @@ struct s_token {
 
 struct s_redir {
     int         fd;
-    int         here_doc_fd[2];
+    int         here_doc_fd[3];
+    t_bool      to_be_expanded;
     char        *file_name;
     t_redir     *next; // later
     REDIR_MODE  mode;
@@ -225,10 +227,11 @@ void    evaluate_syntax(t_token *root);
 /*=====================HERE_DOC==================*/
 void    expand_heredoc(t_redir **heredoc_redir);
 // void    expand_heredoc_to_infiles(t_exec *exec, t_token **root, t_bool error_flag);
-void    here_doc(t_exec *exec, t_redir *og_redir, t_redir *here_doc, t_bool error_flag);
-void    _error_expand_heredoc_to_infiles(t_exec *exec, t_token **root, t_bool error_flag);
-void    here_doc_helper(t_exec *exec, int w_heredoc, char *og_delimiter, char *delimiter);
-void    open_heredoc(t_exec *exec, int w_heredoc, char *og_delimiter, char *delimiter);
+void    here_doc(t_redir *here_doc, t_bool error_flag);
+void    expand_heredoc_to_infiles( t_token **root, t_bool error_flag);
+t_bool  ft_check_for_quotes(char *og_delimiter);
+void    here_doc_helper(int w_heredoc , char *delimiter);
+// void    open_heredoc(t_exec *exec, int w_heredoc, char *og_delimiter, char *delimiter);
 /*=====================UTILS========================*/
 int         strs_len(char **args);
 int         ft_strcmp(const char *s1, const char *s2);
@@ -292,15 +295,15 @@ void handle_output_redirections(t_redir *output, t_redir *og_output, t_env *env)
 // char *expand_arg_if_needed(char *arg, char *og_arg, t_env *env_list);
 // char **expand_arg_if_needed(char *arg, char *og_arg, t_env *env_list);
 // char **expand_arg_if_needed(char *arg, char *og_arg, t_env *env_list, int in_quotes);
-char **expand_arg_if_needed(char *arg, char *og_arg, t_env *env_list);
-char *expand_string(const char *str, t_env *env_list);
-char **process_args(char **args, char **og_args, char *og_cmd, char *cmd, t_env *env_list);
-char **process_cmd_and_args(char *cmd, char **args, t_env *env_list);
-int check_to_expand(char *cmd, t_env *env_list);
+char    **expand_arg_if_needed(char *arg, char *og_arg, t_env *env_list);
+char    *expand_string(const char *str, t_env *env_list);
+char    **process_args(char **args, char **og_args, char *og_cmd, char *cmd, t_env *env_list);
+char    **process_cmd_and_args(char *cmd, char **args, t_env *env_list);
+int     check_to_expand(char *cmd, t_env *env_list);
 void	ft_exit(char **cmd);
-char *ft_strndup(const char *s1, size_t n);
-char **expand_wildcards(char **args);
-void handle_input_redirections(t_redir *input, t_redir *og_input, t_env *env, t_exec *exec);
+char    *ft_strndup(const char *s1, size_t n);
+char    **expand_wildcards(char **args);
+void    handle_input_redirections(t_redir *input, t_redir *og_input, t_env *env, t_exec *exec);
 
 
 
@@ -322,5 +325,6 @@ void        cleanup(t_token *root);
 t_bool      ft_print_error(char *message, char **line, t_error indicator);
 void        ft_error(char *error_message, int exit_code);
 void        free_env_list(t_env *head);
+void        safe_free(void *ptr);
 
 #endif

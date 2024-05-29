@@ -173,7 +173,6 @@ static int is_quoted(const char *str)
 
 static char **initialize_args_if_null(char *cmd, char **args)
 {
-
     if (args == NULL)
     {
         args = malloc(2 * sizeof(char*));
@@ -182,7 +181,7 @@ static char **initialize_args_if_null(char *cmd, char **args)
             perror("Failed to allocate memory for args");
             exit(EXIT_FAILURE);
         }
-        args[0] = cmd;
+        args[0] = ft_strdup(cmd);
         args[1] = NULL;
     }
     return args;
@@ -910,9 +909,8 @@ void execute_command(t_token *token, t_exec *exec)
     args = NULL;
     free_strs(exec->envp);
     exec->envp = NULL;  // Set envp to NULL after freeing
-    free_strs(exec->to_free);
-    exec->to_free = NULL;
-
+    // free_strs(exec->to_free);
+    // exec->to_free = NULL;
     stat(WEXITSTATUS(status), 1);
 }
 
