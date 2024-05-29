@@ -891,7 +891,6 @@ void execute_command(t_token *token, t_exec *exec)
             stat(0, 1);
             exit(0);
         }
-
         char *cmd_path = get_cmd(cmd, exec->envp);
         execve(cmd_path, args, exec->envp);
         perror("execve failed");
