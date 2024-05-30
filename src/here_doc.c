@@ -12,13 +12,25 @@
 
 #include "minishell.h"
 
+// void expand_heredoc(t_redir **heredoc_redir)
+// {
+//     char *ff = ft_strjoin(FNAME, "hh");
+//     unlink(FNAME);
+//     ((*heredoc_redir)->here_doc_fd[W_HEREDOC]) = open(FNAME, (O_CREAT | O_WRONLY) | O_TRUNC, 0644);
+//     ((*heredoc_redir)->here_doc_fd[R_HEREDOC]) = open(FNAME, O_RDONLY | O_TRUNC);
+//     ((*heredoc_redir)->here_doc_fd[_HEREDOC_EXPAND_FD]) = open(ff, O_RDWR | O_TRUNC);
+//     unlink(FNAME);
+//     free(ff);
+// }
 void expand_heredoc(t_redir **heredoc_redir)
 {
+    unlink("FNAME");
     unlink(FNAME);
     ((*heredoc_redir)->here_doc_fd[W_HEREDOC]) = open(FNAME, (O_CREAT | O_WRONLY) | O_TRUNC, 0644);
     ((*heredoc_redir)->here_doc_fd[R_HEREDOC]) = open(FNAME, O_RDONLY | O_TRUNC);
-    ((*heredoc_redir)->here_doc_fd[_HEREDOC_EXPAND_FD]) = open(FNAME, O_RDONLY | O_TRUNC);
+    ((*heredoc_redir)->here_doc_fd[_HEREDOC_EXPAND_FD]) = open("FNAME",O_CREAT | O_RDWR | O_TRUNC, 0644);
     unlink(FNAME);
+    unlink("FNAME");
 }
 
 static t_bool is_delimiter(char *buffer, char *delimiter)

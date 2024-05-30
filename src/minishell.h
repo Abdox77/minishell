@@ -25,6 +25,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "../libft/libft.h"
+# include "../gcl/get_next_line.h"
 #ifdef __linux__
     # include <linux/limits.h>
 #endif
@@ -36,11 +37,12 @@
 # define HEREDOC_LOCATION "/var/tmp/"
 # define YELLOW "\033[33m"
 # define RESET_COLORS "\033[0m"
-# define BUFFER_SIZE 1000
+// # define BUFFER_SIZE 1000
 # define R_HEREDOC 0
 # define W_HEREDOC 1
 # define _HEREDOC_EXPAND_FD 2
 # define FNAME "_MINISHELL_HEREDOC__FILE_NAMING_"
+// # define BUFFER_SIZE 42
 /*===========================enum=========================*/
 
 typedef enum {
@@ -231,6 +233,7 @@ void    here_doc(t_redir *here_doc, t_bool error_flag);
 void    expand_heredoc_to_infiles( t_token **root, t_bool error_flag);
 t_bool  ft_check_for_quotes(char *og_delimiter);
 void    here_doc_helper(int w_heredoc , char *delimiter);
+char *expand_in_heredoc(t_exec *exec, char *line);
 // void    open_heredoc(t_exec *exec, int w_heredoc, char *og_delimiter, char *delimiter);
 /*=====================UTILS========================*/
 int         strs_len(char **args);
@@ -259,7 +262,6 @@ int         unset(t_env **env, char **cmd);
 void        ft_env(t_env *env);
 int         cd(char **arg, t_exec *exec);
 int         ft_export(t_env *env, char **args);
-
 
 
 

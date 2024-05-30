@@ -262,6 +262,8 @@ void handle_input_redirections(t_redir *input, t_redir *og_input, t_env *env, t_
 {
     int fd;
     char *expanded_filename;
+    char *line;
+    char *expanded_line;
 
     while (input)
     {
@@ -283,18 +285,68 @@ void handle_input_redirections(t_redir *input, t_redir *og_input, t_env *env, t_
             }
             close(fd);
         }
+        // else if (input->mode == HEREDOC)
+        // {
+        //     (void)exec;
+        //     expanded_filename = ft_strdup(input->file_name);
+        //     if(input->to_be_expanded == TRUE)
+        //     {
+        //         line = get_next_line(input->here_doc_fd[R_HEREDOC]);
+        //         while(line)
+        //         {
+        //         }
+        //     }
+        //     if (dup2(input->here_doc_fd[R_HEREDOC], STDIN_FILENO) < 0)
+        //     {
+        //         perror("dup2 failed for input redirection");
+        //         exit(1);
+        //     }
+        //     close(input->here_doc_fd[0]);
+
+        // }
         else if (input->mode == HEREDOC)
         {
-            (void)exec;
-            // expanded_filename = ft_strdup(input->file_name);
-            // open_heredoc(exec, input->here_doc_fd[1], og_input->file_name, input->file_name);
-            // if (dup2(input->here_doc_fd[0], STDIN_FILENO) < 0)
-            // {
-            //     perror("dup2 failed for input redirection");
-            //     exit(1);
-            // }
-            // close(input->here_doc_fd[0]);
+            // int fdd = open("heredoc", O_RDWR | O_CREAT | O_TRUNC, 0644);
+            // dup2(input->here_doc_fd[R_HEREDOC], fdd);
+            // unlink("heredoc");
+            expanded_filename = ft_strdup(input->file_name);
+            if (input->to_be_expanded == FALSE)
+            {
+                // printf("%d", input->here_doc_fd[R_HEREDOC]);   
+                int expanded_fd = input->here_doc_fd[_HEREDOC_EXPAND_FD];
+                line = get_next_line(input->here_doc_fd[R_HEREDOC]);
+                while (line)
+                {
+                    expanded_line = expand_in_heredoc(exec,line);
+                    printf("here is the line %s \n", expanded_line);
+                    write(expanded_fd, expanded_line, ft_strlen(expanded_line));
+                    // write(expanded_fd, "\n", 1);
+                    free(line);
+                    free(expanded_line);
+                    line = get_next_line(input->here_doc_fd[R_HEREDOC]);
+                }
+                // int duppy = open("/dev/tmp/hhhhhh", O_RDONLY, 0644);
+                // printf("%d", expanded_fd);
+                if (dup2(input->here_doc_fd[_HEREDOC_EXPAND_FD], STDIN_FILENO) < 0)
+                {
+                    perror("dup2 failed for input redirection");
+                    exit(1);
+                }
+                close(expanded_fd);
+                // close(fdd);
+                close(input->here_doc_fd[R_HEREDOC]);
 
+            }
+            else
+            {
+                // open_heredoc(exec, input->here_doc_fd[1], og_input->file_name, input->file_name);
+                if (dup2(input->here_doc_fd[0], STDIN_FILENO) < 0)
+                {
+                    perror("dup2 failed for input redirection");
+                    exit(1);
+                }
+                close(input->here_doc_fd[0]);
+            }
         }
         free(expanded_filename);
         input = input->next;
