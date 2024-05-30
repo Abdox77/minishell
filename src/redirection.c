@@ -314,11 +314,12 @@ void handle_input_redirections(t_redir *input, t_redir *og_input, t_env *env, t_
             {
                 // printf("%d", input->here_doc_fd[R_HEREDOC]);   
                 int expanded_fd = input->here_doc_fd[_HEREDOC_EXPAND_FD];
+                printf("expanded fd %d\n", expanded_fd);
                 line = get_next_line(input->here_doc_fd[R_HEREDOC]);
                 while (line)
                 {
                     expanded_line = expand_in_heredoc(exec,line);
-                    printf("here is the line %s \n", expanded_line);
+                    // printf("here is the line %s \n", expanded_line);
                     write(expanded_fd, expanded_line, ft_strlen(expanded_line));
                     // write(expanded_fd, "\n", 1);
                     free(line);
@@ -332,10 +333,10 @@ void handle_input_redirections(t_redir *input, t_redir *og_input, t_env *env, t_
                     perror("dup2 failed for input redirection");
                     exit(1);
                 }
+                close(input->here_doc_fd[W_HEREDOC]);
+                close(input->here_doc_fd[R_HEREDOC]);
                 close(expanded_fd);
                 // close(fdd);
-                close(input->here_doc_fd[R_HEREDOC]);
-
             }
             else
             {

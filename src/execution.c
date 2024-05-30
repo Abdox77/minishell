@@ -886,7 +886,6 @@ void execute_command(t_token *token, t_exec *exec)
     if (fork() == 0) {
         handle_signals();
         handle_redirections(token->cmd, exec->env, exec);
-
         if (!flag) {
             stat(0, 1);
             exit(0);
@@ -901,7 +900,9 @@ void execute_command(t_token *token, t_exec *exec)
         exec->envp = NULL;  // Set envp to NULL after freeing
         exit(127);
     }
-
+    close(token->cmd->input->here_doc_fd[W_HEREDOC]);
+    close(token->cmd->input->here_doc_fd[R_HEREDOC]);
+    close(token->cmd->input->here_doc_fd[_HEREDOC_EXPAND_FD]);
     int status;
     wait(&status);
     free_strs(args);
