@@ -25,7 +25,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "../libft/libft.h"
-# include "../gcl/get_next_line.h"
+# include "get_next_line.h"
 #ifdef __linux__
     # include <linux/limits.h>
 #endif

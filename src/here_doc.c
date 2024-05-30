@@ -24,13 +24,13 @@
 // }
 void expand_heredoc(t_redir **heredoc_redir)
 {
-    unlink("FNAME");
+    // unlink("FNAME");
     unlink(FNAME);
     ((*heredoc_redir)->here_doc_fd[W_HEREDOC]) = open(FNAME, (O_CREAT | O_WRONLY) | O_TRUNC, 0644);
     ((*heredoc_redir)->here_doc_fd[R_HEREDOC]) = open(FNAME, O_RDONLY | O_TRUNC);
-    ((*heredoc_redir)->here_doc_fd[_HEREDOC_EXPAND_FD]) = open("FNAME",O_CREAT | O_RDWR | O_TRUNC, 0644);
+    // ((*heredoc_redir)->here_doc_fd[_HEREDOC_EXPAND_FD]) = open("FNAME",O_CREAT | O_RDWR | O_TRUNC, 0644);
     unlink(FNAME);
-    unlink("FNAME");
+    // unlink("FNAME");
 }
 
 static t_bool is_delimiter(char *buffer, char *delimiter)
@@ -68,7 +68,6 @@ char *ft_get_value(t_exec *exec, char *key)
     env = exec->env;
     while(env)
     {
-        printf("env->key  |%s| and key is |%s|\n" , env->key, key);
         if (env->key && ft_strcmp(env->key, key) == 0)
             return (free(key), ft_strdup(env->value));
         env = env->next;
@@ -159,14 +158,12 @@ char *expand_in_heredoc(t_exec *exec, char *line)
             if (len)
             {
                 buff = ft_substr(line, i, len);
-                // printf("key is %s|\n", buff);
                 env_variable = ft_get_value(exec, buff);
-
                 // if (buff)
                 //     printf("buff is %s and value \n", buff );
                 expanded_line = ft_strjoin(expanded_line, env_variable);
                 i += len;
-                // printf("line rest |%s |%s| %s|\n", &line[i], expanded_line, env_variable);
+                printf("line rest %s\n", &line[i]);
             }
         }
     }
