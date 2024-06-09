@@ -865,6 +865,10 @@ char **expander(t_token *token, t_exec *exec, char *cmd)
 void execute_command(t_token *token, t_exec *exec)
 {
     // exec->envp = env_to_envp(exec);
+        int in;
+        int out;
+        in = dup(STDIN_FILENO);
+        out = dup(STDOUT_FILENO);
     char *cmd = token->cmd->cmd;
     char **args = expander(token, exec, cmd);
     int flag = check_to_expand(token->cmd->og_tokens->og_cmd, exec->env);
@@ -874,11 +878,12 @@ void execute_command(t_token *token, t_exec *exec)
     else
         cmd = "\0";
 
-    if (check_builtins(cmd, exec, args)) {
+    if (check_builtins(cmd, token->cmd, exec, args)) {
         free_strs(exec->envp);
         exec->envp = NULL;  // Set envp to NULL after freeing
         free_strs(args);
         args = NULL;
+        reset_fd(in , out);
         return;
     }
 
@@ -886,12 +891,17 @@ void execute_command(t_token *token, t_exec *exec)
     if (fork() == 0) {
         handle_signals();
         handle_redirections(token->cmd, exec->env, exec);
-
+        if(!token->cmd->og_tokens->og_cmd)
+        {
+            stat(0, 1);
+            exit(0);
+        }
         if (!flag) {
             stat(0, 1);
             exit(0);
         }
         char *cmd_path = get_cmd(cmd, exec->envp);
+        // sta
         execve(cmd_path, args, exec->envp);
         perror("execve failed");
         free(cmd_path);
@@ -910,6 +920,7 @@ void execute_command(t_token *token, t_exec *exec)
     exec->envp = NULL;  // Set envp to NULL after freeing
     // free_strs(exec->to_free);
     // exec->to_free = NULL;
+    // reset_fd(in , out);
     stat(WEXITSTATUS(status), 1);
 }
 
@@ -931,26 +942,32 @@ static void execute_right(t_token *node, int *fd, t_exec *exec) {
 
 static void execute_pipe(t_token *node, t_exec *exec)
 {
+    int status;
     int fd[2];
+    int f1;
+    int f2;
     if (pipe(fd) == -1)
     {
         perror("Pipe failed");
         exit(EXIT_FAILURE);
     }
-    if (fork() == 0)
+    f1 = fork();
+    if (f1 == 0)
     {
         close(fd[0]);
         execute_left(node->l_token, fd, exec);
     }
-    if (fork() == 0)
+    f2 = fork();
+    if (f2 == 0)
     {
         close(fd[1]);
         execute_right(node->r_token, fd, exec);
     }
     close(fd[0]);
     close(fd[1]);
-    wait(NULL);
-    wait(NULL);
+    waitpid(f1, &status,0);
+    waitpid(f2, &status,0);
+    stat(WEXITSTATUS(status), 1);
 }
 
 void execute_subtree(t_token *root, t_exec *exec) {
@@ -984,8 +1001,8 @@ void execute_subtree(t_token *root, t_exec *exec) {
 void execute(t_token *token, t_exec *exec) {
     if (!token)
         return;
-    if (token->input || token->output)
-        execute_subtree(token, exec);
+    // if (token->input || token->output)
+    //     execute_subtree(token, exec);
     else if (token->type == CMD)
         execute_command(token, exec);
     else if (token->type == PIPE)

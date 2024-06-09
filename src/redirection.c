@@ -310,7 +310,7 @@ void handle_input_redirections(t_redir *input, t_redir *og_input, t_env *env, t_
             // dup2(input->here_doc_fd[R_HEREDOC], fdd);
             // unlink("heredoc");
             expanded_filename = ft_strdup(input->file_name);
-            if (input->to_be_expanded == FALSE)
+            if (og_input->to_be_expanded == TRUE)
             {
                 unlink("FNAME");
                 input->here_doc_fd[_HEREDOC_EXPAND_FD] = open("FNAME",O_CREAT | O_RDWR | O_TRUNC, 0644);
@@ -404,12 +404,19 @@ void handle_output_redirections(t_redir *output, t_redir *og_output, t_env *env)
 
 void handle_redirections(t_cmd *cmd, t_env *env, t_exec *exec)
 {
-    int in;
-    int out;
-    in = dup(STDIN_FILENO);
-    out = dup(STDOUT_FILENO);
+    // int in;
+    // int out;
+    // in = dup(STDIN_FILENO);
+    // out = dup(STDOUT_FILENO);
     handle_output_redirections(cmd->output, cmd->og_tokens->og_output, env);
     handle_input_redirections(cmd->input, cmd->og_tokens->og_input, env, exec);
-    dup2(STDIN_FILENO, in);
-    dup2(STDOUT_FILENO, out);
+    // dup2(STDIN_FILENO, in);
+    // dup2(STDOUT_FILENO, out);
+}
+void reset_fd(int in, int out)
+{
+    dup2(in, STDIN_FILENO);
+    dup2(out, STDOUT_FILENO);
+    close(in);
+    close(out);
 }

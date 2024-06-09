@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/22 11:54:55 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/04 22:58:09 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -285,7 +285,7 @@ void        handle_input_redirection(t_redir *input, t_env *env);
 void        handle_output_redirection(t_redir *output, t_env *env);
 void        handle_redirections(t_cmd *cmd, t_env *env, t_exec *exec);
 // int	        check_builtins(t_token *node, t_exec *exec, char **args);
-int	check_builtins(char *cmd, t_exec *exec, char **args);
+int	check_builtins(char *cmd, t_cmd *cc, t_exec *exec, char **args);
 void handle_output_redirections(t_redir *output, t_redir *og_output, t_env *env);
 // void        expand_variables(t_cmd *cmd, t_env *env_list, int *flag);
 // char        *expand_token(const char *token, t_env *env_list);
@@ -306,6 +306,7 @@ void	ft_exit(char **cmd);
 char    *ft_strndup(const char *s1, size_t n);
 char    **expand_wildcards(char **args);
 void    handle_input_redirections(t_redir *input, t_redir *og_input, t_env *env, t_exec *exec);
+void reset_fd(int in, int out);
 
 
 

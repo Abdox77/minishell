@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/22 12:20:03 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/06 22:42:41 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,7 @@ static void child_singal_handler()
 {
     signal(SIGINT, _exit_child);
     signal(SIGQUIT, SIG_IGN);
+    signal(SIGTSTP, SIG_IGN);
 }
 
 t_sigstate sig_state(t_sigstate state, t_sigops operation)
@@ -256,7 +257,11 @@ void minishell_loop(char **env) {
         og_line = readline(GREEN "minishell$ " "\033[35m");
         line = og_line;
         if (!line)
+        {
+            printf("\nexit\n");
             break;
+        }
+            // break;
         if (line)
             add_history(line);
         special_trim(&line);

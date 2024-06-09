@@ -6,7 +6,7 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 08:13:26 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/13 22:48:41 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/06/09 18:05:25 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,13 +48,13 @@ int unset(t_env **env, char **cmd)
         j = 0;
         while (cmd[i][j])
         {
-            if (!ft_isalnum(cmd[i][j]))
+            if (!ft_isalnum(cmd[i][j]) && cmd[i][j] != 95)
             {
                 ft_write("unset: `", 2, 0);
                 ft_write(cmd[i], 2, 0);
                 ft_write("` invalid parameter name\n", 2, 0);
                 stat(1,1);
-                exit(1);
+                // exit(1);
                 return 0;
             }
             j++;

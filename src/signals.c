@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 22:40:30 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/22 12:18:22 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/06 22:42:13 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,4 +27,5 @@ void singal_handler(void)
 {
     signal(SIGQUIT, SIG_IGN);
     signal(SIGINT, ft_handle_sigint);
+    signal(SIGTSTP, SIG_IGN);
 }
