@@ -6,7 +6,7 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/04 22:58:09 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/06/09 19:01:59 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -329,5 +329,6 @@ t_bool      ft_print_error(char *message, char **line, t_error indicator);
 void        ft_error(char *error_message, int exit_code);
 void        free_env_list(t_env *head);
 void        safe_free(void *ptr);
+// void reset_fd(int in, int out);
 
 #endif

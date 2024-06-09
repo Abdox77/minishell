@@ -862,13 +862,11 @@ char **expander(t_token *token, t_exec *exec, char *cmd)
 //     stat(WEXITSTATUS(status), 1);
 // }
 
-void execute_command(t_token *token, t_exec *exec)
-{
-    // exec->envp = env_to_envp(exec);
-        int in;
-        int out;
-        in = dup(STDIN_FILENO);
-        out = dup(STDOUT_FILENO);
+void execute_command(t_token *token, t_exec *exec) {
+    exec->envp = env_to_envp(exec);
+    int in = dup(STDIN_FILENO);
+    int out = dup(STDOUT_FILENO);
+
     char *cmd = token->cmd->cmd;
     char **args = expander(token, exec, cmd);
     int flag = check_to_expand(token->cmd->og_tokens->og_cmd, exec->env);
@@ -880,10 +878,10 @@ void execute_command(t_token *token, t_exec *exec)
 
     if (check_builtins(cmd, token->cmd, exec, args)) {
         free_strs(exec->envp);
-        exec->envp = NULL;  // Set envp to NULL after freeing
+        exec->envp = NULL;
         free_strs(args);
         args = NULL;
-        reset_fd(in , out);
+        reset_fd(in, out);
         return;
     }
 
@@ -891,24 +889,20 @@ void execute_command(t_token *token, t_exec *exec)
     if (fork() == 0) {
         handle_signals();
         handle_redirections(token->cmd, exec->env, exec);
-        if(!token->cmd->og_tokens->og_cmd)
-        {
-            stat(0, 1);
-            exit(0);
-        }
+
         if (!flag) {
             stat(0, 1);
             exit(0);
         }
+
         char *cmd_path = get_cmd(cmd, exec->envp);
-        // sta
         execve(cmd_path, args, exec->envp);
         perror("execve failed");
         free(cmd_path);
         free_strs(args);
         args = NULL;
         free_strs(exec->envp);
-        exec->envp = NULL;  // Set envp to NULL after freeing
+        exec->envp = NULL;
         exit(127);
     }
 
@@ -917,11 +911,9 @@ void execute_command(t_token *token, t_exec *exec)
     free_strs(args);
     args = NULL;
     free_strs(exec->envp);
-    exec->envp = NULL;  // Set envp to NULL after freeing
-    // free_strs(exec->to_free);
-    // exec->to_free = NULL;
-    // reset_fd(in , out);
+    exec->envp = NULL;
     stat(WEXITSTATUS(status), 1);
+    reset_fd(in, out);
 }
 
 static void execute_left(t_token *node, int *fd, t_exec *exec) {
@@ -940,34 +932,24 @@ static void execute_right(t_token *node, int *fd, t_exec *exec) {
     exit(0);
 }
 
-static void execute_pipe(t_token *node, t_exec *exec)
-{
-    int status;
+static void execute_pipe(t_token *node, t_exec *exec) {
     int fd[2];
-    int f1;
-    int f2;
-    if (pipe(fd) == -1)
-    {
+    if (pipe(fd) == -1) {
         perror("Pipe failed");
         exit(EXIT_FAILURE);
     }
-    f1 = fork();
-    if (f1 == 0)
-    {
+    if (fork() == 0) {
         close(fd[0]);
         execute_left(node->l_token, fd, exec);
     }
-    f2 = fork();
-    if (f2 == 0)
-    {
+    if (fork() == 0) {
         close(fd[1]);
         execute_right(node->r_token, fd, exec);
     }
     close(fd[0]);
     close(fd[1]);
-    waitpid(f1, &status,0);
-    waitpid(f2, &status,0);
-    stat(WEXITSTATUS(status), 1);
+    wait(NULL);
+    wait(NULL);
 }
 
 void execute_subtree(t_token *root, t_exec *exec) {
@@ -1001,8 +983,8 @@ void execute_subtree(t_token *root, t_exec *exec) {
 void execute(t_token *token, t_exec *exec) {
     if (!token)
         return;
-    // if (token->input || token->output)
-    //     execute_subtree(token, exec);
+    if (token->input || token->output)
+        execute_subtree(token, exec);
     else if (token->type == CMD)
         execute_command(token, exec);
     else if (token->type == PIPE)
@@ -1024,3 +1006,173 @@ void execute_or(t_token *node, t_exec *exec) {
     if (stat(0, 0) != 0)
         execute(node->r_token, exec);
 }
+
+void reset_fd(int in, int out) {
+    dup2(in, STDIN_FILENO);
+    dup2(out, STDOUT_FILENO);
+    close(in);
+    close(out);
+}
+
+// void execute_command(t_token *token, t_exec *exec)
+// {
+//     // exec->envp = env_to_envp(exec);
+//         int in;
+//         int out;
+//         in = dup(STDIN_FILENO);
+//         out = dup(STDOUT_FILENO);
+//     char *cmd = token->cmd->cmd;
+//     char **args = expander(token, exec, cmd);
+//     int flag = check_to_expand(token->cmd->og_tokens->og_cmd, exec->env);
+
+//     if (args[0])
+//         cmd = args[0];
+//     else
+//         cmd = "\0";
+
+//     if (check_builtins(cmd, token->cmd, exec, args)) {
+//         free_strs(exec->envp);
+//         exec->envp = NULL;  // Set envp to NULL after freeing
+//         free_strs(args);
+//         args = NULL;
+//         reset_fd(in , out);
+//         return;
+//     }
+
+//     // handle_here_doc(); // TODO
+//     if (fork() == 0) {
+//         handle_signals();
+//         handle_redirections(token->cmd, exec->env, exec);
+//         if(!token->cmd->og_tokens->og_cmd)
+//         {
+//             stat(0, 1);
+//             exit(0);
+//         }
+//         if (!flag) {
+//             stat(0, 1);
+//             exit(0);
+//         }
+//         char *cmd_path = get_cmd(cmd, exec->envp);
+//         // sta
+//         execve(cmd_path, args, exec->envp);
+//         perror("execve failed");
+//         free(cmd_path);
+//         free_strs(args);
+//         args = NULL;
+//         free_strs(exec->envp);
+//         exec->envp = NULL;  // Set envp to NULL after freeing
+//         exit(127);
+//     }
+
+//     int status;
+//     wait(&status);
+//     free_strs(args);
+//     args = NULL;
+//     free_strs(exec->envp);
+//     exec->envp = NULL;  // Set envp to NULL after freeing
+//     // free_strs(exec->to_free);
+//     // exec->to_free = NULL;
+//     // reset_fd(in , out);
+//     stat(WEXITSTATUS(status), 1);
+// }
+
+// static void execute_left(t_token *node, int *fd, t_exec *exec) {
+//     dup2(fd[1], STDOUT_FILENO);
+//     close(fd[0]);
+//     close(fd[1]);
+//     execute(node, exec);
+//     exit(0);
+// }
+
+// static void execute_right(t_token *node, int *fd, t_exec *exec) {
+//     dup2(fd[0], STDIN_FILENO);
+//     close(fd[0]);
+//     close(fd[1]);
+//     execute(node, exec);
+//     exit(0);
+// }
+
+// static void execute_pipe(t_token *node, t_exec *exec)
+// {
+//     int status;
+//     int fd[2];
+//     int f1;
+//     int f2;
+//     if (pipe(fd) == -1)
+//     {
+//         perror("Pipe failed");
+//         exit(EXIT_FAILURE);
+//     }
+//     f1 = fork();
+//     if (f1 == 0)
+//     {
+//         close(fd[0]);
+//         execute_left(node->l_token, fd, exec);
+//     }
+//     f2 = fork();
+//     if (f2 == 0)
+//     {
+//         close(fd[1]);
+//         execute_right(node->r_token, fd, exec);
+//     }
+//     close(fd[0]);
+//     close(fd[1]);
+//     waitpid(f1, &status,0);
+//     waitpid(f2, &status,0);
+//     stat(WEXITSTATUS(status), 1);
+// }
+
+// void execute_subtree(t_token *root, t_exec *exec) {
+//     if (!root)
+//         return;
+//     int original_stdin = dup(STDIN_FILENO);
+//     int original_stdout = dup(STDOUT_FILENO);
+//     if (root->input)
+//         handle_input_redirections(root->input, root->og_input, exec->env, exec);
+//     if (root->output)
+//         handle_output_redirections(root->output, root->og_output, exec->env);
+//     if (root->type == CMD)
+//         execute_command(root, exec);
+//     else if (root->type == PIPE)
+//         execute_pipe(root, exec);
+//     else if (root->type == AND) {
+//         execute_subtree(root->l_token, exec);
+//         if (stat(0, 0) == 0)
+//             execute_subtree(root->r_token, exec);
+//     } else if (root->type == OR) {
+//         execute_subtree(root->l_token, exec);
+//         if (stat(0, 0) != 0)
+//             execute_subtree(root->r_token, exec);
+//     }
+//     dup2(original_stdin, STDIN_FILENO);
+//     dup2(original_stdout, STDOUT_FILENO);
+//     close(original_stdin);
+//     close(original_stdout);
+// }
+
+// void execute(t_token *token, t_exec *exec) {
+//     if (!token)
+//         return;
+//     // if (token->input || token->output)
+//     //     execute_subtree(token, exec);
+//     else if (token->type == CMD)
+//         execute_command(token, exec);
+//     else if (token->type == PIPE)
+//         execute_pipe(token, exec);
+//     else if (token->type == AND)
+//         execute_and(token, exec);
+//     else if (token->type == OR)
+//         execute_or(token, exec);
+// }
+
+// void execute_and(t_token *node, t_exec *exec) {
+//     execute(node->l_token, exec);
+//     if (stat(0, 0) == 0)
+//         execute(node->r_token, exec);
+// }
+
+// void execute_or(t_token *node, t_exec *exec) {
+//     execute(node->l_token, exec);
+//     if (stat(0, 0) != 0)
+//         execute(node->r_token, exec);
+// }

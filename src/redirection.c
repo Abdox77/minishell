@@ -413,10 +413,10 @@ void handle_redirections(t_cmd *cmd, t_env *env, t_exec *exec)
     // dup2(STDIN_FILENO, in);
     // dup2(STDOUT_FILENO, out);
 }
-void reset_fd(int in, int out)
-{
-    dup2(in, STDIN_FILENO);
-    dup2(out, STDOUT_FILENO);
-    close(in);
-    close(out);
-}
+// void reset_fd(int in, int out)
+// {
+//     dup2(in, STDIN_FILENO);
+//     dup2(out, STDOUT_FILENO);
+//     close(in);
+//     close(out);
+// }
