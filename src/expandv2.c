@@ -792,7 +792,8 @@ static size_t get_expanded_length(const char *str, t_env *env_list) {
                 char *var_name = strndup(var_start, var_len);
                 const char *var_value = find_env_value(var_name, env_list);
                 free(var_name);
-                length += strlen(var_value);
+                if(var_value)
+                    length += strlen(var_value);
             }
         } else {
             length++;
@@ -838,8 +839,10 @@ char *expand_string(const char *str, t_env *env_list) {
                     char *var_name = strndup(var_start, var_len);
                     const char *var_value = find_env_value(var_name, env_list);
                     free(var_name);
+                    if(var_value){
                     strcpy(result_ptr, var_value);
                     result_ptr += strlen(var_value);
+                    }
                 } else {
                     *result_ptr++ = '$';
                 }

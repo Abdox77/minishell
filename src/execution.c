@@ -875,6 +875,13 @@ void execute_command(t_token *token, t_exec *exec) {
         cmd = args[0];
     else
         cmd = "\0";
+    int p =0;
+    while (args[p])
+    {
+        printf("expanded_args[%i] : %s \n", p, args[p]);
+        p++;
+    }
+    
 
     if (check_builtins(cmd, token->cmd, exec, args)) {
         free_strs(exec->envp);
