@@ -402,6 +402,7 @@ char **process_args(char **args, char **og_args, char *og_cmd, char *cmd, t_env 
         processed_args = new_processed_args;
         i++;
     }
+    // free_strs(args);
     free_strs(for_cmd);
     return processed_args;
 }

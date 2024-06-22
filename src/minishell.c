@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aminosar <aminosar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/09 23:16:48 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/06/22 20:47:00 by aminosar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -252,7 +252,7 @@ void minishell_loop(char **env) {
     exec.env = parse_env(env);
     head_tokens = NULL;
     while (42) { 
-        exec.envp = env_to_envp(&exec);
+        // exec.envp = env_to_envp(&exec);
         singal_handler();
         og_line = readline(GREEN "minishell$ " "\033[35m");
         line = og_line;
@@ -278,8 +278,9 @@ void minishell_loop(char **env) {
         {
             execute(head_tokens, &exec);
         }
-        free_strs(exec.envp);
-        exec.envp = NULL;  // Ensure envp is set to NULL after freeing
+        free_2d(exec.to_free); //////////////////////////need to fix this
+        // free_strs(exec.envp);
+        // exec.envp = NULL;  // Ensure envp is set to NULL after freeing
         cleanup(head_tokens);
         ft_print_error(NULL, NULL, RESET);
         if (*line)
@@ -290,6 +291,7 @@ void minishell_loop(char **env) {
 
     free_strs(exec.envp);  // Ensure envp is freed at the end
     exec.envp = NULL;
+    free_strs(exec.to_free); /////////////need to fix this
     free_env_list(exec.env);
 }
 
