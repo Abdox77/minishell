@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aminosar <aminosar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/09 19:01:59 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/06/22 08:43:38 by aminosar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -278,14 +278,17 @@ void	    free_2d(char **arr);
 char	    *get_cmd(char *cmd, char **envp);
 void        execute_or(t_token *node, t_exec *exec);
 void        execute_and(t_token *node, t_exec *exec);
-void        execute(t_token *token, t_exec *exec);
+int        execute(t_token *token, t_exec *exec);
 int         stat(int code, int flag);
 char        *expand_env_variable(char *input, t_env *env);
 void        handle_input_redirection(t_redir *input, t_env *env);
 void        handle_output_redirection(t_redir *output, t_env *env);
+void execute_subtree(t_token *root, t_exec *exec);
 void        handle_redirections(t_cmd *cmd, t_env *env, t_exec *exec);
 // int	        check_builtins(t_token *node, t_exec *exec, char **args);
 int	check_builtins(char *cmd, t_cmd *cc, t_exec *exec, char **args);
+char **expander(t_token *token, t_exec *exec, char *cmd);
+char **initialize_args_if_null(char *cmd, char **args);
 void handle_output_redirections(t_redir *output, t_redir *og_output, t_env *env);
 // void        expand_variables(t_cmd *cmd, t_env *env_list, int *flag);
 // char        *expand_token(const char *token, t_env *env_list);
@@ -298,6 +301,7 @@ void handle_output_redirections(t_redir *output, t_redir *og_output, t_env *env)
 // char **expand_arg_if_needed(char *arg, char *og_arg, t_env *env_list);
 // char **expand_arg_if_needed(char *arg, char *og_arg, t_env *env_list, int in_quotes);
 char    **expand_arg_if_needed(char *arg, char *og_arg, t_env *env_list);
+// int is_inside_quotes(const char *str, const char *pos)
 char    *expand_string(const char *str, t_env *env_list);
 char    **process_args(char **args, char **og_args, char *og_cmd, char *cmd, t_env *env_list);
 char    **process_cmd_and_args(char *cmd, char **args, t_env *env_list);

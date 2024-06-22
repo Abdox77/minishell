@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aminosar <aminosar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 08:11:48 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/13 18:17:54 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/06/22 20:16:01 by aminosar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,10 +89,6 @@ static void update_pwd_and_oldpwd(t_exec *exec)
 
 int cd(char **arg, t_exec *exec)
 {
-    // int	i;
-
-	// i = 1;
-		// printf("heeeeeeeerree");
 	if (arg[0] == NULL)
 	{
 		if (!check_key(exec->env, "HOME"))
@@ -103,12 +99,8 @@ int cd(char **arg, t_exec *exec)
 		else
 		{
 			if (chdir(get_value(exec->env, "HOME")) == -1)
-			{
-				(perror(GREEN"minishell$ " "\033[35m"));
-				return (0);
-			}
+				return (perror(GREEN"minishell$ " "\033[35m"), 0);
 			update_pwd_and_oldpwd(exec);
-			
 		}
 	}
 	else

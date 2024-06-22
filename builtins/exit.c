@@ -3,14 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aminosar <aminosar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 08:14:00 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/04 23:03:37 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/06/22 20:13:25 by aminosar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include "../src/minishell.h"
 
 #include "../src/minishell.h"
 

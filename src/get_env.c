@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_env.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aminosar <aminosar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 15:22:09 by aabou-ib          #+#    #+#             */
-/*   Updated: 2024/04/14 15:27:17 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/06/22 20:11:09 by aminosar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,38 +44,78 @@ void    copy_key(char **env, t_var *var)
     var->rem = var->j + 1;
 }
 
-t_env    *parse_env(char **env)
+// t_env    *parse_env(char **env)
+// {
+//     t_var    var;
+//     t_env    *head;
+
+//     head = NULL;
+//     var.i = 0;
+//     if (!*env)
+// 		return (set_empty_env(&head), head);
+//     while (env[var.i])
+//     {
+//         var.j = 0;
+//         while (env[var.i][var.j] != '=')
+//             var.j++;
+//         if (env[var.i][var.j] == '=')
+//             copy_key(env, &var);
+//         var.j = 0;
+//         while (env[var.i][var.j])
+//             var.j++;
+//         var.tmp_val = ft_substr(env[var.i], var.rem, var.j - var.rem);
+//         if (!var.tmp_val)
+//         {
+//             ft_write("Malloc error", 2, 1);
+//             exit(2);
+//         }
+//         append_node(&head, var.tmp_key, var.tmp_val);
+//         free(var.tmp_val);
+//         free(var.tmp_key);
+//         var.i++;
+//     }
+//     return (head);
+// }
+
+static void split_key_value(char **env, t_var *var)
 {
-    t_var    var;
-    t_env    *head;
+    var->j = 0;
+    while (env[var->i][var->j] != '=')
+        var->j++;
+    var->tmp_key = ft_substr(env[var->i], 0, var->j);
+    var->rem = ++var->j;
+    while (env[var->i][var->j])
+        var->j++;
+    var->tmp_val = ft_substr(env[var->i], var->rem, var->j - var->rem);
+    if (!var->tmp_key || !var->tmp_val)
+    {
+        ft_write("Malloc error", 2, 1);
+        exit(2);
+    }
+}
+
+static void add_env_node(t_env **head, t_var *var)
+{
+    append_node(head, var->tmp_key, var->tmp_val);
+    free(var->tmp_val);
+    free(var->tmp_key);
+}
+
+t_env *parse_env(char **env)
+{
+    t_var var;
+    t_env *head;
 
     head = NULL;
     var.i = 0;
     if (!*env)
-		return (set_empty_env(&head), head);
+        return (set_empty_env(&head), head);
     while (env[var.i])
     {
-        var.j = 0;
-        while (env[var.i][var.j] != '=')
-            var.j++;
-        if (env[var.i][var.j] == '=')
-            copy_key(env, &var);
-        var.j = 0;
-        while (env[var.i][var.j])
-            var.j++;
-        var.tmp_val = ft_substr(env[var.i], var.rem, var.j - var.rem);
-        if (!var.tmp_val)
-        {
-            ft_write("Malloc error", 2, 1);
-            exit(2);
-        }
-        append_node(&head, var.tmp_key, var.tmp_val);
-        free(var.tmp_val);
-        free(var.tmp_key);
+        split_key_value(env, &var);
+        add_env_node(&head, &var);
         var.i++;
     }
-    // free(var.tmp_val);
-    // free(var.tmp_key);
     return (head);
 }
 
