@@ -16,6 +16,7 @@
 static void	set_empty_env(t_env **head)
 {
     char *str;
+
 	append_node(head, "SHLVL", "1");
 	append_node(head, "PWD", getcwd(NULL, 0));
 	str = ft_strjoin(getcwd(NULL, 0), "/minishell");

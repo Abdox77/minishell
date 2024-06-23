@@ -261,7 +261,6 @@ void minishell_loop(char **env) {
             printf("\nexit\n");
             break;
         }
-            // break;
         if (line)
             add_history(line);
         special_trim(&line);
@@ -278,7 +277,7 @@ void minishell_loop(char **env) {
         {
             execute(head_tokens, &exec);
         }
-        free_2d(exec.to_free); //////////////////////////need to fix this
+        // free_strs(exec.to_free); //////////////////////////need to fix this
         // free_strs(exec.envp);
         // exec.envp = NULL;  // Ensure envp is set to NULL after freeing
         cleanup(head_tokens);
@@ -289,9 +288,9 @@ void minishell_loop(char **env) {
         head_tokens = NULL;
     }
 
-    free_strs(exec.envp);  // Ensure envp is freed at the end
-    exec.envp = NULL;
-    free_strs(exec.to_free); /////////////need to fix this
+    // free_strs(exec.envp);  // Ensure envp is freed at the end
+    // exec.envp = NULL;
+    // free_strs(exec.to_free); /////////////need to fix this
     free_env_list(exec.env);
 }
 

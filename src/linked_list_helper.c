@@ -17,6 +17,7 @@ t_env   *create_node(char *key, char *value)
     t_env   *env;
 
     env = (t_env *)malloc(sizeof(t_env));
+    memset(env, 0, sizeof(t_env));
     if (!env)
     {
         ft_write("Malloc error", 2, 1);

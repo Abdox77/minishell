@@ -15,6 +15,7 @@
 void free_strs(char **strs)
 {
     int i; 
+
     i = 0;
     if (strs)
     {
@@ -24,7 +25,7 @@ void free_strs(char **strs)
             strs[i] = NULL;
             i++;
         }
-        safe_free(strs);
+        free(strs);
         strs = NULL;
     }
 }
@@ -72,10 +73,9 @@ void free_cmd(t_token *root)
 {
     if (!root)
         return;
-    safe_free(root->cmd->cmd);
-    safe_free(root->cmd->cmd_to_be_expanded);
     free_strs(root->cmd->args);
-    root->cmd->args = NULL;
+    safe_free(root->cmd->cmd_to_be_expanded);
+    safe_free(root->cmd->cmd);
     free_expands(root->cmd->og_tokens);
     free_redirections(root->cmd->input);
     free_redirections(root->cmd->output);
