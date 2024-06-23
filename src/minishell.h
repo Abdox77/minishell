@@ -6,7 +6,7 @@
 /*   By: aminosar <aminosar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/22 08:43:38 by aminosar         ###   ########.fr       */
+/*   Updated: 2024/06/23 23:42:59 by aminosar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 # include <readline/history.h>
 # include "../libft/libft.h"
 # include "get_next_line.h"
+# include <termios.h>
 #ifdef __linux__
     # include <linux/limits.h>
 #endif

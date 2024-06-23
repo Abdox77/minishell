@@ -374,7 +374,13 @@ char **initialize_args_if_null(char *cmd, char **args)
 
 static void handle_signals(void)
 {
+    signal(SIGQUIT, SIG_DFL);
     signal(SIGINT, SIG_DFL);
+}
+static void handle_signals_before(void)
+{
+    signal(SIGINT, SIG_IGN);
+    signal(SIGQUIT, SIG_IGN);
 }
 
 char **expander(t_token *token, t_exec *exec, char *cmd)
@@ -456,6 +462,7 @@ static void cleanup_exec(t_exec *exec, char **args, int in, int out)
 static int handle_fork_execution(t_token *token, t_exec *exec, char *cmd, char **args, int flag)
 {
     char *cmd_path;
+    int ex;
 
     handle_signals();
     handle_redirections(token->cmd, exec->env, exec);
@@ -467,12 +474,34 @@ static int handle_fork_execution(t_token *token, t_exec *exec, char *cmd, char *
     cmd_path = get_cmd(cmd, exec->envp);
     execve(cmd_path, args, exec->envp);
     perror("execve failed");
+    ex = 127;
+    if (access(cmd_path, F_OK) == -1)
+       ex = 127; // Command not found
+    else if (access(cmd_path, X_OK) == -1)
+        ex = 126; // Permission denied
     free(cmd_path);
     free_strs(args);
     free_strs(exec->envp);
-    exit(127);
+    exit(ex);
 }
 
+void	reset_terminal(void)
+{
+	struct termios	term;
+
+	if (tcgetattr(STDIN_FILENO, &term) == -1)
+	{
+		perror("tcgetattr");
+		exit(1);
+	}
+	term.c_oflag = OPOST | ONLCR;
+	term.c_lflag = ICANON | ECHO | ECHOE | ECHOK | ISIG;
+	if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &term) == -1)
+	{
+		perror("tcsetattr");
+		exit(1);
+	}
+}
 static int handle_builtin_or_fork(t_token *token, t_exec *exec, char *cmd, char **args, int flag)
 {
     int status;
@@ -482,6 +511,20 @@ static int handle_builtin_or_fork(t_token *token, t_exec *exec, char *cmd, char 
     if (fork() == 0)
         handle_fork_execution(token, exec, cmd, args, flag);
     wait(&status);
+    if (WIFSIGNALED(status))
+    {
+        if (WTERMSIG(status) == SIGINT)
+        {
+            write(1, "\n", 1);
+		    // reset_terminal();
+        }
+        else if (WTERMSIG(status) == SIGQUIT)
+        {
+            write(1, "Quit (core dumped)\n", 20);
+		    reset_terminal();
+        }
+        return 128 + WTERMSIG(status);
+    }
     return WEXITSTATUS(status);
 }
 
@@ -495,8 +538,10 @@ int execute_command(t_token *token, t_exec *exec)
     int status;
 
     exec->envp = env_to_envp(exec);
+    handle_signals_before();
     in = dup(STDIN_FILENO);
     out = dup(STDOUT_FILENO);
+
     cmd = token->cmd->cmd;
     args = expander(token, exec, cmd);
     flag = check_to_expand(token->cmd->og_tokens->og_cmd, exec->env);
