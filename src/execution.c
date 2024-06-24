@@ -473,18 +473,32 @@ static int handle_fork_execution(t_token *token, t_exec *exec, char *cmd, char *
     }
     cmd_path = get_cmd(cmd, exec->envp);
     execve(cmd_path, args, exec->envp);
-    perror("execve failed");
     ex = 127;
     if (access(cmd_path, F_OK) == -1)
        ex = 127; // Command not found
     else if (access(cmd_path, X_OK) == -1)
         ex = 126; // Permission denied
+    exec_error(cmd, cmd_path);
     free(cmd_path);
     free_strs(args);
     free_strs(exec->envp);
     exit(ex);
 }
-
+void exec_error(char *cmd, char *cmd_path)
+{
+    ft_write("minishell: ", 2, 0);
+	ft_write(cmd, 2, 0);
+	ft_write(": ", 2, 0);
+    if (access(cmd_path, F_OK) == -1)
+    {
+        if(!strchr(cmd, '/'))
+	        ft_write("command not found\n", 2, 0);
+        else
+            ft_write("No such file or directory\n", 2, 0);
+    }
+    else if (access(cmd_path, X_OK) == -1)
+        ft_write("Permission denied\n", 2, 0);
+}
 void	reset_terminal(void)
 {
 	struct termios	term;

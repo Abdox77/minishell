@@ -6,7 +6,7 @@
 /*   By: aminosar <aminosar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/23 23:42:59 by aminosar         ###   ########.fr       */
+/*   Updated: 2024/06/24 07:07:15 by aminosar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -312,7 +312,7 @@ char    *ft_strndup(const char *s1, size_t n);
 char    **expand_wildcards(char **args);
 void    handle_input_redirections(t_redir *input, t_redir *og_input, t_env *env, t_exec *exec);
 void reset_fd(int in, int out);
-
+void exec_error(char *cmd, char *cmd_path);
 
 
 

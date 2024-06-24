@@ -65,7 +65,6 @@ char *get_cmd(char *cmd, char **envp)
 
     j = 0;
     if (ft_strchr(cmd, '/')) {
-        if (access(cmd, F_OK | X_OK) != -1)
             return ft_strdup(cmd);
         return NULL;
     }

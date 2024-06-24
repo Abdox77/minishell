@@ -234,7 +234,7 @@ void handle_infile(t_redir *input, t_redir *og_input, t_env *env)
     fd = open(expanded_filename, O_RDONLY);
     if (fd < 0)
     {
-        perror("Failed to open input file");
+        perror(expanded_filename);
         free(expanded_filename);
         exit(1);
     }
@@ -321,7 +321,7 @@ void open_output_file(t_redir *output, char *expanded_filename)
         fd = open(expanded_filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
     if (fd < 0)
     {
-        perror("Failed to open output file");
+        perror(expanded_filename);
         free(expanded_filename);
         exit(EXIT_FAILURE);
     }
