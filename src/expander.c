@@ -315,6 +315,7 @@ void open_output_file(t_redir *output, char *expanded_filename)
 {
     int fd;
 
+    fd = -1;
     if (output->mode == OUTFILE || output->mode == TRUNC)
         fd = open(expanded_filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
     else if (output->mode == APPEND)

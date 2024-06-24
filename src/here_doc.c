@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 10:06:01 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/22 11:55:41 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/24 20:21:38 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,6 +204,7 @@ void here_doc(t_redir *here_doc, t_bool error_flag)
     if (error_flag == TRUE)
     {
         close(here_doc->here_doc_fd[R_HEREDOC]);
-        close(here_doc->here_doc_fd[_HEREDOC_EXPAND_FD]);
+        if(here_doc->to_be_expanded == TRUE)
+            close(here_doc->here_doc_fd[_HEREDOC_EXPAND_FD]);
     }
 }

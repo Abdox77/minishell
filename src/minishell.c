@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aminosar <aminosar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/22 20:47:00 by aminosar         ###   ########.fr       */
+/*   Updated: 2024/06/24 20:27:54 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -269,10 +269,12 @@ void minishell_loop(char **env) {
         evaluate_syntax(head_tokens);
         heredoc_to_fds(&head_tokens);
         if (ft_print_error(NULL, NULL, RETRIEVE) == TRUE)
+        {
+            ft_print_error(NULL, NULL, PRINT);
             expand_heredoc_to_infiles(&head_tokens, TRUE);
+        }
         else
             expand_heredoc_to_infiles(&head_tokens, FALSE);
-        ft_print_error(NULL, NULL, PRINT);
         if (ft_print_error(NULL, NULL, RETRIEVE) == FALSE)
         {
             execute(head_tokens, &exec);
@@ -288,8 +290,8 @@ void minishell_loop(char **env) {
         head_tokens = NULL;
     }
 
-    // free_strs(exec.envp);  // Ensure envp is freed at the end
-    // exec.envp = NULL;
+    free_strs(exec.envp);  // Ensure envp is freed at the end
+    exec.envp = NULL;
     // free_strs(exec.to_free); /////////////need to fix this
     free_env_list(exec.env);
 }

@@ -484,6 +484,7 @@ static int handle_fork_execution(t_token *token, t_exec *exec, char *cmd, char *
     free_strs(exec->envp);
     exit(ex);
 }
+
 void exec_error(char *cmd, char *cmd_path)
 {
     ft_write("minishell: ", 2, 0);
@@ -499,23 +500,25 @@ void exec_error(char *cmd, char *cmd_path)
     else if (access(cmd_path, X_OK) == -1)
         ft_write("Permission denied\n", 2, 0);
 }
+
 void	reset_terminal(void)
 {
-	struct termios	term;
+	// struct termios	term;
 
-	if (tcgetattr(STDIN_FILENO, &term) == -1)
-	{
-		perror("tcgetattr");
-		exit(1);
-	}
-	term.c_oflag = OPOST | ONLCR;
-	term.c_lflag = ICANON | ECHO | ECHOE | ECHOK | ISIG;
-	if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &term) == -1)
-	{
-		perror("tcsetattr");
-		exit(1);
-	}
+	// if (tcgetattr(STDIN_FILENO, &term) == -1)
+	// {
+	// 	perror("tcgetattr");
+	// 	exit(1);
+	// }
+	// term.c_oflag = OPOST | ONLCR;
+	// term.c_lflag = ICANON | ECHO | ECHOE | ECHOK | ISIG;
+	// if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &term) == -1)
+	// {
+	// 	perror("tcsetattr");
+	// 	exit(1);
+	// }
 }
+
 static int handle_builtin_or_fork(t_token *token, t_exec *exec, char *cmd, char **args, int flag)
 {
     int status;
