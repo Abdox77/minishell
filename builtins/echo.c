@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aminosar <aminosar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 08:11:05 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/22 20:22:26 by aminosar         ###   ########.fr       */
+/*   Updated: 2024/06/25 01:07:12 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ int ft_echo(char **arg)
     int flag;
 
     i = 1;
+	stat(0, 1);
     if (!arg || !arg[1])
     {
         ft_write("\n", 1, 0);

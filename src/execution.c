@@ -267,7 +267,7 @@ static void append_var_value(char **result_ptr, const char **str_ptr, t_env *env
     var_value = find_env_value(var_name, env_list);
     free(var_name);
     if (var_value) {
-        strcpy(*result_ptr, var_value);
+        ft_strcpy(*result_ptr, var_value);
         *result_ptr += strlen(var_value);
     }
 }
@@ -524,25 +524,25 @@ static int handle_builtin_or_fork(t_token *token, t_exec *exec, char *cmd, char 
     int status;
 
     if (check_builtins(cmd, token->cmd, exec, args))
-        return 0;
-    if (fork() == 0)
-        handle_fork_execution(token, exec, cmd, args, flag);
-    wait(&status);
-    if (WIFSIGNALED(status))
+        return stat(0, 0);
+    else
     {
-        if (WTERMSIG(status) == SIGINT)
+        if (fork() == 0)
+            handle_fork_execution(token, exec, cmd, args, flag);
+        wait(&status);
+        if (WIFSIGNALED(status))
         {
-            write(1, "\n", 1);
-		    // reset_terminal();
+            if (WTERMSIG(status) == SIGINT)
+                write(1, "\n", 1);
+            else if (WTERMSIG(status) == SIGQUIT)
+            {
+                write(1, "Quit (core dumped)\n", 20);
+                reset_terminal();
+            }
+            return 128 + WTERMSIG(status);
         }
-        else if (WTERMSIG(status) == SIGQUIT)
-        {
-            write(1, "Quit (core dumped)\n", 20);
-		    reset_terminal();
-        }
-        return 128 + WTERMSIG(status);
+        return WEXITSTATUS(status);
     }
-    return WEXITSTATUS(status);
 }
 
 int execute_command(t_token *token, t_exec *exec)

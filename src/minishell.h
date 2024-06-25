@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aminosar <aminosar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/24 07:07:15 by aminosar         ###   ########.fr       */
+/*   Updated: 2024/06/25 01:02:35 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -246,6 +246,7 @@ t_bool      is_redirection_char(char c);
 t_bool      is_an_operator(char **line, int len);
 void        special_trim(char **line);
 char	    *ft_tolowerr(char *c);
+char        *ft_strcpy(char *dest, char *src);
 
 /*=====================ENV=====================*/
 char	   **env_to_envp(t_exec *exec);

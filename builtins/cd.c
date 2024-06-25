@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aminosar <aminosar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 08:11:48 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/22 20:16:01 by aminosar         ###   ########.fr       */
+/*   Updated: 2024/06/25 01:32:20 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ static void update_pwd_and_oldpwd(t_exec *exec)
     if (getcwd(new_pwd, sizeof(new_pwd)) == NULL)
 	{
         perror("getcwd");
+        stat(1, 1);
         return;
     }
     set_value(exec->env, "PWD", new_pwd);
@@ -92,26 +93,21 @@ int cd(char **arg, t_exec *exec)
 	if (arg[0] == NULL)
 	{
 		if (!check_key(exec->env, "HOME"))
-		{
-			perror(GREEN"minishell$ " "\033[35m");
-			return (0);
-		}
+            return (stat(1,1), perror("cd: HOME not set"), 0);
 		else
 		{
 			if (chdir(get_value(exec->env, "HOME")) == -1)
-				return (perror(GREEN"minishell$ " "\033[35m"), 0);
+				return (stat(1,1), perror("cd"), 0);
 			update_pwd_and_oldpwd(exec);
 		}
 	}
 	else
 	{
 		if (chdir(arg[1]) == -1)
-		{
-			(perror(GREEN"minishell$ " "\033[35m"));
-			return (0);
-		}
+			return (stat(1,1), perror("cd"), 0);
 		update_pwd_and_oldpwd(exec);
 	}
+    stat(0, 1);
 	return (1);
 }
 
