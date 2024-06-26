@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:22:59 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/17 18:51:45 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/26 23:22:07 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,10 +199,10 @@ static void handle_parenthesis(t_token **root, char **line)
 {
 	t_token *node;
 
+	printf("got here in parenthesis\n");
 	++(*line);
 	node = NULL;
 	parenthesis_lexer(&node, line);
-	printf("node is\n");
 	if (!*line || **line != ')')
 	{
 		ft_print_error("Syntax error unlosed parenthesis\n", line, SAVE);
@@ -222,6 +222,7 @@ void	parenthesis_lexer(t_token **token, char **line)
 {
 	if (!*line || !**line || **line == ')')
 		return ;
+	special_trim(line);
 	if (is_an_operator(line, 0) == TRUE)
 		handle_operators(token, line);
 	else if (**line == '|')
@@ -242,6 +243,8 @@ void	lexer(t_token **token, char **line)
 		handle_operators(token, line);
 	else if (**line == '|')
 		handle_pipes(token, line);
+	else if (**line == ')')
+		ft_print_error("Syntax error unexpected token near ')'\n", line, SAVE);
 	else if (**line == '(' || **line == ')')
 		handle_parenthesis(token, line);
 	else
