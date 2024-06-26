@@ -356,18 +356,31 @@ int check_to_expand(char *cmd, t_env *env_list)
     return (0);
 }
 
+// char **initialize_args_if_null(char *cmd, char **args)
+// {
+//     if (args == NULL)
+//     {
+//         args = malloc(2 * sizeof(char *));
+//         if (args == NULL)
+//         {
+//             perror("Failed to allocate memory for args");
+//             exit(EXIT_FAILURE);
+//         }
+//         args[0] = ft_strdup(cmd);
+//         args[1] = NULL;
+//     }
+//     return (args);
+// }
+
 char **initialize_args_if_null(char *cmd, char **args)
 {
+    static char *default_args[2];
+
     if (args == NULL)
     {
-        args = malloc(2 * sizeof(char *));
-        if (args == NULL)
-        {
-            perror("Failed to allocate memory for args");
-            exit(EXIT_FAILURE);
-        }
-        args[0] = ft_strdup(cmd);
-        args[1] = NULL;
+        default_args[0] = cmd;
+        default_args[1] = NULL;
+        args = default_args;
     }
     return (args);
 }
@@ -385,14 +398,15 @@ static void handle_signals_before(void)
 
 char **expander(t_token *token, t_exec *exec, char *cmd)
 {
-    // char **args;
+    char **args;
     char **processed_args;
     char **expanded_wildcards;
 
-    exec->to_free = initialize_args_if_null(cmd, token->cmd->args);
-    processed_args = process_args(exec->to_free, token->cmd->og_tokens->og_args, token->cmd->og_tokens->og_cmd, cmd, exec->env);
+    args = initialize_args_if_null(cmd, token->cmd->args);
+    processed_args = process_args(args, token->cmd->og_tokens->og_args, token->cmd->og_tokens->og_cmd, cmd, exec->env);
     expanded_wildcards = expand_wildcards(processed_args);
     free_strs(processed_args);
+    // free_strs(args);
     return expanded_wildcards;
 }
 
@@ -449,7 +463,12 @@ char **expander(t_token *token, t_exec *exec, char *cmd)
 //     reset_fd(in, out);
 //     return (stat(WEXITSTATUS(status), 1), WEXITSTATUS(status));
 // }
-
+// static int check_to_exec(char *cmd_path)
+// {
+//     if ((access(cmd_path, F_OK) == -1) || (access(cmd_path, X_OK) == -1))
+//         return (0);
+//     return (1);
+// }
 
 static void cleanup_exec(t_exec *exec, char **args, int in, int out)
 {
@@ -490,9 +509,11 @@ void exec_error(char *cmd, char *cmd_path)
     ft_write("minishell: ", 2, 0);
 	ft_write(cmd, 2, 0);
 	ft_write(": ", 2, 0);
-    if (access(cmd_path, F_OK) == -1)
+    if(!*cmd)
+	    ft_write("command not found\n", 2, 0);
+    else if (access(cmd_path, F_OK) == -1)
     {
-        if(!strchr(cmd, '/'))
+        if(!ft_strchr(cmd, '/'))
 	        ft_write("command not found\n", 2, 0);
         else
             ft_write("No such file or directory\n", 2, 0);

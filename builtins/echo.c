@@ -6,7 +6,7 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 08:11:05 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/25 01:07:12 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/06/26 05:13:09 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ static int handle_flag(char **arg, int *i)
     int flag;
 
     flag = 0;
-    if (arg[*i] && arg[*i][0] == '-' && arg[*i][1] == 'n' && n_exists(arg[*i]))
+    while (arg[*i] && arg[*i][0] == '-' && arg[*i][1] == 'n' && n_exists(arg[*i]))
     {
         flag = 1;
         (*i)++;
