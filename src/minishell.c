@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/24 20:27:54 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/26 23:06:55 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -249,12 +249,13 @@ void minishell_loop(char **env) {
     t_exec exec;
     t_token *head_tokens;
 
+    exec.envp = NULL;
     exec.env = parse_env(env);
     head_tokens = NULL;
     while (42) { 
         // exec.envp = env_to_envp(&exec);
         singal_handler();
-        og_line = readline(GREEN "minishell$ " "\033[35m");
+        og_line = readline("minishell$ " );
         line = og_line;
         if (!line)
         {
@@ -289,7 +290,6 @@ void minishell_loop(char **env) {
         free(og_line);
         head_tokens = NULL;
     }
-
     free_strs(exec.envp);  // Ensure envp is freed at the end
     exec.envp = NULL;
     // free_strs(exec.to_free); /////////////need to fix this
