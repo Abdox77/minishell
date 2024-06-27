@@ -564,7 +564,7 @@ static void assign_variable_value(const char **str, char **result_ptr, t_env *en
     {
         strcpy(*result_ptr, var_value);
         *result_ptr += strlen(var_value);
-        free(var_value);
+        // free(var_value);
     }
     else
     {
