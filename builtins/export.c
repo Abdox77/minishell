@@ -6,7 +6,7 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 08:13:01 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/25 01:25:34 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/06/27 18:51:39 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void print_error(char *str)
 {
-	stat(1, 1);
+	stat_handler(1, 1);
 	ft_putstr_fd(str, 2);
 	ft_putstr_fd(": not a valid identifier\n", 2);
 }

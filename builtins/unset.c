@@ -6,7 +6,7 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 08:13:26 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/25 00:11:11 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/06/27 18:51:39 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,6 @@ int unset(t_env **env, char **cmd)
         free_env_node(env, cmd[i]);
         i++;
     }
-    stat(0, 1);
+    stat_handler(0, 1);
     return 1;
 }

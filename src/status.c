@@ -1,4 +1,4 @@
-int	stat(int code, int flag)
+int	stat_handler(int code, int flag)
 {
 	static int	exit_stat = 0;
 	

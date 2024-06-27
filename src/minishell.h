@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/27 16:17:18 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/27 18:51:39 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -287,7 +287,7 @@ char	    *get_cmd(char *cmd, char **envp);
 void        execute_or(t_token *node, t_exec *exec);
 void        execute_and(t_token *node, t_exec *exec);
 int        execute(t_token *token, t_exec *exec);
-int         stat(int code, int flag);
+int         stat_handler(int code, int flag);
 char        *expand_env_variable(char *input, t_env *env);
 void        handle_input_redirection(t_redir *input, t_env *env);
 void        handle_output_redirection(t_redir *output, t_env *env);

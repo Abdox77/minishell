@@ -6,7 +6,7 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 08:11:05 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/26 05:13:09 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/06/27 18:51:39 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@
 	// 	}
 	// 	if (flag == 0)
 	// 		printf("\n");
-	// 	stat(0, 1);
+	// 	stat_handler(0, 1);
 	// 	return (0);
 	// }
 
@@ -96,7 +96,7 @@ int ft_echo(char **arg)
     int flag;
 
     i = 1;
-	stat(0, 1);
+	stat_handler(0, 1);
     if (!arg || !arg[1])
     {
         ft_write("\n", 1, 0);

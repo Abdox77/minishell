@@ -137,7 +137,7 @@
 // static char *find_env_value(const char *var_name, t_env *env_list)
 // {
 //     if (ft_strcmp(var_name, "?") == 0) {
-//         return (ft_itoa(stat(0, 0)));
+//         return (ft_itoa(stat_handler(0, 0)));
 //     }
 
 //     while (env_list != NULL) {
@@ -410,7 +410,7 @@ char **process_args(char **args, char **og_args, char *og_cmd, char *cmd, t_env 
 static char *find_env_value(const char *var_name, t_env *env_list)
 {
     if (ft_strcmp(var_name, "?") == 0)
-        return ft_itoa(stat(0, 0));
+        return ft_itoa(stat_handler(0, 0));
     while (env_list != NULL)
     {
         if (strcmp(var_name, env_list->key) == 0)
@@ -440,13 +440,15 @@ static size_t handle_quotes_and_length(const char **str, int *in_single_quotes, 
 static size_t handle_dollar_sign(const char **str, t_env *env_list, size_t length)
 {
     const char *var_start;
+    char *var_value;
 
     (*str)++;
     var_start = *str;
     if (**str == '?')
     {
-        const char *var_value = find_env_value("?", env_list);
-        length += strlen(var_value);
+        var_value = find_env_value("?", env_list);
+        length += ft_strlen(var_value);
+        free(var_value);
         (*str)++;
     }
     else
@@ -493,12 +495,13 @@ static void handle_expand_quotes(const char **str, int *in_single_quotes, int *i
     (*str)++;
 }
 
-static const char *get_variable_value(const char **str, t_env *env_list)
+static char *get_variable_value(const char **str, t_env *env_list)
 {
-    const char *var_value = NULL;
+    char *var_value = NULL;
     if (**str == '?')
     {
         var_value = find_env_value("?", env_list);
+        // free(var_value);
         (*str)++;
     }
     else
@@ -519,11 +522,12 @@ static const char *get_variable_value(const char **str, t_env *env_list)
 
 static void assign_variable_value(const char **str, char **result_ptr, t_env *env_list)
 {
-    const char *var_value = get_variable_value(str, env_list);
+    char *var_value = get_variable_value(str, env_list);
     if (var_value)
     {
         strcpy(*result_ptr, var_value);
         *result_ptr += strlen(var_value);
+        free(var_value);
     }
     else
     {

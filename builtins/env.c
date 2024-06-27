@@ -6,7 +6,7 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 08:13:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/25 00:31:37 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/06/27 18:51:39 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,5 +23,5 @@ void	ft_env(t_env *env)
 			printf("%s=%s\n", tmp->key, tmp->value);
 		tmp = tmp->next;
 	}
-	stat(0, 1);
+	stat_handler(0, 1);
 }

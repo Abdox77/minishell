@@ -439,7 +439,7 @@ char **expander(t_token *token, t_exec *exec, char *cmd)
 //         handle_redirections(token->cmd, exec->env, exec);
 
 //         if (!flag || !token->cmd->og_tokens->og_cmd) {
-//             stat(0, 1);
+//             stat_handler(0, 1);
 //             exit(0);
 //         }
 
@@ -461,7 +461,7 @@ char **expander(t_token *token, t_exec *exec, char *cmd)
 //     free_strs(exec->envp);
 //     exec->envp = NULL;
 //     reset_fd(in, out);
-//     return (stat(WEXITSTATUS(status), 1), WEXITSTATUS(status));
+//     return (stat_handler(WEXITSTATUS(status), 1), WEXITSTATUS(status));
 // }
 // static int check_to_exec(char *cmd_path)
 // {
@@ -487,7 +487,7 @@ static int handle_fork_execution(t_token *token, t_exec *exec, char *cmd, char *
     handle_redirections(token->cmd, exec->env, exec);
     if (!flag || !token->cmd->og_tokens->og_cmd)
     {
-        stat(0, 1);
+        stat_handler(0, 1);
         exit(0);
     }
     cmd_path = get_cmd(cmd, exec->envp);
@@ -545,7 +545,7 @@ static int handle_builtin_or_fork(t_token *token, t_exec *exec, char *cmd, char 
     int status;
 
     if (check_builtins(cmd, token->cmd, exec, args))
-        return stat(0, 0);
+        return stat_handler(0, 0);
     else
     {
         if (fork() == 0)
@@ -590,7 +590,7 @@ int execute_command(t_token *token, t_exec *exec)
 
     status = handle_builtin_or_fork(token, exec, cmd, args, flag);
     cleanup_exec(exec, args, in, out);
-    return stat(status, 1), status;
+    return stat_handler(status, 1), status;
 }
 
 static void execute_left(t_token *node, int *fd, t_exec *exec)
@@ -639,7 +639,7 @@ static void execute_pipe(t_token *node, t_exec *exec)
     waitpid(pid[1], &status2, 0);
     puts("here with exit status ");
     puts(ft_itoa(WEXITSTATUS(status2)));
-    stat(WEXITSTATUS(status2), 1);
+    stat_handler(WEXITSTATUS(status2), 1);
 }
 
 void execute_subtree(t_token *root, t_exec *exec)
@@ -658,11 +658,11 @@ void execute_subtree(t_token *root, t_exec *exec)
         execute_pipe(root, exec);
     else if (root->type == AND) {
         execute_subtree(root->l_token, exec);
-        if (stat(0, 0) == 0)
+        if (stat_handler(0, 0) == 0)
             execute_subtree(root->r_token, exec);
     } else if (root->type == OR) {
         execute_subtree(root->l_token, exec);
-        if (stat(0, 0) != 0)
+        if (stat_handler(0, 0) != 0)
             execute_subtree(root->r_token, exec);
     }
     dup2(original_stdin, STDIN_FILENO);
@@ -693,13 +693,13 @@ int execute(t_token *token, t_exec *exec)
 
 void execute_and(t_token *node, t_exec *exec) {
     execute(node->l_token, exec);
-    if (stat(0, 0) == 0)
+    if (stat_handler(0, 0) == 0)
         execute(node->r_token, exec);
 }
 
 void execute_or(t_token *node, t_exec *exec) {
     execute(node->l_token, exec);
-    if (stat(0, 0) != 0)
+    if (stat_handler(0, 0) != 0)
         execute(node->r_token, exec);
 }
 

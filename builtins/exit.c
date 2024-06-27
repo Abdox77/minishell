@@ -6,7 +6,7 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 08:14:00 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/25 00:30:11 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/06/27 18:51:39 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	ft_exit(char **cmd)
 	int	exit_st;
 	int	i;
 
-	exit_st = stat(0,0);
+	exit_st = stat_handler(0,0);
 	i = 0;
 	while (cmd[i])
 		i++;
