@@ -437,6 +437,34 @@ static size_t handle_quotes_and_length(const char **str, int *in_single_quotes, 
     return 1;
 }
 
+// static size_t handle_dollar_sign(const char **str, t_env *env_list, size_t length)
+// {
+//     const char *var_start;
+//     char *var_value;
+
+//     (*str)++;
+//     var_start = *str;
+//     if (**str == '?')
+//     {
+//         var_value = find_env_value("?", env_list);
+//         length += ft_strlen(var_value);
+//         free(var_value);
+//         (*str)++;
+//     }
+//     else
+//     {
+//         while (**str && (isalnum((unsigned char)**str) || **str == '_'))
+//             (*str)++;
+//         size_t var_len = *str - var_start;
+//         char *var_name = strndup(var_start, var_len);
+//         const char *var_value = find_env_value(var_name, env_list);
+//         free(var_name);
+//         if (var_value)
+//             length += strlen(var_value);
+//     }
+//     return length;
+// }
+
 static size_t handle_dollar_sign(const char **str, t_env *env_list, size_t length)
 {
     const char *var_start;
@@ -444,10 +472,11 @@ static size_t handle_dollar_sign(const char **str, t_env *env_list, size_t lengt
 
     (*str)++;
     var_start = *str;
+
     if (**str == '?')
     {
         var_value = find_env_value("?", env_list);
-        length += ft_strlen(var_value);
+        length += strlen(var_value);
         free(var_value);
         (*str)++;
     }
@@ -455,12 +484,20 @@ static size_t handle_dollar_sign(const char **str, t_env *env_list, size_t lengt
     {
         while (**str && (isalnum((unsigned char)**str) || **str == '_'))
             (*str)++;
-        size_t var_len = *str - var_start;
-        char *var_name = strndup(var_start, var_len);
-        const char *var_value = find_env_value(var_name, env_list);
-        free(var_name);
-        if (var_value)
-            length += strlen(var_value);
+        
+        if (*str == var_start)  // No valid variable name found
+        {
+            length++;  // Count the dollar sign as a literal character
+        }
+        else
+        {
+            size_t var_len = *str - var_start;
+            char *var_name = strndup(var_start, var_len);
+            const char *var_value = find_env_value(var_name, env_list);
+            free(var_name);
+            if (var_value)
+                length += strlen(var_value);
+        }
     }
     return length;
 }
@@ -536,10 +573,23 @@ static void assign_variable_value(const char **str, char **result_ptr, t_env *en
     }
 }
 
+// static void handle_expand_dollar(const char **str, char **result_ptr, t_env *env_list)
+// {
+//     (*str)++;
+//     assign_variable_value(str, result_ptr, env_list);
+// }
+
 static void handle_expand_dollar(const char **str, char **result_ptr, t_env *env_list)
 {
     (*str)++;
-    assign_variable_value(str, result_ptr, env_list);
+    if (isalnum((unsigned char)**str) || **str == '_' || **str == '?')
+    {
+        assign_variable_value(str, result_ptr, env_list);
+    }
+    else
+    {
+        *(*result_ptr)++ = '$';
+    }
 }
 
 char *expand_string(const char *str, t_env *env_list)
