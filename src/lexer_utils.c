@@ -35,6 +35,7 @@ char **add_arg(char **args, char *arg)
     }
     new_args[i] = ft_strdup(arg);
     free(arg);
+    free(args);
     new_args[i + 1] = NULL;
     return (new_args);
 }
