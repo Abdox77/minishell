@@ -6,7 +6,7 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/27 18:51:39 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/06/27 21:48:22 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 # include "../libft/libft.h"
 # include "get_next_line.h"
 # include <termios.h>
+#include <sys/stat.h>
 #ifdef __linux__
     # include <linux/limits.h>
 #endif

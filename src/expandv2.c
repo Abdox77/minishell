@@ -314,7 +314,7 @@ static int is_inside_quotes(const char *str, const char *pos)
 
 static void *malloc_with_error(size_t size)
 {
-    void *ptr = malloc(size);
+    void *ptr = malloc(size + 2);
     if (ptr == NULL)
     {
         perror("malloc failed");
@@ -477,7 +477,7 @@ static size_t handle_dollar_sign(const char **str, t_env *env_list, size_t lengt
     {
         var_value = find_env_value("?", env_list);
         length += strlen(var_value);
-        free(var_value);
+        // free(var_value);
         (*str)++;
     }
     else
@@ -538,7 +538,7 @@ static char *get_variable_value(const char **str, t_env *env_list)
     if (**str == '?')
     {
         var_value = find_env_value("?", env_list);
-        // free(var_value);
+        free(var_value);
         (*str)++;
     }
     else
@@ -566,11 +566,11 @@ static void assign_variable_value(const char **str, char **result_ptr, t_env *en
         *result_ptr += strlen(var_value);
         // free(var_value);
     }
-    else
-    {
-        **result_ptr = '$';
-        (*result_ptr)++;
-    }
+    // else
+    // {
+    //     **result_ptr = '$';
+    //     (*result_ptr)++;
+    // }
 }
 
 // static void handle_expand_dollar(const char **str, char **result_ptr, t_env *env_list)

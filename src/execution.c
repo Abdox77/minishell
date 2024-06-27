@@ -351,9 +351,10 @@ int check_to_expand(char *cmd, t_env *env_list)
             return (printf("because of 2;\n"), 1);
         cmd++;
     }
-    if (expand_string1(cmd, env_list))
-        return (printf("because of 3;\n"), 1);
-    return (0);
+    char *xp = expand_string1(cmd, env_list);
+    if (xp)
+        return (free(xp), printf("because of 3;\n"), 1);
+    return (free(xp), 0);
 }
 
 // char **initialize_args_if_null(char *cmd, char **args)
@@ -477,6 +478,16 @@ static void cleanup_exec(t_exec *exec, char **args, int in, int out)
     free_strs(args);
     reset_fd(in, out);
 }
+int    is_dir(char *path)
+{
+    struct stat    buf;
+
+    if (stat(path, &buf) == -1)
+        return (0);
+    else if (buf.st_mode & S_IFDIR)
+        return (1);
+    return (0);
+}
 
 static int handle_fork_execution(t_token *token, t_exec *exec, char *cmd, char **args, int flag)
 {
@@ -497,6 +508,8 @@ static int handle_fork_execution(t_token *token, t_exec *exec, char *cmd, char *
        ex = 127; // Command not found
     else if (access(cmd_path, X_OK) == -1)
         ex = 126; // Permission denied
+    if (is_dir(cmd_path))
+        ex = 126;
     exec_error(cmd, cmd_path);
     free(cmd_path);
     free_strs(args);
@@ -509,18 +522,25 @@ void exec_error(char *cmd, char *cmd_path)
     ft_write("minishell: ", 2, 0);
 	ft_write(cmd, 2, 0);
 	ft_write(": ", 2, 0);
-    if(!*cmd)
-	    ft_write("command not found\n", 2, 0);
-    else if (access(cmd_path, F_OK) == -1)
+    if (is_dir(cmd_path))
     {
-        if(!ft_strchr(cmd, '/'))
-	        ft_write("command not found\n", 2, 0);
-        else
-            ft_write("No such file or directory\n", 2, 0);
+        ft_write("Is a directory\n", 2, 0);
     }
-    else if (access(cmd_path, X_OK) == -1)
-        ft_write("Permission denied\n", 2, 0);
-}
+    else
+    {
+        if(!*cmd)
+            ft_write("command not found\n", 2, 0);
+        else if (access(cmd_path, F_OK) == -1)
+        {
+            if(!ft_strchr(cmd, '/'))
+                ft_write("command not found\n", 2, 0);
+            else
+                ft_write("No such file or directory\n", 2, 0);
+        }
+        else if (access(cmd_path, X_OK) == -1)
+            ft_write("Permission denied\n", 2, 0);
+    }
+    }
 
 void	reset_terminal(void)
 {
