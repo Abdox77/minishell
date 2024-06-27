@@ -637,8 +637,6 @@ static void execute_pipe(t_token *node, t_exec *exec)
     close(fd[1]);
     waitpid(pid[0], &status1, 0);
     waitpid(pid[1], &status2, 0);
-    puts("here with exit status ");
-    puts(ft_itoa(WEXITSTATUS(status2)));
     stat_handler(WEXITSTATUS(status2), 1);
 }
 
