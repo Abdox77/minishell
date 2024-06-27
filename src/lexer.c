@@ -26,7 +26,6 @@ void handle_pipe(t_token **token, char **line)
 t_bool is_an_operator(char **line, int len)
 {
 	char operator;
-
 	if (((*line)[len] == '&' || (*line)[len] == '|'))
 	{
 		operator = (*line)[len];

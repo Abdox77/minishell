@@ -102,161 +102,73 @@ static char *get_value_in_between_quotes(char *line, char quote)
     return (token);
 }
 
-// char *expand_in_heredoc(t_exec *exec, char *line)
-// {
-//     int i;
-//     int len;
-//     char *buff;
-//     char *env_variable;
-//     char *expanded_line;
-
-//     if (!line)
-//         return NULL;
-//     i = 0;
-//     len = 0;
-//     expanded_line = NULL;
-//     env_variable = NULL;
-//     while(line[i])
-//     {
-//         len = 0;
-//         while (line[i + len] && line[i + len] != '$' && is_quote(line[i + len]) == FALSE)
-//             len++;
-//         if (is_quote(line[i + len]) == TRUE)
-//         {
-//             expanded_line = ft_strjoin(expanded_line, ft_substr(line, i, len + 1));
-//             i += len + 1;
-//             buff = get_value_in_between_quotes(line + i, line[i - 1]);
-//             if (buff)
-//                 i += ft_strlen(buff);
-//             buff = expand_in_heredoc(exec, buff);
-//             expanded_line = ft_strjoin(expanded_line , buff);
-//         }
-//         else if (len)
-//         {
-//             expanded_line = ft_strjoin(expanded_line, ft_substr(line, i, len));
-//             i += len;
-//         }
-//         else if (line[i] == '$' && (line[i + 1]== '$'|| (ft_isalpha(line[i + 1]) == 0 && line[i + 1] != '_')))
-//         {
-//             if (line[i + 1]== '$')
-//             {
-//                 expanded_line = ft_strjoin(expanded_line, ft_substr(line, i, 2));
-//                 i += 2;
-//             }
-//             else 
-//             {
-//                 expanded_line = ft_strjoin(expanded_line, ft_substr(line, i, 1));
-//                 ++i;
-//             }
-//         }       
-//         else if (line[i] == '$')
-//         {
-//             i++;
-//             len = 0;
-//             while(line[i + len] && is_space(line[i + len]) == FALSE && is_quote(line[i + len]) == FALSE && line[i + len] != '$')
-//                 ++len;
-//             if (len)
-//             {
-//                 buff = ft_substr(line, i, len);
-//                 env_variable = ft_get_value(exec, buff);
-//                 // if (buff)
-//                 //     printf("buff is %s and value \n", buff );
-//                 expanded_line = ft_strjoin(expanded_line, env_variable);
-//                 i += len;
-//                 printf("line rest %s\n", &line[i]);
-//             }
-//         }
-//     }
-//     return expanded_line;
-// }
-
 char *expand_in_heredoc(t_exec *exec, char *line)
 {
-    int i = 0;
-    int len = 0;
-    char *expanded_line = NULL;
-    char *buff = NULL;
-    char *env_variable = NULL;
+    int i;
+    int len;
+    char *buff;
+    char *env_variable;
+    char *expanded_line;
 
     if (!line)
         return NULL;
-    while (line[i])
+    i = 0;
+    len = 0;
+    expanded_line = NULL;
+    env_variable = NULL;
+    while(line[i])
     {
-        len = get_token_length(line, i);
-        if (is_quote(line[i + len]))
-            handle_quotes(&expanded_line, &i, len, line);
+        len = 0;
+        while (line[i + len] && line[i + len] != '$' && is_quote(line[i + len]) == FALSE)
+            len++;
+        if (is_quote(line[i + len]) == TRUE)
+        {
+            expanded_line = ft_strjoin(expanded_line, ft_substr(line, i, len + 1));
+            i += len + 1;
+            buff = get_value_in_between_quotes(line + i, line[i - 1]);
+            if (buff)
+                i += ft_strlen(buff);
+            buff = expand_in_heredoc(exec, buff);
+            expanded_line = ft_strjoin(expanded_line , buff);
+        }
         else if (len)
-            handle_no_quotes(&expanded_line, &i, len, line);
-        else if (is_special_dollar(line, i))
-            handle_special_dollar(&expanded_line, &i, line);
+        {
+            expanded_line = ft_strjoin(expanded_line, ft_substr(line, i, len));
+            i += len;
+        }
+        else if (line[i] == '$' && (line[i + 1]== '$'|| (ft_isalpha(line[i + 1]) == 0 && line[i + 1] != '_')))
+        {
+            if (line[i + 1]== '$')
+            {
+                expanded_line = ft_strjoin(expanded_line, ft_substr(line, i, 2));
+                i += 2;
+            }
+            else 
+            {
+                expanded_line = ft_strjoin(expanded_line, ft_substr(line, i, 1));
+                ++i;
+            }
+        }       
         else if (line[i] == '$')
-            handle_dollar(&expanded_line, &i, exec, line);
+        {
+            i++;
+            len = 0;
+            while(line[i + len] && is_space(line[i + len]) == FALSE && is_quote(line[i + len]) == FALSE && line[i + len] != '$')
+                ++len;
+            if (len)
+            {
+                buff = ft_substr(line, i, len);
+                env_variable = ft_get_value(exec, buff);
+                // if (buff)
+                //     printf("buff is %s and value \n", buff );
+                expanded_line = ft_strjoin(expanded_line, env_variable);
+                i += len;
+                printf("line rest %s\n", &line[i]);
+            }
+        }
     }
     return expanded_line;
 }
-
-int get_token_length(char *line, int i)
-{
-    int len = 0;
-    while (line[i + len] && line[i + len] != '$' && !is_quote(line[i + len]))
-        len++;
-    return len;
-}
-
-void handle_quotes(char **expanded_line, int *i, int len, char *line)
-{
-    *expanded_line = ft_strjoin(*expanded_line, ft_substr(line, *i, len + 1));
-    *i += len + 1;
-    char *buff = get_value_in_between_quotes(line + *i, line[*i - 1]);
-    if (buff)
-        *i += ft_strlen(buff);
-    buff = expand_in_heredoc(exec, buff);
-    *expanded_line = ft_strjoin(*expanded_line, buff);
-}
-
-void handle_no_quotes(char **expanded_line, int *i, int len, char *line)
-{
-    *expanded_line = ft_strjoin(*expanded_line, ft_substr(line, *i, len));
-    *i += len;
-}
-
-int is_special_dollar(char *line, int i)
-{
-    return line[i] == '$' && (line[i + 1] == '$' || (!ft_isalpha(line[i + 1]) && line[i + 1] != '_'));
-}
-
-void handle_special_dollar(char **expanded_line, int *i, char *line)
-{
-    if (line[*i + 1] == '$')
-    {
-        *expanded_line = ft_strjoin(*expanded_line, ft_substr(line, *i, 2));
-        *i += 2;
-    }
-    else
-    {
-        *expanded_line = ft_strjoin(*expanded_line, ft_substr(line, *i, 1));
-        (*i)++;
-    }
-}
-
-void handle_dollar(char **expanded_line, int *i, t_exec *exec, char *line)
-{
-    int len = 0;
-    char *buff = NULL;
-    char *env_variable = NULL;
-    (*i)++;
-    while (line[*i + len] && !is_space(line[*i + len]) && !is_quote(line[*i + len]) && line[*i + len] != '$')
-        len++;
-    if (len)
-    {
-        buff = ft_substr(line, *i, len);
-        env_variable = ft_get_value(exec, buff);
-        *expanded_line = ft_strjoin(*expanded_line, env_variable);
-        *i += len;
-    }
-}
-
-
 
 void here_doc_helper(int w_heredoc, char *delimiter)
 {

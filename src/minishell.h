@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/25 01:02:35 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/06/27 16:17:18 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,12 +112,13 @@ typedef struct s_env        t_env;
 typedef struct s_env_var    t_var;
 typedef struct s_exec       t_exec;
 typedef struct s_expands    t_expands;
-typedef struct s_lvars   t_lvars;
+typedef struct s_lvars      t_lvars;
+
 
 
 /*=======================STRUCTS============================*/
 
-struct s_lvars{
+struct s_lvars {
     int len;
     int og_len;
 };

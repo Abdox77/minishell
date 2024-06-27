@@ -32,92 +32,44 @@ static t_eval  check_args(char **args)
     return PASSED;
 }
 
-// t_bool ft_print_error(char *message, char **line, t_error indicator)
-// {
-//     static t_bool   is_saved;
-//     static t_bool   is_printed;
-//     static t_bool err_here_doc;
-//     static char     *error_message;
-
-//     if (indicator == RESET)
-//     {
-//         is_saved = FALSE;
-//         is_printed = FALSE;
-//         err_here_doc = FALSE;
-//         free(error_message);
-//         error_message = NULL;
-//     }
-//     else if (indicator == RESET_HEREDOC)
-//     {
-//         err_here_doc = TRUE;
-//         is_saved = TRUE;
-//     }
-//     else if (indicator == SAVE && is_saved == FALSE)
-//     {
-//         if (line && *line)
-//             (*line) += ft_strlen(*line); 
-//         is_saved = TRUE;
-//         error_message = ft_strdup(message);
-//     }
-//     else if (indicator == RETRIEVE)
-//         return (is_saved);
-//     else if (indicator == PRINT && is_printed == FALSE && err_here_doc == FALSE)
-//     {
-//         if (error_message != NULL)
-//         { 
-//             is_printed = TRUE;
-//             write(STDERR_FILENO, error_message, ft_strlen(error_message));
-//         }
-//     }
-//     return TRUE;
-// }
-
 t_bool ft_print_error(char *message, char **line, t_error indicator)
 {
-    static t_bool is_saved;
-    static t_bool is_printed;
+    static t_bool   is_saved;
+    static t_bool   is_printed;
     static t_bool err_here_doc;
-    static char *error_message;
+    static char     *error_message;
 
     if (indicator == RESET)
-        return reset_error(&is_saved, &is_printed, &err_here_doc, &error_message);
-    else if (indicator == RESET_HEREDOC)
-        err_here_doc = TRUE;
-    else if (indicator == SAVE && !is_saved)
-        save_error(message, line, &is_saved, &error_message);
-    else if (indicator == RETRIEVE)
-        return is_saved;
-    else if (indicator == PRINT && !is_printed && !err_here_doc)
-        print_error(&is_printed, error_message);
-    return TRUE;
-}
-
-t_bool reset_error(t_bool *is_saved, t_bool *is_printed,
-                   t_bool *err_here_doc, char **error_message)
-{
-    *is_saved = FALSE;
-    *is_printed = FALSE;
-    *err_here_doc = FALSE;
-    free(*error_message);
-    *error_message = NULL;
-    return TRUE;
-}
-
-void save_error(char *message, char **line, t_bool *is_saved, char **error_message)
-{
-    if (line && *line)
-        (*line) += ft_strlen(*line);
-    *is_saved = TRUE;
-    *error_message = ft_strdup(message);
-}
-
-void print_error(t_bool *is_printed, char *error_message)
-{
-    if (error_message)
     {
-        *is_printed = TRUE;
-        write(STDERR_FILENO, error_message, ft_strlen(error_message));
+        is_saved = FALSE;
+        is_printed = FALSE;
+        err_here_doc = FALSE;
+        free(error_message);
+        error_message = NULL;
     }
+    else if (indicator == RESET_HEREDOC)
+    {
+        err_here_doc = TRUE;
+        is_saved = TRUE;
+    }
+    else if (indicator == SAVE && is_saved == FALSE)
+    {
+        if (line && *line)
+            (*line) += ft_strlen(*line); 
+        is_saved = TRUE;
+        error_message = ft_strdup(message);
+    }
+    else if (indicator == RETRIEVE)
+        return (is_saved);
+    else if (indicator == PRINT && is_printed == FALSE && err_here_doc == FALSE)
+    {
+        if (error_message != NULL)
+        { 
+            is_printed = TRUE;
+            write(STDERR_FILENO, error_message, ft_strlen(error_message));
+        }
+    }
+    return TRUE;
 }
 
 static t_eval check_command(t_token *root)
