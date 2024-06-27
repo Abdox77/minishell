@@ -112,10 +112,15 @@ typedef struct s_env        t_env;
 typedef struct s_env_var    t_var;
 typedef struct s_exec       t_exec;
 typedef struct s_expands    t_expands;
-
+typedef struct s_lvars   t_lvars;
 
 
 /*=======================STRUCTS============================*/
+
+struct s_lvars{
+    int len;
+    int og_len;
+};
 
 struct s_expands {
     char        **og_args;
