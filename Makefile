@@ -4,7 +4,9 @@ SRC = 	src/minishell.c \
 		src/init.c \
 		src/lexer.c 	 \
 		src/lexer_utils.c \
-		src/lexer_utils_2.c \
+		src/redir_parser.c \
+		src/redir_parser_utils.c \
+		src/redir_parser_utils_2.c \
 		src/lexer_utils_3.c \
 		src/utils_3.c \
 		src/split.c \

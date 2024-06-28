@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/28 19:22:10 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/28 20:52:01 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -216,6 +216,14 @@ void        init_lvars(t_lvars *vars);
 /*=====================LEXER=====================*/
 void        lexer(t_token **token, char **line);
 t_token     *handle_command(char **line);
+
+/*=====================REDIR_PARSER=====================*/
+REDIR_MODE  get_redir_mode(char **line);
+t_bool      is_valid_filename(char c);
+int         calculate_file_name_len(char **line, t_lvars *vars);
+void        add_redirection(t_redir **redir, REDIR_MODE mode, char *file_name);
+void        check_for_expansion_in_heredoc(t_token **token , t_bool is_root, REDIR_MODE mode);
+void        get_file_name(char **line, char **file_name, t_lvars *vars);
 void        handle_redirection(t_token **token, char **line, t_bool is_root);
 void        handle_input(t_token **token, char **line, t_bool is_root);
 void        handle_output(t_token **token, char **line, t_bool is_root);
