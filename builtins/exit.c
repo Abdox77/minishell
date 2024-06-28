@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 08:14:00 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/27 18:51:39 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/06/28 22:44:50 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,17 +49,17 @@ void	ft_exit(char **cmd)
 	while (cmd[i])
 		i++;
 	ft_write("exit", 2, 1);
-	if (i > 2)
-	{
-		ft_write("minishell: exit: too many arguments", 2, 1);
-		exit_st = 1;
-	}
-	else if (cmd[1] && !isanumvalue(cmd[1]))
+	 if (cmd[1] && !isanumvalue(cmd[1]))
 	{
 		ft_write("minishell: exit: ", 2, 0);
 		ft_write(cmd[1], 2, 0);
 		ft_write(": numeric argument required", 2, 1);
 		exit_st = 2;
+	}
+	else if (i > 2)
+	{
+		ft_write("minishell: exit: too many arguments", 2, 1);
+		exit_st = 1;
 	}
 	else
 	if (cmd[1] && i <= 2)

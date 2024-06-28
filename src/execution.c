@@ -338,22 +338,22 @@ int check_to_expand(char *cmd, t_env *env_list)
 
     (void)env_list;
     if (!cmd || cmd[i] != '$')
-        return (printf("because of 0;\n"), 1);
+        return (1);
     if (is_quoted(cmd))
         return (printf("ghsdldsbfldsbfljdsbflsdjbfs"), 1);
 
     i++; // Skip the initial $
 
     if (!is_expandable_char(cmd[i]))
-        return (printf("because of 1;\n"), 1);
+        return ( 1);
     while (cmd[i]) {
         if (!is_expandable_char(cmd[i]))
-            return (printf("because of 2;\n"), 1);
+            return ( 1);
         cmd++;
     }
     char *xp = expand_string1(cmd, env_list);
     if (xp)
-        return (free(xp), printf("because of 3;\n"), 1);
+        return (free(xp), 1);
     return (free(xp), 0);
 }
 
