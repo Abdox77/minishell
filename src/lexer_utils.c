@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 15:14:16 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/27 18:34:23 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/28 16:17:45 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,23 @@ void skip_spaces(char **line)
         ++(*line);
 }
 
+char *copy_token_in_between_quotes(char **line, int len, int *og_len)
+{
+    int i;
+    char *token;
+
+    i = -1;
+    token = malloc(sizeof(char) * len + 1);
+    if(!token)
+        return (NULL);
+    while(++i < len)
+        token[i] = (*line)[i];
+    token[i] = '\0';
+    *line += len;
+    *og_len += len;
+    return (token);
+}
+
 static char *get_token_in_between_quotes(char **line, char quote, int *og_len)
 {
     int i;
@@ -89,14 +106,7 @@ static char *get_token_in_between_quotes(char **line, char quote, int *og_len)
         }
         return NULL;
     }
-    token = malloc(sizeof(char) * len + 1);
-    if(!token)
-        return (NULL);
-    while(++i < len)
-        token[i] = (*line)[i];
-    token[i] = '\0';
-    *line += len;
-    *og_len += len;
+    token = copy_token_in_between_quotes(line, len, og_len);
     return (token);
 }
 
@@ -111,47 +121,102 @@ static char *ft_special_join(char *arg, char *buff)
     return (joined);
 }
 
-char *get_token_with_quotes(char **line, int len, int *og_len)
+// char *get_token_with_quotes(char **line, int len, int *og_len)
+// {
+//     char quote;
+//     char *arg;
+//     char *buff;
+
+//     arg = ft_substr(*line, 0, len);
+//     (*line) += len;
+//     (*og_len) += len;
+//     if (!arg)
+//         printf("problemo LEO\n"); // to edit later
+//     buff = NULL;
+//     while(**line && **line != '&' && **line != '(' && **line != ')' && **line != '|' && is_space(**line) == FALSE && is_redirection_char(**line) == FALSE)
+//     {
+//         if (is_quote(**line) == FALSE)
+//         {
+//             len = 0;
+//             while ((*line)[len] && is_special_char((*line)[len]) == FALSE)
+//                 len++;
+//             arg = ft_special_join(arg, ft_substr(*line, 0, len));
+//             *og_len += len;
+//             *line += len;
+//         }
+//         else
+//         {   
+//             quote = **line;
+//             buff = get_token_in_between_quotes(line, quote, og_len);
+//             arg = ft_special_join(arg, buff);
+//             if(**line != quote)
+//                 ft_print_error("Syntax error unclosed quotes\n", line, SAVE);
+//             else
+//             {
+//                 ++(*line);
+//                 ++(*og_len);
+//             }
+//         }
+//     }
+//     return (arg);
+// }
+
+t_bool is_valid_char_to_be_processed(char c)
+{
+    if (c != '\0' && c != '&' && c != '(' && c != ')' && c != '|' 
+        && is_space(c) == FALSE && is_redirection_char(c) == FALSE)
+    {
+        return TRUE;
+    }
+    return FALSE;
+}
+
+void get_token_wout_quotes(char **line, char **arg, int *og_len)
+{
+    int len;
+    
+    len = 0;
+    while ((*line)[len] && is_special_char((*line)[len]) == FALSE)
+        len++;
+    *arg = ft_special_join(*arg, ft_substr(*line, 0, len));
+    *og_len += len;
+    *line += len;
+}
+void get_token_wquotes(char **line, char **arg, int *og_len)
 {
     char quote;
-    char *arg;
     char *buff;
 
+    quote = **line;
+    buff = get_token_in_between_quotes(line, quote, og_len);
+    *arg = ft_special_join(*arg, buff);
+    if(**line != quote)
+        ft_print_error("Syntax error unclosed quotes\n", line, SAVE);
+    else
+    {
+        ++(*line);
+        ++(*og_len);
+    }
+}
+
+char *get_token_with_quotes(char **line, int len, int *og_len)
+{
+    char *arg;
+
     arg = ft_substr(*line, 0, len);
+    if (!arg)
+        printf("allocation failed in get_token_with_quotes\n"); 
     (*line) += len;
     (*og_len) += len;
-    if (!arg)
-        printf("problemo LEO\n"); // to edit later
-    buff = NULL;
-    while(**line && **line != '&' && **line != '(' && **line != ')' && **line != '|' && is_space(**line) == FALSE && is_redirection_char(**line) == FALSE)
+    while(is_valid_char_to_be_processed(**line) == TRUE)
     {
-        if (is_quote(**line) == FALSE && **line != '(' && **line != ')' && is_special_char(**line) == FALSE)
-        {
-            len = 0;
-            while ((*line)[len] && is_special_char((*line)[len]) == FALSE)
-                len++;
-            arg = ft_special_join(arg, ft_substr(*line, 0, len));
-            *og_len += len;
-            *line += len;
-        }
-        else if (is_quote(**line) == TRUE)
-        {   
-            quote = **line;
-            buff = get_token_in_between_quotes(line, quote, og_len);
-            arg = ft_special_join(arg, buff);
-            if(**line != quote)
-                ft_print_error("Syntax error unclosed quotes\n", line, SAVE);
-            else
-            {
-                ++(*line);
-                ++(*og_len);
-            }
-        }
+        if(is_quote(**line) == FALSE)
+            get_token_wout_quotes(line , &arg, og_len);
+        else
+            get_token_wquotes(line, &arg, og_len);
     }
     return (arg);
 }
-
-
 
 // static void get_command(t_token **token, char **line)
 // {
