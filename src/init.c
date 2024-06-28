@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 01:45:18 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/16 23:11:02 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/28 15:38:08 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ t_token *new_token(TOKEN type)
         return (NULL);
     memset(token, 0, sizeof(t_token));
     token->type = type;
-    if (type== CMD)
+    if (type == CMD)
     {
 	    token->cmd = new_cmd();
         token->cmd->og_tokens = malloc(sizeof(t_expands));

@@ -111,9 +111,10 @@ void cleanup(t_token *root)
         cleanup(root->l_token);
         cleanup(root->r_token);
         if(root->type == CMD)
-            {
-                printf("This is impossible yet it happened\n");
-                free_cmd(root);}
+        {
+            printf("This is impossible yet it happened\n");
+            free_cmd(root);
+        }
         else
             free_token(root);
     }

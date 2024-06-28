@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:22:59 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/26 23:22:07 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/28 15:46:19 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,8 +94,10 @@ static void	place_operator_node(t_token **root, t_token **to_put)
 {
 	t_token *tmp;
 
-	if (!*root)
+	if (!*to_put)
 		return;
+	else if (!*root)
+		*root = *to_put;
 	else
 	{
 		tmp = *root;
@@ -134,8 +136,12 @@ static t_eval check_operator_syntax(char **line)
 {
 	char operator;
 
+	if (!**line)
+		return (ft_print_error("Syntax error unexpected token near operator\n", line, SAVE), FAILED);
 	operator = **line;
 	++(*line);
+	if (!**line)
+		return (ft_print_error("Syntax error unexpected token near operator\n", line, SAVE), FAILED);
 	if (**line == operator)
 	{
 		++(*line);
@@ -199,7 +205,6 @@ static void handle_parenthesis(t_token **root, char **line)
 {
 	t_token *node;
 
-	printf("got here in parenthesis\n");
 	++(*line);
 	node = NULL;
 	parenthesis_lexer(&node, line);
