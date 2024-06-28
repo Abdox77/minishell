@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/26 23:06:55 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/28 21:08:21 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,7 @@ t_sigstate sig_state(t_sigstate state, t_sigops operation)
     return SET_SIGS;
 }
 
-void expand_heredoc_to_infiles(t_token **root, t_bool error_flag)
+void heredoc_to_fd_to_infiles(t_token **root, t_bool error_flag)
 {
     int     status;
     t_redir *tmp;
@@ -162,8 +162,8 @@ void expand_heredoc_to_infiles(t_token **root, t_bool error_flag)
     sig_state(SET_SIGS, _SAVE);
     if (WEXITSTATUS(status) == 120)
         ft_print_error(NULL, NULL, RESET_HEREDOC);
-    expand_heredoc_to_infiles(&(*root)->l_token, error_flag);
-    expand_heredoc_to_infiles(&(*root)->r_token, error_flag);
+    heredoc_to_fd_to_infiles(&(*root)->l_token, error_flag);
+    heredoc_to_fd_to_infiles(&(*root)->r_token, error_flag);
 }
 
 // void    open_heredoc(t_exec *exec, int w_heredoc, char *og_delimiter, char *delimiter)
@@ -193,7 +193,7 @@ static void heredoc_to_fds(t_token **root)
         while(tmp)
         {
             if (tmp->mode == HEREDOC)
-                expand_heredoc(&tmp);
+                heredoc_to_fd(&tmp);
             tmp = tmp->next;
         }
     }
@@ -227,7 +227,7 @@ static void heredoc_to_fds(t_token **root)
 //         evaluate_syntax(head_tokens);
 //         heredoc_to_fds(&head_tokens);
 //         if (ft_print_error(NULL, NULL, RETRIEVE) == TRUE)
-//             _error_expand_heredoc_to_infiles(&exec, &head_tokens, TRUE);
+//             _error_heredoc_to_fd_to_infiles(&exec, &head_tokens, TRUE);
 //         ft_print_error(NULL, NULL, PRINT);
 //         if (ft_print_error(NULL, NULL, RETRIEVE) == FALSE)
 //             execute(head_tokens, &exec);
@@ -272,10 +272,10 @@ void minishell_loop(char **env) {
         if (ft_print_error(NULL, NULL, RETRIEVE) == TRUE)
         {
             ft_print_error(NULL, NULL, PRINT);
-            expand_heredoc_to_infiles(&head_tokens, TRUE);
+            heredoc_to_fd_to_infiles(&head_tokens, TRUE);
         }
         else
-            expand_heredoc_to_infiles(&head_tokens, FALSE);
+            heredoc_to_fd_to_infiles(&head_tokens, FALSE);
         if (ft_print_error(NULL, NULL, RETRIEVE) == FALSE)
         {
             execute(head_tokens, &exec);

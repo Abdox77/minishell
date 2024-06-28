@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 15:14:16 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/28 16:17:45 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/28 20:55:55 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,46 +121,6 @@ static char *ft_special_join(char *arg, char *buff)
     return (joined);
 }
 
-// char *get_token_with_quotes(char **line, int len, int *og_len)
-// {
-//     char quote;
-//     char *arg;
-//     char *buff;
-
-//     arg = ft_substr(*line, 0, len);
-//     (*line) += len;
-//     (*og_len) += len;
-//     if (!arg)
-//         printf("problemo LEO\n"); // to edit later
-//     buff = NULL;
-//     while(**line && **line != '&' && **line != '(' && **line != ')' && **line != '|' && is_space(**line) == FALSE && is_redirection_char(**line) == FALSE)
-//     {
-//         if (is_quote(**line) == FALSE)
-//         {
-//             len = 0;
-//             while ((*line)[len] && is_special_char((*line)[len]) == FALSE)
-//                 len++;
-//             arg = ft_special_join(arg, ft_substr(*line, 0, len));
-//             *og_len += len;
-//             *line += len;
-//         }
-//         else
-//         {   
-//             quote = **line;
-//             buff = get_token_in_between_quotes(line, quote, og_len);
-//             arg = ft_special_join(arg, buff);
-//             if(**line != quote)
-//                 ft_print_error("Syntax error unclosed quotes\n", line, SAVE);
-//             else
-//             {
-//                 ++(*line);
-//                 ++(*og_len);
-//             }
-//         }
-//     }
-//     return (arg);
-// }
-
 t_bool is_valid_char_to_be_processed(char c)
 {
     if (c != '\0' && c != '&' && c != '(' && c != ')' && c != '|' 
@@ -218,54 +178,6 @@ char *get_token_with_quotes(char **line, int len, int *og_len)
     return (arg);
 }
 
-// static void get_command(t_token **token, char **line)
-// {
-//     int len;
-//     int og_len;
-//     char *tmp;
-
-//     if (!*line || !**line)
-//         return;
-//     len = 0;
-//     og_len = 0;
-//     tmp = *line;
-//     special_trim(line);
-//     while(tmp[len] && is_special_char(tmp[len]) == FALSE && is_an_operator(line , len) == FALSE && is_parenthesis(tmp[len]) == FALSE)
-//         ++len;
-//     if (is_quote(tmp[len]) == TRUE)
-//     {
-//         if (!*token)
-//             *token = new_token(CMD);
-//         (*token)->cmd->cmd = get_token_with_quotes(line, len, &og_len);
-//         (*token)->cmd->og_tokens->og_cmd = ft_substr(*line - og_len, 0, og_len);
-//     }
-//     else if (tmp[len] == ')')
-//     {
-//         if (len)
-//         {
-//             if (!*token)
-//                 *token = new_token(CMD);
-//             (*token)->cmd->cmd = ft_substr(*line, 0, len);
-//             (*token)->cmd->og_tokens->og_cmd = ft_substr(*line, 0, len);
-//             (*line) += len;
-//         }
-//         else
-//         {
-//             // syntax error 
-//             return;
-//         }
-//     }
-//     else if (len)
-//     {
-//         if (!*token)
-//             *token = new_token(CMD);
-//         (*token)->cmd->cmd = ft_substr(*line, 0, len);
-//         (*token)->cmd->og_tokens->og_cmd = ft_substr(*line, 0, len);
-//         (*line) += len;
-//     }
-// }
-
-
 t_bool check_char_validation_for_cmd(char **line, char *tmp, int len)
 {
     if (tmp[len] && is_special_char(tmp[len]) == FALSE && is_an_operator(line , len) == FALSE 
@@ -321,10 +233,6 @@ static void get_command(t_token **token, char **line)
     else if (vars.len)
         process_simple_cmd(token, line, vars.len);
 }
-
-
-
-// norminette
 
 static char **add_cmd_to_args(char *cmd , char **args)
 {

@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/28 20:52:01 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/28 21:08:21 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -249,15 +249,21 @@ void handle_sig(int sig);
 
 /*=====================SYNTAX_EVALUATOR==================*/
 void    evaluate_syntax(t_token *root);
+
+
 /*=====================HERE_DOC==================*/
-void    expand_heredoc(t_redir **heredoc_redir);
-// void    expand_heredoc_to_infiles(t_exec *exec, t_token **root, t_bool error_flag);
+char    *expand_in_heredoc(t_exec *exec, char *line);
+void    here_doc_helper(int w_heredoc, char *delimiter);
 void    here_doc(t_redir *here_doc, t_bool error_flag);
-void    expand_heredoc_to_infiles( t_token **root, t_bool error_flag);
+/*=====================HERE_DOC_UTILS==================*/
+char    *get_value_in_between_quotes(char *line, char quote);
+char    *ft_get_value(t_exec *exec, char *key);
 t_bool  ft_check_for_quotes(char *og_delimiter);
-void    here_doc_helper(int w_heredoc , char *delimiter);
-char *expand_in_heredoc(t_exec *exec, char *line);
-// void    open_heredoc(t_exec *exec, int w_heredoc, char *og_delimiter, char *delimiter);
+t_bool  is_delimiter(char *buffer, char *delimiter);
+void    heredoc_to_fd(t_redir **heredoc_redir);
+t_bool  is_valid_char_for_expansion(char c);
+void    init_iter_vars(t_iter_vars *vars);
+
 /*=====================UTILS========================*/
 int         strs_len(char **args);
 int         ft_strcmp(const char *s1, const char *s2);

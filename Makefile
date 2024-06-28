@@ -13,6 +13,9 @@ SRC = 	src/minishell.c \
 		src/utils.c \
 		src/utils_2.c \
 		src/here_doc.c \
+		src/expand_in_heredoc.c\
+		src/here_doc_utils.c\
+		src/here_doc_utils_2.c\
 		src/cleanup.c \
 		src/get_env.c \
 		src/signals.c \
