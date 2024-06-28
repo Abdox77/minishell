@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 11:12:42 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/28 19:10:32 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/28 20:39:03 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ REDIR_MODE get_redir_mode(char **line)
         if (**line == '>')
         {
             ++(*line);
-            mode = HEREDOC;
+            mode = APPEND;
         }
     }
     special_trim(line);
@@ -75,8 +75,8 @@ int calculate_file_name_len(char **line, t_lvars *vars)
     }
     while(is_valid_filename((*line)[vars->len]) == TRUE)
         (vars->len)++;
-    printf("vars->len is %d %s\n", vars->len, *line);
-    if ((vars->len == 0 && is_quote((*line)[vars->len]) == FALSE) || !(*line)[vars->len])
+    printf("vars->len is %d %s and |%c|\n", vars->len, *line, (*line)[vars->len]);
+    if ((vars->len == 0 && is_quote((*line)[vars->len]) == FALSE))
     {
         ft_print_error("Syntax error unexpected error near '>'\n", line, SAVE);
         return -1;
@@ -138,7 +138,6 @@ void handle_input(t_token **token, char **line, t_bool is_root)
         add_redirection(&((*token)->cmd->input), mode, file_name);
         add_redirection(&((*token)->cmd->og_tokens->og_input), mode, ft_substr(*line - vars.og_len, 0, vars.og_len));
         check_for_expansion_in_heredoc(token , is_root, mode);
-        
     }
     else
     {
