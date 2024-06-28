@@ -6,7 +6,7 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/27 21:48:22 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/06/28 02:08:34 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -321,6 +321,7 @@ char    **expand_wildcards(char **args);
 void    handle_input_redirections(t_redir *input, t_redir *og_input, t_env *env, t_exec *exec);
 void reset_fd(int in, int out);
 void exec_error(char *cmd, char *cmd_path);
+char	*ft_itoa_no_malloc(int n);
 
 
 

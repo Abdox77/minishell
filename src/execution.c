@@ -522,15 +522,15 @@ void exec_error(char *cmd, char *cmd_path)
     ft_write("minishell: ", 2, 0);
 	ft_write(cmd, 2, 0);
 	ft_write(": ", 2, 0);
-    if (is_dir(cmd_path))
+    if(!*cmd)
+        ft_write("command not found\n", 2, 0);
+    else if (is_dir(cmd_path))
     {
         ft_write("Is a directory\n", 2, 0);
     }
     else
     {
-        if(!*cmd)
-            ft_write("command not found\n", 2, 0);
-        else if (access(cmd_path, F_OK) == -1)
+        if (access(cmd_path, F_OK) == -1)
         {
             if(!ft_strchr(cmd, '/'))
                 ft_write("command not found\n", 2, 0);
@@ -599,7 +599,6 @@ int execute_command(t_token *token, t_exec *exec)
     handle_signals_before();
     in = dup(STDIN_FILENO);
     out = dup(STDOUT_FILENO);
-
     cmd = token->cmd->cmd;
     args = expander(token, exec, cmd);
     flag = check_to_expand(token->cmd->og_tokens->og_cmd, exec->env);
@@ -607,8 +606,10 @@ int execute_command(t_token *token, t_exec *exec)
         cmd = args[0];
     else
         cmd = "\0";
-
-    status = handle_builtin_or_fork(token, exec, cmd, args, flag);
+    if (!*args && token->cmd->cmd)
+        status = 0;
+    else
+        status = handle_builtin_or_fork(token, exec, cmd, args, flag);
     cleanup_exec(exec, args, in, out);
     return stat_handler(status, 1), status;
 }

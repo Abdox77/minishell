@@ -410,7 +410,7 @@ char **process_args(char **args, char **og_args, char *og_cmd, char *cmd, t_env 
 static char *find_env_value(const char *var_name, t_env *env_list)
 {
     if (ft_strcmp(var_name, "?") == 0)
-        return ft_itoa(stat_handler(0, 0));
+        return ft_itoa_no_malloc(stat_handler(0, 0));
     while (env_list != NULL)
     {
         if (strcmp(var_name, env_list->key) == 0)
@@ -538,7 +538,7 @@ static char *get_variable_value(const char **str, t_env *env_list)
     if (**str == '?')
     {
         var_value = find_env_value("?", env_list);
-        free(var_value);
+        // free(var_value);
         (*str)++;
     }
     else

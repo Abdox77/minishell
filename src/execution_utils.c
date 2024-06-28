@@ -82,3 +82,53 @@ char *get_cmd(char *cmd, char **envp)
     }
     return (free_strs(tab), NULL);
 }
+
+#include <stdlib.h>
+
+static int	ft_nb_len(long n)
+{
+	int	len;
+
+	len = 0;
+	if (n <= 0)
+	{
+		len++;
+		n = -n;
+	}
+	while (n != 0)
+	{
+		n /= 10;
+		len++;
+	}
+	return (len);
+}
+
+static void	ft_convert(char *s, int len, long n)
+{
+	int	sign;
+
+	sign = 0;
+	if (n < 0)
+	{
+		n = -n;
+		sign = 1;
+	}
+	s[len--] = '\0';
+	while (len >= 0)
+	{
+		s[len--] = (char)((n % 10) + 48);
+		n /= 10;
+	}
+	if (sign)
+		s[0] = '-';
+}
+
+char	*ft_itoa_no_malloc(int n)
+{
+	static char buffer[12]; // Enough to hold any 32-bit integer and the null terminator
+	int	len;
+
+	len = ft_nb_len((long)n);
+	ft_convert(buffer, len, ((long)n));
+	return buffer;
+}
