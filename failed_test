@@ -5,4 +5,3 @@ echo $HOME | > $PW
 > '$a'
 echo $1salam
 ls < ?
-exit with required arg a 1 2 numerical value instead of too many arguments
