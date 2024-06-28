@@ -523,55 +523,55 @@ static size_t get_expanded_length(const char *str, t_env *env_list)
     return length;
 }
 
-static void handle_expand_quotes(const char **str, int *in_single_quotes, int *in_double_quotes)
-{
-    if (**str == '\'' && !*in_double_quotes)
-        *in_single_quotes = !*in_single_quotes;
-    else if (**str == '"' && !*in_single_quotes)
-        *in_double_quotes = !*in_double_quotes;
-    (*str)++;
-}
+// static void handle_expand_quotes(const char **str, int *in_single_quotes, int *in_double_quotes)
+// {
+//     if (**str == '\'' && !*in_double_quotes)
+//         *in_single_quotes = !*in_single_quotes;
+//     else if (**str == '"' && !*in_single_quotes)
+//         *in_double_quotes = !*in_double_quotes;
+//     (*str)++;
+// }
 
-static char *get_variable_value(const char **str, t_env *env_list)
-{
-    char *var_value = NULL;
-    if (**str == '?')
-    {
-        var_value = find_env_value("?", env_list);
-        // free(var_value);
-        (*str)++;
-    }
-    else
-    {
-        const char *var_start = *str;
-        while (**str && (isalnum((unsigned char)**str) || **str == '_'))
-            (*str)++;
-        size_t var_len = *str - var_start;
-        if (var_len > 0)
-        {
-            char *var_name = strndup(var_start, var_len);
-            var_value = find_env_value(var_name, env_list);
-            free(var_name);
-        }
-    }
-    return var_value;
-}
+// static char *get_variable_value(const char **str, t_env *env_list)
+// {
+//     char *var_value = NULL;
+//     if (**str == '?')
+//     {
+//         var_value = find_env_value("?", env_list);
+//         // free(var_value);
+//         (*str)++;
+//     }
+//     else
+//     {
+//         const char *var_start = *str;
+//         while (**str && (isalnum((unsigned char)**str) || **str == '_'))
+//             (*str)++;
+//         size_t var_len = *str - var_start;
+//         if (var_len > 0)
+//         {
+//             char *var_name = strndup(var_start, var_len);
+//             var_value = find_env_value(var_name, env_list);
+//             free(var_name);
+//         }
+//     }
+//     return var_value;
+// }
 
-static void assign_variable_value(const char **str, char **result_ptr, t_env *env_list)
-{
-    char *var_value = get_variable_value(str, env_list);
-    if (var_value)
-    {
-        strcpy(*result_ptr, var_value);
-        *result_ptr += strlen(var_value);
-        // free(var_value);
-    }
-    // else
-    // {
-    //     **result_ptr = '$';
-    //     (*result_ptr)++;
-    // }
-}
+// static void assign_variable_value(const char **str, char **result_ptr, t_env *env_list)
+// {
+//     char *var_value = get_variable_value(str, env_list);
+//     if (var_value)
+//     {
+//         strcpy(*result_ptr, var_value);
+//         *result_ptr += strlen(var_value);
+//         // free(var_value);
+//     }
+//     // else
+//     // {
+//     //     **result_ptr = '$';
+//     //     (*result_ptr)++;
+//     // }
+// }
 
 // static void handle_expand_dollar(const char **str, char **result_ptr, t_env *env_list)
 // {
@@ -579,36 +579,97 @@ static void assign_variable_value(const char **str, char **result_ptr, t_env *en
 //     assign_variable_value(str, result_ptr, env_list);
 // }
 
-static void handle_expand_dollar(const char **str, char **result_ptr, t_env *env_list)
-{
-    (*str)++;
-    if (isalnum((unsigned char)**str) || **str == '_' || **str == '?')
-    {
-        assign_variable_value(str, result_ptr, env_list);
-    }
-    else
-    {
-        *(*result_ptr)++ = '$';
+// static void handle_expand_dollar(const char **str, char **result_ptr, t_env *env_list)
+// {
+//     (*str)++;
+//     if (isalnum((unsigned char)**str) || **str == '_' || **str == '?')
+//     {
+//         assign_variable_value(str, result_ptr, env_list);
+//     }
+//     else
+//     {
+//         *(*result_ptr)++ = '$';
+//     }
+// }
+
+// char *expand_string(const char *str, t_env *env_list)
+// {
+//     size_t result_size = get_expanded_length(str, env_list) + 1;
+//     char *result = malloc_with_error(result_size);
+//     result[0] = '\0';
+//     char *result_ptr = result;
+//     int in_single_quotes = 0;
+//     int in_double_quotes = 0;
+
+//     while (*str)
+//     {
+//         if (*str == '\'' || *str == '"')
+//             handle_expand_quotes(&str, &in_single_quotes, &in_double_quotes);
+//         else if (*str == '$' && !in_single_quotes)
+//             handle_expand_dollar(&str, &result_ptr, env_list);
+//         else
+//         {
+//             *result_ptr++ = *str++;
+//         }
+//     }
+//     *result_ptr = '\0';
+//     return result;
+// }
+
+static void expand_variable(const char **str, char **result_ptr, t_env *env_list, int *in_single_quotes) {
+    const char *var_start = *str;
+    if (**str == '?') {
+        const char *var_value = find_env_value("?", env_list);
+        if (var_value) {
+            strcpy(*result_ptr, var_value);
+            *result_ptr += strlen(var_value);
+        }
+        (*str)++;
+    } else if (!*in_single_quotes) {  // Only expand variables if not in single quotes
+        while (**str && (isalnum((unsigned char)**str) || **str == '_')) {
+            (*str)++;
+        }
+        size_t var_len = *str - var_start;
+        if (var_len > 0) {
+            char *var_name = strndup(var_start, var_len);
+            const char *var_value = find_env_value(var_name, env_list);
+            free(var_name);
+            if (var_value) {
+                strcpy(*result_ptr, var_value);
+                *result_ptr += strlen(var_value);
+            }
+        } else {
+            *(*result_ptr)++ = '$';
+        }
+    } else {
+        *(*result_ptr)++ = '$';  // Just copy '$' if in single quotes
     }
 }
 
-char *expand_string(const char *str, t_env *env_list)
-{
+
+
+
+
+char *expand_string(const char *str, t_env *env_list) {
     size_t result_size = get_expanded_length(str, env_list) + 1;
     char *result = malloc_with_error(result_size);
-    result[0] = '\0';
     char *result_ptr = result;
     int in_single_quotes = 0;
     int in_double_quotes = 0;
 
-    while (*str)
-    {
-        if (*str == '\'' || *str == '"')
-            handle_expand_quotes(&str, &in_single_quotes, &in_double_quotes);
-        else if (*str == '$' && !in_single_quotes)
-            handle_expand_dollar(&str, &result_ptr, env_list);
-        else
-        {
+    while (*str) {
+        if (*str == '\'' && !in_double_quotes) {
+            // Toggle in_single_quotes state
+            in_single_quotes = !in_single_quotes;
+            str++;
+        } else if (*str == '"' && !in_single_quotes) {
+            // Toggle in_double_quotes state
+            in_double_quotes = !in_double_quotes;
+            str++;
+        } else if (*str == '$' && !in_single_quotes) {
+            str++;
+            expand_variable(&str, &result_ptr, env_list, &in_single_quotes);
+        } else {
             *result_ptr++ = *str++;
         }
     }
