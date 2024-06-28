@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/28 02:08:34 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/06/28 16:51:32 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -205,6 +205,7 @@ t_token     *set_pipe_head(void);
 t_token     *new_token(TOKEN type);
 t_redir     *new_cmd_redir (REDIR_MODE mode, char *file_name);
 t_token     *new_token(TOKEN type);
+void        init_lvars(t_lvars *vars);
 
 /*=====================LEXER=====================*/
 void        lexer(t_token **token, char **line);
