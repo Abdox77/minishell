@@ -73,7 +73,7 @@ char *get_file_name(char **line, char **file_name, t_lvars *vars)
     (*line) += vars->len; 
 }
 
-void handle_input(t_token **token, char **line, t_bool is_root)
+void handle_inpu(t_token **token, char **line, t_bool is_root)
 {
     char        *file_name;
     t_lvars     vars;
@@ -88,16 +88,12 @@ void handle_input(t_token **token, char **line, t_bool is_root)
     get_file_name(line, &file_name, &vars);
     if (is_root == FALSE)
     {
-        add_redirection(&((*token)->cmd->input), mode, file_name);
-        add_redirection(&((*token)->cmd->og_tokens->og_input), mode, ft_substr(*line - vars.og_len, 0, vars.og_len));
-        if (mode == HEREDOC && ft_check_for_quotes((*token)->cmd->og_tokens->og_input->file_name) == TRUE)
-            (*token)->cmd->og_tokens->og_input->to_be_expanded = TRUE;
+        add_redirection(&((*token)->cmd->output), mode, file_name);
+        add_redirection(&((*token)->cmd->og_tokens->og_output), mode, ft_substr(*line - vars.og_len, 0, vars.og_len - 1));
     }
     else
     {
-        add_redirection(&((*token)->input), mode, file_name);
-        add_redirection(&((*token)->og_input), mode, ft_substr(*line - vars.og_len, 0, vars.og_len));
-        if (mode == HEREDOC && ft_check_for_quotes((*token)->og_input->file_name) == TRUE)
-            (*token)->cmd->og_tokens->og_input->to_be_expanded = TRUE;
+        add_redirection(&((*token)->output), mode, file_name);
+        add_redirection(&((*token)->og_output), mode, ft_substr(*line - vars.og_len, 0, vars.og_len));
     }
 }
