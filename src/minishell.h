@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/28 16:51:32 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/28 19:22:10 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,10 +114,16 @@ typedef struct s_env_var    t_var;
 typedef struct s_exec       t_exec;
 typedef struct s_expands    t_expands;
 typedef struct s_lvars      t_lvars;
+typedef struct s_iter_vars  t_iter_vars;
 
 
 
 /*=======================STRUCTS============================*/
+
+struct s_iter_vars{
+    int i;
+    int len;  
+};
 
 struct s_lvars {
     int len;

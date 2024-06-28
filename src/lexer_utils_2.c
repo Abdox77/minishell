@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 11:12:42 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/28 19:09:39 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/28 19:10:32 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,6 @@
 
 //////////////
 
-
-
-// void init_lvars(t_lvars *vars)
-// {
-//     vars->len = 0;
-//     vars->og_len = 0;
-// }
 
 void get_file_name(char **line, char **file_name, t_lvars *vars)
 {

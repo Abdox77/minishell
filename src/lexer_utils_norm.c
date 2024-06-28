@@ -1,99 +1,107 @@
 #include "minishell.h"
 
-void init_lvars(t_lvars *vars)
+
+void init_iter_vars(t_iter_vars *vars)
 {
+    vars->i = 0;
     vars->len = 0;
-    vars->og_len = 0;
 }
 
-REDIR_MODE get_redir_mode(char **line)
-{
-    REDIR_MODE mode;
 
-    if (**line == '<')
-    {
-        mode = INFILE;
-        ++(**line);
-        if (**line == '<')
-        {
-            ++(**line);
-            mode = HEREDOC;
-        }
-    }
-    else
-    {
-        mode = TRUNC;
-        ++(**line);
-        if (**line == '>')
-        {
-            ++(**line);
-            mode = HEREDOC;
-        }
-    }
-    special_trim(line);
-    return mode;
-}
-t_bool is_valid_filename(char c)
+t_bool is_valid_char_for_expansion(char c)
 {
-    if (c != '\0' && is_space(c) == FALSE
-        && is_special_char(c) == FALSE && (c != ')' && c != '('))
-    {
+    if (c != '\0' && c != '$' && is_quote(c) == FALSE)
         return TRUE;
-    }
     return FALSE;
 }
 
-int calculate_file_name_len(char **line, t_lvars *vars)
+void handle_quote_in_expanded_line(t_exec *exec, char *line, char **expanded_line, t_iter_vars *vars)
 {
-    if (!**line)
-    {
-        ft_print_error("Syntax error near unexpected token 'newline'\n", line, SAVE);
-        return;
-    }
-    while(is_valid_filename((*line)[vars->len]) == TRUE)
-        vars->len++;
-    if ((vars->len == 0 && is_quote((*line)[vars->len]) == FALSE) || !(*line)[vars->len])
-    {
-        ft_print_error("Syntax error unexpected error near '>'\n", line, SAVE);
-        return -1;
-    }
-    return 0;
+    char *buff;
+
+    buff = NULL;
+    *expanded_line = ft_strjoin(*expanded_line, ft_substr(line, vars->i, vars->len + 1));
+    vars->i += vars->len + 1;
+    buff = get_value_in_between_quotes(line + vars->i, line[vars->i - 1]);
+    if (buff)
+        vars->i += ft_strlen(buff);
+    buff = expand_in_heredoc(exec, buff);
+    *expanded_line = ft_strjoin(*expanded_line , buff);
 }
 
-char *get_file_name(char **line, char **file_name, t_lvars *vars)
+void handle_consecutive_dollarsign(char *line, char **expanded_line, t_iter_vars *vars)
 {
-    if (is_quote((*line)[vars->len]) == TRUE)
+    if (line[vars->i + 1]== '$')
     {
-        *file_name = get_token_with_quotes(line, vars->len, &vars->og_len);
-        vars->len = 0;
+        *expanded_line = ft_strjoin(*expanded_line, ft_substr(line, vars->i, 2));
+        vars->i += 2;
     }
-    else
-        *file_name = ft_substr(*line, 0, vars->len);
-    // vars->og_len += vars->len;
-    (*line) += vars->len; 
+    else 
+    {
+        *expanded_line = ft_strjoin(*expanded_line, ft_substr(line, vars->i, 1));
+        ++(vars->i);
+    }
 }
 
-void handle_inpu(t_token **token, char **line, t_bool is_root)
+t_bool is_valid_consecutive_dollarsign(char *s)
 {
-    char        *file_name;
-    t_lvars     vars;
-    REDIR_MODE  mode;
+    if (*s == '$' && (*(s + 1) == '$'|| (ft_isalpha(*(s + 1)) == 0 && *(s + 1) != '_')))
+        return (TRUE);
+    return FALSE;
+}
 
+void handle_single_dollarsign(t_exec *exec, char *line, char **expanded_line, t_iter_vars *vars)
+{
+    char *buff;
+    char *env_variable;
 
-    inti_lvars(&vars);
-    file_name = NULL;
-    mode = get_redir_mode(line);
-    if (calculate_file_name_len(line, &vars) == -1)
-        return;
-    get_file_name(line, &file_name, &vars);
-    if (is_root == FALSE)
+    buff = NULL;
+    env_variable = NULL;
+    vars->len = 0;
+    (vars->i)++;
+    while(is_valid_char_for_expansion(line[vars->i + vars->len]) == TRUE && is_space(line[vars->i + vars->len]) == TRUE)
+        ++(vars->len);
+    if (vars->len)
     {
-        add_redirection(&((*token)->cmd->output), mode, file_name);
-        add_redirection(&((*token)->cmd->og_tokens->og_output), mode, ft_substr(*line - vars.og_len, 0, vars.og_len - 1));
+        buff = ft_substr(line, vars->i, vars->len);
+        env_variable = ft_get_value(exec, buff);
+        *expanded_line = ft_strjoin(*expanded_line, env_variable);
+        vars->i += vars->len;
+        // printf("line rest %s\n", &line[i]);
     }
-    else
+}
+
+char *expand_in_heredoc(t_exec *exec, char *line)
+{
+    // char *buff;
+    // char *env_variable;
+    char *expanded_line;
+    t_iter_vars vars;
+
+    if (!line)
+        return NULL;
+    init_iter_vars(&vars);
+    expanded_line = NULL;
+    // env_variable = NULL;
+    while(line[vars.i])
     {
-        add_redirection(&((*token)->output), mode, file_name);
-        add_redirection(&((*token)->og_output), mode, ft_substr(*line - vars.og_len, 0, vars.og_len));
+        vars.len = 0;
+        while (is_valid_char_for_expansion(line[vars.i + vars.len]) == TRUE)
+            vars.len++;
+        if (is_quote(line[vars.i + vars.len]) == TRUE)
+            handle_quote_in_expanded_line(exec, line, &expanded_line, &vars);
+        else if (vars.len)
+        {
+            expanded_line = ft_strjoin(expanded_line, ft_substr(line, vars.i, vars.len));
+            vars.i += vars.len;
+        }
+        else if (is_valid_consecutive_dollarsign(&(line[vars.i])) == TRUE)
+            handle_consecutive_dollarsign(line, &expanded_line, &vars);    
+        else if (line[vars.i] == '$')
+        {
+            handle_single_dollarsign(exec, line, &expanded_line, &vars);
+            
+        }
     }
+    return expanded_line;
 }
