@@ -364,9 +364,25 @@ void handle_output_redirections(t_redir *output, t_redir *og_output, t_env *env)
         og_output = og_output->next;
     }
 }
-
 void handle_redirections(t_cmd *cmd, t_env *env, t_exec *exec)
 {
-    handle_output_redirections(cmd->output, cmd->og_tokens->og_output, env);
-    handle_input_redirections(cmd->input, cmd->og_tokens->og_input, env, exec);
+    t_redir *redir = cmd->redir;
+    t_redir *og_redir = cmd->og_tokens->og_redir;
+
+    while (redir)
+    {
+        if (redir->mode == INFILE)
+            handle_infile(redir, og_redir, env);
+        else if (redir->mode == HEREDOC)
+            handle_heredoc(redir, og_redir, exec);
+        else if (redir->mode == OUTFILE || redir->mode == TRUNC || redir->mode == APPEND)
+        {
+            char *expanded_filename = expand_arg_if_needed1(redir->file_name, og_redir->file_name, env);
+            open_output_file(redir, expanded_filename);
+            free(expanded_filename);
+        }
+        redir = redir->next;
+        og_redir = og_redir->next;
+    }
 }
+

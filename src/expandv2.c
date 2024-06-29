@@ -634,16 +634,17 @@ static void expand_variable(const char **str, char **result_ptr, t_env *env_list
             char *var_name = strndup(var_start, var_len);
             const char *var_value = find_env_value(var_name, env_list);
             free(var_name);
-            if (var_value) {
+            if (var_value)
+            {
                 strcpy(*result_ptr, var_value);
                 *result_ptr += strlen(var_value);
             }
-        } else {
-            *(*result_ptr)++ = '$';
         }
-    } else {
-        *(*result_ptr)++ = '$';  // Just copy '$' if in single quotes
+        else
+            *(*result_ptr)++ = '$';
     }
+    else
+        *(*result_ptr)++ = '$';  // Just copy '$' if in single quotes
 }
 
 
@@ -658,21 +659,25 @@ char *expand_string(const char *str, t_env *env_list)
     int in_single_quotes = 0;
     int in_double_quotes = 0;
 
-    while (*str) {
-        if (*str == '\'' && !in_double_quotes) {
-            // Toggle in_single_quotes state
+    while (*str)
+    {
+        if (*str == '\'' && !in_double_quotes)
+        {
             in_single_quotes = !in_single_quotes;
             str++;
-        } else if (*str == '"' && !in_single_quotes) {
-            // Toggle in_double_quotes state
+        }
+        else if (*str == '"' && !in_single_quotes)
+        {
             in_double_quotes = !in_double_quotes;
             str++;
-        } else if (*str == '$' && !in_single_quotes) {
+        }
+        else if (*str == '$' && !in_single_quotes)
+        {
             str++;
             expand_variable(&str, &result_ptr, env_list, &in_single_quotes);
-        } else {
-            *result_ptr++ = *str++;
         }
+        else
+            *result_ptr++ = *str++;
     }
     *result_ptr = '\0';
     return result;

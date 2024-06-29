@@ -667,10 +667,10 @@ void execute_subtree(t_token *root, t_exec *exec)
         return;
     int original_stdin = dup(STDIN_FILENO);
     int original_stdout = dup(STDOUT_FILENO);
-    if (root->input)
-        handle_input_redirections(root->input, root->og_input, exec->env, exec);
-    if (root->output)
-        handle_output_redirections(root->output, root->og_output, exec->env);
+    if (root->redir)
+        handle_redirections(root->cmd, exec->env, exec);
+    // if (root->output)
+    //     handle_output_redirections(root->output, root->og_output, exec->env);
     if (root->type == CMD)
         execute_command(root, exec);
     else if (root->type == PIPE)
@@ -697,7 +697,7 @@ int execute(t_token *token, t_exec *exec)
     status = 0;
     if (!token)
         return 0;
-    if (token->input || token->output)
+    if (token->redir)
         execute_subtree(token, exec);
     else if (token->type == PIPE)
         execute_pipe(token, exec);
