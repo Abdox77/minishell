@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 20:47:10 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/28 20:52:46 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/29 13:43:19 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ int calculate_file_name_len(char **line, t_lvars *vars)
     }
     while(is_valid_filename((*line)[vars->len]) == TRUE)
         (vars->len)++;
-    printf("vars->len is %d %s and |%c|\n", vars->len, *line, (*line)[vars->len]);
     if ((vars->len == 0 && is_quote((*line)[vars->len]) == FALSE))
     {
         ft_print_error("Syntax error unexpected error near '>'\n", line, SAVE);

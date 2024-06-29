@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/28 21:08:21 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/29 14:06:36 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -215,7 +215,37 @@ void        init_lvars(t_lvars *vars);
 
 /*=====================LEXER=====================*/
 void        lexer(t_token **token, char **line);
+
+/*=====================CMD_PARSER=====================*/
 t_token     *handle_command(char **line);
+char        *copy_token_in_between_quotes(char **line, int len, int *og_len);
+char        **add_arg(char **args, char *arg);
+char        **add_cmd_to_args(char *cmd , char **args);
+char        *ft_special_join(char *arg, char *buff);
+void        get_command(t_token **token, char **line);
+char        *get_token_in_between_quotes(char **line, char quote, int *og_len);
+void        get_token_wquotes(char **line, char **arg, int *og_len);
+void        get_token_wout_quotes(char **line, char **arg, int *og_len);
+char        *get_token_with_quotes(char **line, int len, int *og_len);
+void        process_line(char **line, t_token **token);
+void        process_line_without_quotes(char **line, t_token **token, t_lvars *vars);
+void        process_line_with_quotes(char **line, t_token **token, t_lvars *vars);
+void        process_simple_cmd(t_token **token, char **line, int len);
+void        process_line_when_parenthesis(char **line, t_token **token, int len);
+
+/*=====================CMD_PARSER_UTILS=====================*/
+
+t_cmd       *new_cmd(void);
+
+void        skip_spaces(char **line);
+t_bool      arg_len_condition(char **line, int len);
+t_bool      process_line_condition(char **line);
+t_bool      handle_parenthesis_error(char **line, int len);
+t_bool      check_char_validation_for_cmd(char **line, char *tmp, int len);
+t_bool      check_for_quotes_condition(char **line , t_lvars *vars);
+t_bool      check_for_quotes(char **line, t_lvars *vars);
+t_bool      is_parenthesis(char c);
+t_bool      is_valid_char_to_be_processed(char c);
 
 /*=====================REDIR_PARSER=====================*/
 REDIR_MODE  get_redir_mode(char **line);
@@ -229,7 +259,6 @@ void        handle_input(t_token **token, char **line, t_bool is_root);
 void        handle_output(t_token **token, char **line, t_bool is_root);
 
 /*=====================LEXER_UTILS=====================*/
-t_cmd       *new_cmd(void);
 void        skip_spaces(char **line);
 char	    **split(char *str, char *charset);
 char        **add_arg(char **args, char *arg);

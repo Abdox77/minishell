@@ -6,30 +6,47 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/05 05:43:18 by amohdi            #+#    #+#             */
-/*   Updated: 2024/05/21 22:11:17 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/29 14:14:50 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 
-static t_eval  check_args(char **args)
-{
-    // int i;
-    // int len;
+// static t_eval  check_args(char **args)
+// {
+//     // int i;
+//     // int len;
 
-    // if (args)
-    // {
-    //     i = -1;
-    //     len = strs_len(args);
-    //     while(++i < len)
-    //     {
-    //         if(args[i] && !args[i][0])
-    //             return FAILED;
-    //     }
-    // }
-    (void)args;
-    return PASSED;
+//     // if (args)
+//     // {
+//     //     i = -1;
+//     //     len = strs_len(args);
+//     //     while(++i < len)
+//     //     {
+//     //         if(args[i] && !args[i][0])
+//     //             return FAILED;
+//     //     }
+//     // }
+//     (void)args;
+//     return PASSED;
+// }
+static void reset_error_message(t_bool *is_saved, t_bool *is_printed, t_bool *err_here_doc, char **message)
+{
+    *is_saved = FALSE;
+    *is_printed = FALSE;
+    *err_here_doc = FALSE;
+    free(*message);
+    *message = NULL;
+}
+
+static void print_error_message(char *error_message, t_bool *is_printed)
+{    
+    if (error_message != NULL)
+    { 
+        *is_printed = TRUE;
+        write(STDERR_FILENO, error_message, ft_strlen(error_message));
+    }
 }
 
 t_bool ft_print_error(char *message, char **line, t_error indicator)
@@ -40,13 +57,7 @@ t_bool ft_print_error(char *message, char **line, t_error indicator)
     static char     *error_message;
 
     if (indicator == RESET)
-    {
-        is_saved = FALSE;
-        is_printed = FALSE;
-        err_here_doc = FALSE;
-        free(error_message);
-        error_message = NULL;
-    }
+        reset_error_message(&is_saved, &is_printed, &err_here_doc, &message);
     else if (indicator == RESET_HEREDOC)
     {
         err_here_doc = TRUE;
@@ -62,19 +73,14 @@ t_bool ft_print_error(char *message, char **line, t_error indicator)
     else if (indicator == RETRIEVE)
         return (is_saved);
     else if (indicator == PRINT && is_printed == FALSE && err_here_doc == FALSE)
-    {
-        if (error_message != NULL)
-        { 
-            is_printed = TRUE;
-            write(STDERR_FILENO, error_message, ft_strlen(error_message));
-        }
-    }
+        print_error_message(message, &is_printed);
     return TRUE;
 }
 
 static t_eval check_command(t_token *root)
 {
-    if (!root->cmd || (root->cmd->args && check_args(root->cmd->args) == FAILED))
+    // if (!root->cmd || (root->cmd->args && check_args(root->cmd->args) == FAILED))
+    if (!root->cmd || root->cmd->args)
         return (FAILED);
     return PASSED;
 }
