@@ -5,3 +5,4 @@ echo $HOME | > $PW // fixed
 > '$a'   //fixed
 echo $1salam // won't handle it
 ls < ? // fixed
+"ls          " "     -la"
