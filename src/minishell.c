@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/29 16:31:21 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/29 17:02:00 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ void display_cmd(t_token *token)
 {
     if (token && token->cmd)
     {   
-        if (token->output && token->output->file_name)
-            printf("og_output of the root node : %s\n", token->output->file_name);
+        if (token->redir && token->redir->file_name)
+            printf("og_output of the root node : %s\n", token->redir->file_name);
         i++;
         printf("\t\tCMD IS =======>  : %s\n", token->cmd->cmd);
         printf("\t\tOG_CMD IS =======>  : %s\n", token->cmd->og_tokens->og_cmd);
@@ -32,9 +32,9 @@ void display_cmd(t_token *token)
                 for (int j = 0; token->cmd->args[j]; j++)
                     printf ("\t\t\targ[%d] : %s\n", j, token->cmd->og_tokens->og_args[j]);
         }
-        if (token->cmd->input)
+        if (token->cmd->redir)
         {
-            t_redir *redir = token->cmd->input;
+            t_redir *redir = token->cmd->redir;
             while(redir)
             {
                 if (redir->mode == INFILE)
@@ -47,9 +47,9 @@ void display_cmd(t_token *token)
                 redir = redir->next;
             }
         }
-        if (token->cmd->output)
+        if (token->cmd->redir)
         {
-            t_redir *redir = token->cmd->output;
+            t_redir *redir = token->cmd->redir;
             while(redir)
             {
                 if (redir->mode == TRUNC)
@@ -76,8 +76,8 @@ void display(t_token *token)
             printf("OR\n");
         if (token->type == PIPE)
             printf("pipe\n");
-        if (token->og_output && token->og_output->file_name)
-            printf("output : %s og_output : %s\n", token->output->file_name, token->og_output->file_name);
+        if (token->og_redir && token->og_redir->file_name)
+            printf("output : %s og_output : %s\n", token->og_redir->file_name, token->og_redir->file_name);
         printf("==============left->node==============\n");
         display(token->l_token);
         printf("==============right->node==============\n");
@@ -146,9 +146,9 @@ void heredoc_to_fd_to_infiles(t_token **root, t_bool error_flag)
     if (pid == 0)
     {
         child_singal_handler();
-        if ((*root)->type == CMD && (*root)->cmd->input) // removed the check for (*root)->cmd if it exists
+        if ((*root)->type == CMD && (*root)->cmd->redir) // removed the check for (*root)->cmd if it exists
         {
-            tmp = (*root)->cmd->input;
+            tmp = (*root)->cmd->redir;
             while(tmp)
             {
                 if (tmp->mode == HEREDOC && tmp->file_name)
@@ -187,9 +187,9 @@ static void heredoc_to_fds(t_token **root)
     t_redir *tmp;
     if (!*root)
         return;
-    if((*root)->type == CMD && (*root)->cmd->input)
+    if((*root)->type == CMD && (*root)->cmd->redir)
     {
-        tmp =  (*root)->cmd->input;
+        tmp =  (*root)->cmd->redir;
         while(tmp)
         {
             if (tmp->mode == HEREDOC)

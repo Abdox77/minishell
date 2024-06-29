@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   redir_paser.c                                      :+:      :+:    :+:   */
+/*   redir_parser.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 11:12:42 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/28 20:52:31 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/29 17:00:16 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,14 @@ void handle_input(t_token **token, char **line, t_bool is_root)
     get_file_name(line, &file_name, &vars);
     if (is_root == FALSE)
     {
-        add_redirection(&((*token)->cmd->input), mode, file_name);
-        add_redirection(&((*token)->cmd->og_tokens->og_input), mode, ft_substr(*line - vars.og_len, 0, vars.og_len));
+        add_redirection(&((*token)->cmd->redir), mode, file_name);
+        add_redirection(&((*token)->cmd->og_tokens->og_redir), mode, ft_substr(*line - vars.og_len, 0, vars.og_len));
         check_for_expansion_in_heredoc(token , is_root, mode);
     }
     else
     {
-        add_redirection(&((*token)->input), mode, file_name);
-        add_redirection(&((*token)->og_input), mode, ft_substr(*line - vars.og_len, 0, vars.og_len));
+        add_redirection(&((*token)->redir), mode, file_name);
+        add_redirection(&((*token)->og_redir), mode, ft_substr(*line - vars.og_len, 0, vars.og_len));
         check_for_expansion_in_heredoc(token , is_root, mode);
     }
 }
@@ -53,13 +53,13 @@ void handle_output(t_token **token, char **line, t_bool is_root)
     get_file_name(line, &file_name, &vars);
     if (is_root == FALSE)
     {
-        add_redirection(&((*token)->cmd->output), mode, file_name);
-        add_redirection(&((*token)->cmd->og_tokens->og_output), mode, ft_substr(*line - vars.og_len, 0, vars.og_len - 1));
+        add_redirection(&((*token)->cmd->redir), mode, file_name);
+        add_redirection(&((*token)->cmd->og_tokens->og_redir), mode, ft_substr(*line - vars.og_len, 0, vars.og_len - 1));
     }
     else
     {
-        add_redirection(&((*token)->output), mode, file_name);
-        add_redirection(&((*token)->og_output), mode, ft_substr(*line - vars.og_len, 0, vars.og_len));
+        add_redirection(&((*token)->redir), mode, file_name);
+        add_redirection(&((*token)->og_redir), mode, ft_substr(*line - vars.og_len, 0, vars.og_len));
     }
 }
 

@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 20:47:10 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/29 13:43:19 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/29 17:03:02 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,13 @@ void check_for_expansion_in_heredoc(t_token **token , t_bool is_root, REDIR_MODE
 {
     if (is_root == FALSE)
     { 
-        if (mode == HEREDOC && ft_check_for_quotes((*token)->cmd->og_tokens->og_input->file_name) == TRUE)
-            (*token)->cmd->og_tokens->og_input->to_be_expanded = TRUE;
+        if (mode == HEREDOC && ft_check_for_quotes((*token)->cmd->og_tokens->og_redir->file_name) == TRUE)
+            (*token)->cmd->og_tokens->og_redir->to_be_expanded = TRUE;
     }
     else
     {
-        if (mode == HEREDOC && ft_check_for_quotes((*token)->og_input->file_name) == TRUE)
-            (*token)->cmd->og_tokens->og_input->to_be_expanded = TRUE;
+        if (mode == HEREDOC && ft_check_for_quotes((*token)->og_redir->file_name) == TRUE)
+            (*token)->cmd->og_tokens->og_redir->to_be_expanded = TRUE;
     }
 }
 

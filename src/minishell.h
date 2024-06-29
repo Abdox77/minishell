@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/29 14:06:36 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/29 16:59:25 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,18 +133,18 @@ struct s_lvars {
 struct s_expands {
     char        **og_args;
     char        *og_cmd;
-    t_redir     *og_input;
-    t_redir     *og_output;
+    t_redir     *og_redir;
+    // t_redir     *og_output;
 };
 
 struct s_token {
     TOKEN       type;
     t_token     *r_token;
     t_token     *l_token;
-    t_redir     *output;
-    t_redir     *og_output;
+    t_redir     *redir;
+    t_redir     *og_redir;
     t_redir     *input;
-    t_redir     *og_input;
+    // t_redir     *og_input;
     t_cmd       *cmd;
 } ;
 
@@ -163,8 +163,8 @@ struct s_cmd
     char        **args;
     char        *cmd_to_be_expanded;
     t_expands   *og_tokens; // og stands for original
-    t_redir     *input;
-    t_redir     *output;
+    t_redir     *redir;
+    // t_redir     *output;
 };
 
 

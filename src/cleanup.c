@@ -64,8 +64,8 @@ void free_expands(t_expands *expands)
     safe_free(expands->og_cmd);
     free_strs(expands->og_args);
     expands->og_args = NULL;
-    free_redirections(expands->og_input);
-    free_redirections(expands->og_output);
+    free_redirections(expands->og_redir);
+    // free_redirections(expands->og_output);
     safe_free(expands);
 }
 
@@ -77,8 +77,8 @@ void free_cmd(t_token *root)
     safe_free(root->cmd->cmd_to_be_expanded);
     safe_free(root->cmd->cmd);
     free_expands(root->cmd->og_tokens);
-    free_redirections(root->cmd->input);
-    free_redirections(root->cmd->output);
+    free_redirections(root->cmd->redir);
+    // free_redirections(root->cmd->output);
     safe_free(root->cmd);
     safe_free(root);
     root = NULL;
@@ -88,10 +88,10 @@ void free_token(t_token *root)
 {
     if (!root)
         return;
-    free_redirections(root->output);
-    free_redirections(root->og_output);
-    free_redirections(root->input);
-    free_redirections(root->og_input);
+    free_redirections(root->redir);
+    free_redirections(root->og_redir);
+    // free_redirections(root->input);
+    // free_redirections(root->og_input);
     free(root);
 }
 
