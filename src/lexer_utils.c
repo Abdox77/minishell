@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 15:14:16 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/28 20:55:55 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/28 23:03:58 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,11 +85,11 @@ char *copy_token_in_between_quotes(char **line, int len, int *og_len)
 
 static char *get_token_in_between_quotes(char **line, char quote, int *og_len)
 {
-    int i;
+    // int i;
     int len;
     char *token;
 
-    i = -1;
+    // int i = -1;
     len = 0;
     if (!*line || !**line)
         return NULL;

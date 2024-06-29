@@ -1,29 +1,17 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   cd.c                                               :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/10 08:11:48 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/27 18:51:39 by aabou-ib         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../src/minishell.h"
 
-static int	check_key(t_env *env, char *key)
+static int check_key(t_env *env, char *key)
 {
-	t_env	*tmp;
+    t_env *tmp;
 
-	tmp = env;
-	while (tmp)
-	{
-		if (!ft_strcmp(tmp->key, key))
-			return (1);
-		tmp = tmp->next;
-	}
-	return (0);
+    tmp = env;
+    while (tmp)
+    {
+        if (!ft_strcmp(tmp->key, key))
+            return (1);
+        tmp = tmp->next;
+    }
+    return (0);
 }
 
 // Helper function to check the key in the environment list and return its value
@@ -31,7 +19,7 @@ static char *get_value(t_env *env, const char *key)
 {
     t_env *tmp = env;
     while (tmp)
-	{
+    {
         if (ft_strcmp(tmp->key, key) == 0)
             return tmp->value;
         tmp = tmp->next;
@@ -44,85 +32,71 @@ static void set_value(t_env *env, const char *key, const char *value)
 {
     t_env *tmp = env;
     while (tmp)
-	{
+    {
         if (ft_strcmp(tmp->key, key) == 0)
-		{
-            // Free the old value and set the new value
-            // free(tmp->value);
-            tmp->value = ft_strdup(value);
+        {
+            free(tmp->value); // Free the old value
+            tmp->value = ft_strdup(value); // Set the new value
             return;
         }
         tmp = tmp->next;
     }
-	return;
-    // If the key does not exist, create a new node
-    // t_env *new_node = (t_env *)malloc(sizeof(t_env));
-    // if (!new_node) {
-    //     perror("malloc");
-    //     return;
-    // }
-    // new_node->key = strdup(key);
-    // new_node->value = strdup(value);
-    // new_node->next = env->next;
-    // env->next = new_node;
+    // If the key does not exist and it's "OLDPWD", add a new node to the list
+    if (!ft_strcmp(key, "OLDPWD"))
+    {
+        t_env *new_node = (t_env *)malloc(sizeof(t_env));
+        if (!new_node)
+        {
+            perror("malloc");
+            return;
+        }
+        new_node->key = ft_strdup(key);
+        new_node->value = ft_strdup(value);
+        new_node->next = env->next;
+        env->next = new_node;
+    }
+    return;
 }
 
 // Function to update PWD and OLDPWD after changing the directory
-static void update_pwd_and_oldpwd(t_exec *exec)
+static void update_pwd_and_oldpwd(t_exec *exec, char *old_pwd)
 {
     if (!exec || !exec->env)
         return;
-    char *tmp_pwd = get_value(exec->env, "PWD");     // Find and save the current PWD value in tmp_pwd
-    if (!tmp_pwd)
-        return;         // if PWD does not exist in the list, return without doing anything
     char new_pwd[1024];
     if (getcwd(new_pwd, sizeof(new_pwd)) == NULL)
-	{
+    {
         perror("getcwd");
         stat_handler(1, 1);
         return;
     }
     set_value(exec->env, "PWD", new_pwd);
-    set_value(exec->env, "OLDPWD", tmp_pwd);
+    set_value(exec->env, "OLDPWD", old_pwd);
 }
-
-
 
 int cd(char **arg, t_exec *exec)
 {
-	if (arg[0] == NULL)
-	{
-		if (!check_key(exec->env, "HOME"))
-            return (stat_handler(1,1), perror("cd: HOME not set"), 0);
-		else
-		{
-			if (chdir(get_value(exec->env, "HOME")) == -1)
-				return (stat_handler(1,1), perror("cd"), 0);
-			update_pwd_and_oldpwd(exec);
-		}
-	}
-	else
-	{
-		if (chdir(arg[1]) == -1)
-			return (stat_handler(1,1), perror("cd"), 0);
-		update_pwd_and_oldpwd(exec);
-	}
+    char old_pwd[1024];
+    getcwd(old_pwd, sizeof(old_pwd));
+
+    if (arg[1] == NULL)
+    {
+        if (!check_key(exec->env, "HOME"))
+            return (stat_handler(1, 1), perror("cd: HOME not set"), 0);
+        else
+        {
+            if (chdir(get_value(exec->env, "HOME")) == -1)
+                return (stat_handler(1, 1), perror("cd"), 0);
+            else
+                update_pwd_and_oldpwd(exec, old_pwd);
+        }
+    }
+    else
+    {
+        if (chdir(arg[1]) == -1)
+            return (stat_handler(1, 1), perror("cd"), 0);
+        update_pwd_and_oldpwd(exec, old_pwd);
+    }
     stat_handler(0, 1);
-	return (1);
+    return (1);
 }
-
-// static char	*get_value(t_env *env, char *key)
-// {
-// 	t_env	*tmp;
-
-// 	if (!env || !key)
-// 		return (NULL);
-// 	tmp = env;
-// 	while (tmp)
-// 	{
-// 		if (!ft_strcmp(tmp->key, key))
-// 			return (tmp->value);
-// 		tmp = tmp->next;
-// 	}
-// 	return (NULL);
-// }

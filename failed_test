@@ -1,7 +1,7 @@
-cd ..
-pwd
-cd
-echo $HOME | > $PW
-> '$a'
-echo $1salam
-ls < ?
+cd .. // fixed
+pwd // fixed
+cd // fixed
+echo $HOME | > $PW // fixed
+> '$a'   //fixed
+echo $1salam // won't handle it
+ls < ? // fixed

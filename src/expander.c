@@ -204,25 +204,32 @@ static char *handle_wildcards(char *arg)
 static char *expand_arg_if_needed1(char *arg, char *og_arg, t_env *env_list)
 {
     char *expanded;
+    char **exp;
 
     (void)og_arg;
     if (ft_strchr(arg, ' ') || ft_strchr(arg, '\t'))
         ambiguous();
-    if (ft_strchr(arg, '*') || ft_strchr(arg, '?'))
+    if (ft_strchr(arg, '*'))
         return handle_wildcards(arg);
     if (strchr(arg, '$'))
     {
-        expanded = expand_string(arg, env_list);
+        exp = expand_arg_if_needed(arg, og_arg, env_list);
+        expanded = ft_strdup(exp[0]);
+        if (exp && *exp && exp[1])
+            ambiguous();
+        free(exp);
+        if( (!expanded || !*expanded) && arg && *arg)
+            ambiguous();
         if (ft_strchr(expanded, ' ') || ft_strchr(expanded, '\t'))
             ambiguous();
-        if (ft_strchr(expanded, '*') || ft_strchr(expanded, '?'))
+        if (ft_strchr(expanded, '*'))
         {
             // free(expanded);
             return handle_wildcards(expanded);
         }
         return (expanded);
     }
-    return (strdup(arg));
+    return (ft_strdup(arg));
 }
 
 void handle_infile(t_redir *input, t_redir *og_input, t_env *env)
@@ -343,7 +350,8 @@ void handle_output_redirections(t_redir *output, t_redir *og_output, t_env *env)
     {
         if (check_to_expand(output->file_name, env))
         {
-            expanded_filename = expand_arg_if_needed1(output->file_name, output->file_name, env);
+            // expanded_filename = expand_arg_if_needed1(output->file_name, output->file_name, env);
+            expanded_filename = expand_arg_if_needed1(output->file_name, og_output->file_name, env);
             open_output_file(output, expanded_filename);
             free(expanded_filename);
         }

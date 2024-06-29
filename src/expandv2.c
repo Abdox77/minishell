@@ -650,7 +650,8 @@ static void expand_variable(const char **str, char **result_ptr, t_env *env_list
 
 
 
-char *expand_string(const char *str, t_env *env_list) {
+char *expand_string(const char *str, t_env *env_list)
+{
     size_t result_size = get_expanded_length(str, env_list) + 1;
     char *result = malloc_with_error(result_size);
     char *result_ptr = result;
