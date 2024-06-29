@@ -3,6 +3,9 @@ CFLAGS = -Wall -Wextra -Werror -g3 -fsanitize=address
 SRC = 	src/minishell.c \
 		src/init.c \
 		src/lexer.c 	 \
+		src/parenthesis_lexer.c 	 \
+		src/pipe_lexer.c 	 \
+		src/operator_lexer.c 	 \
 		src/parse_cmd.c \
 		src/parse_cmd_2.c \
 		src/parse_cmd_3.c \

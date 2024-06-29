@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/29 16:59:25 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/29 18:41:10 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,8 +213,30 @@ t_redir     *new_cmd_redir (REDIR_MODE mode, char *file_name);
 t_token     *new_token(TOKEN type);
 void        init_lvars(t_lvars *vars);
 
-/*=====================LEXER=====================*/
-void        lexer(t_token **token, char **line);
+/*=====================LEXERS=====================*/
+
+/* OPERATOR */
+void	handle_operators(t_token **token, char **line);
+void	place_operator_node(t_token **root, t_token **to_put);
+t_bool	handle_error_if_not_valid_op(char **line, char operator, int len);
+t_bool	is_an_operator(char **line, int len);
+t_eval  check_operator_syntax(char **line);
+
+/* PARENTHESIS*/
+void	place_parenthesis_node(t_token **root, t_token **to_put);
+void	handle_parenthesis(t_token **root, char **line);
+void	parenthesis_lexer(t_token **token, char **line);
+
+/* PIPE */
+void	place_pipe_node(t_token **root, t_token **to_put);
+void	handle_pipe(t_token **token, char **line);
+void	handle_pipes(t_token **token, char **line);
+
+void	handle_commands(t_token **root, char **line);
+void	place_node(t_token **root, t_token **to_put, TOKEN type);
+void    lexer(t_token **token, char **line);
+
+
 
 /*=====================CMD_PARSER=====================*/
 t_token     *handle_command(char **line);
