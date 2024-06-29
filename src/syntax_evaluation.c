@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/05 05:43:18 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/29 15:08:17 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/29 16:30:24 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,14 +73,14 @@ t_bool ft_print_error(char *message, char **line, t_error indicator)
     else if (indicator == RETRIEVE)
         return (is_saved);
     else if (indicator == PRINT && is_printed == FALSE && err_here_doc == FALSE)
-        print_error_message(message, &is_printed);
+        print_error_message(error_message, &is_printed);
     return TRUE;
 }
 
 static t_eval check_command(t_token *root)
 {
-    // if (!root->cmd || (root->cmd->args && check_args(root->cmd->args) == FAILED))
-    if (!root->cmd || root->cmd->args)
+    // if (!root->cmd || (root->cmd->args && check_args(root->cmd->args) == FAILED)) 
+    if (!root->cmd)
         return (FAILED);
     return PASSED;
 }

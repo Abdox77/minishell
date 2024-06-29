@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/29 16:14:07 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/29 16:31:21 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -266,7 +266,7 @@ void minishell_loop(char **env) {
             add_history(line);
         special_trim(&line);
         head_tokens = lexer_manager(&line);
-        display(head_tokens);
+        // display(head_tokens);
         evaluate_syntax(head_tokens);
         heredoc_to_fds(&head_tokens);
         if (ft_print_error(NULL, NULL, RETRIEVE) == TRUE)
