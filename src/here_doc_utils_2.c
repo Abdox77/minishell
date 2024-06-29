@@ -6,14 +6,14 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 21:00:53 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/28 21:01:27 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/29 18:21:20 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void init_iter_vars(t_iter_vars *vars)
+void	init_iter_vars(t_iter_vars *vars)
 {
-    vars->i = 0;
-    vars->len = 0;
+	vars->i = 0;
+	vars->len = 0;
 }
