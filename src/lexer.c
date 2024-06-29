@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:22:59 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/29 18:40:42 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/29 19:04:06 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,6 @@ void	place_node(t_token **root, t_token **to_put, TOKEN type)
 		place_pipe_node(root, to_put);
 	else if (type == PARENTHESIS)
 		place_parenthesis_node(root, to_put);
-	else
-		return;
 }
 
 void	handle_commands(t_token **root, char **line)

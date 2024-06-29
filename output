@@ -1,3 +1,0 @@
-CC = cc$
-	$(CC) $(CFLAGS) -c $< -o $@$
-	$(CC) $(CFLAGS) $(OBJ) $(LIBFT) -lreadline -o $(NAME)$
