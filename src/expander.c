@@ -206,7 +206,6 @@ static char *expand_arg_if_needed1(char *arg, char *og_arg, t_env *env_list)
     char *expanded;
     char **exp;
 
-    (void)og_arg;
     if (ft_strchr(arg, ' ') || ft_strchr(arg, '\t'))
         ambiguous();
     if (ft_strchr(arg, '*'))
@@ -223,10 +222,7 @@ static char *expand_arg_if_needed1(char *arg, char *og_arg, t_env *env_list)
         if (ft_strchr(expanded, ' ') || ft_strchr(expanded, '\t'))
             ambiguous();
         if (ft_strchr(expanded, '*'))
-        {
-            // free(expanded);
             return handle_wildcards(expanded);
-        }
         return (expanded);
     }
     return (ft_strdup(arg));
@@ -350,7 +346,6 @@ void handle_output_redirections(t_redir *output, t_redir *og_output, t_env *env)
     {
         if (check_to_expand(output->file_name, env))
         {
-            // expanded_filename = expand_arg_if_needed1(output->file_name, output->file_name, env);
             expanded_filename = expand_arg_if_needed1(output->file_name, og_output->file_name, env);
             open_output_file(output, expanded_filename);
             free(expanded_filename);
@@ -364,11 +359,13 @@ void handle_output_redirections(t_redir *output, t_redir *og_output, t_env *env)
         og_output = og_output->next;
     }
 }
-void handle_redirections(t_cmd *cmd, t_env *env, t_exec *exec)
+void handle_redirections(t_redir *red, t_redir *og_red, t_env *env, t_exec *exec)
 {
-    t_redir *redir = cmd->redir;
-    t_redir *og_redir = cmd->og_tokens->og_redir;
+    t_redir *redir;
+    t_redir *og_redir;
 
+    redir = red;
+    og_redir = og_red;
     while (redir)
     {
         if (redir->mode == INFILE)

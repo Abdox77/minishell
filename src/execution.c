@@ -495,7 +495,7 @@ static int handle_fork_execution(t_token *token, t_exec *exec, char *cmd, char *
     int ex;
 
     handle_signals();
-    handle_redirections(token->cmd, exec->env, exec);
+    handle_redirections(token->cmd->redir,token->cmd->og_tokens->og_redir, exec->env, exec);
     if (!flag || !token->cmd->og_tokens->og_cmd)
     {
         stat_handler(0, 1);
@@ -667,8 +667,8 @@ void execute_subtree(t_token *root, t_exec *exec)
         return;
     int original_stdin = dup(STDIN_FILENO);
     int original_stdout = dup(STDOUT_FILENO);
-    if (root->redir)
-        handle_redirections(root->cmd, exec->env, exec);
+    if (root)
+        handle_redirections(root->redir,root->og_redir, exec->env, exec);
     // if (root->output)
     //     handle_output_redirections(root->output, root->og_output, exec->env);
     if (root->type == CMD)

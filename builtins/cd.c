@@ -31,17 +31,13 @@ static char *get_value(t_env *env, const char *key)
 static void set_value(t_env *env, const char *key, const char *value)
 {
     t_env *tmp = env;
+
     while (tmp)
     {
         if (ft_strcmp(tmp->key, key) == 0)
-        {
-            free(tmp->value); // Free the old value
-            tmp->value = ft_strdup(value); // Set the new value
-            return;
-        }
+            return(free(tmp->value), tmp->value = ft_strdup(value), (void)0);
         tmp = tmp->next;
     }
-    // If the key does not exist and it's "OLDPWD", add a new node to the list
     if (!ft_strcmp(key, "OLDPWD"))
     {
         t_env *new_node = (t_env *)malloc(sizeof(t_env));
@@ -61,9 +57,10 @@ static void set_value(t_env *env, const char *key, const char *value)
 // Function to update PWD and OLDPWD after changing the directory
 static void update_pwd_and_oldpwd(t_exec *exec, char *old_pwd)
 {
+    char new_pwd[1024];
+
     if (!exec || !exec->env)
         return;
-    char new_pwd[1024];
     if (getcwd(new_pwd, sizeof(new_pwd)) == NULL)
     {
         perror("getcwd");

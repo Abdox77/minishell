@@ -24,7 +24,7 @@ int	check_builtins(char *cmd, t_cmd *cc, t_exec *exec, char **args)
 {
 	if(is_builtin(cmd))
 	{
-		handle_redirections(cc, exec->env, exec);
+		handle_redirections(cc->redir,cc->og_tokens->og_redir, exec->env, exec);
 		if (!ft_strcmp(cmd, "echo"))
 			return (ft_echo(args), 1);
 		if (!ft_strcmp(ft_tolowerr(cmd), "export"))
