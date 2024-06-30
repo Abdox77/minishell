@@ -70,7 +70,7 @@ char	*get_cmd(char *cmd, char **envp)
 
 void	*malloc_with_error(size_t size)
 {
-	void	*ptr;
+	void *ptr;
 
 	ptr = malloc(size + 2);
 	if (ptr == NULL)

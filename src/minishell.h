@@ -6,7 +6,7 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/30 04:54:25 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/06/30 05:28:01 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -296,6 +296,8 @@ t_redir *ft_dup_redir(t_redir *redir);
 t_sigstate sig_state(t_sigstate state, t_sigops operation);
 void singal_handler(void);
 void handle_sig(int sig);
+void handle_signals(void);
+void handle_signals_before(void);
 
 
 /*=====================SYNTAX_EVALUATOR==================*/
@@ -408,6 +410,14 @@ size_t	handle_dollar_sign(const char **str, t_env *env_list, size_t length);
 char	*get_var_value(int var_len, const char *var_start, t_env *env_list);
 void	handle_special_variable(const char **str, t_env *env_list, size_t *length);
 char	**concat_args(char **args1, char **args2);
+int check_to_expand(char *cmd, t_env *env_list);
+size_t get_expanded_length1(const char *str, t_env *env_list);
+void append_var_value(char **res_ptr, const char **str_ptr, t_env *env);
+int is_expandable_char(char c);
+int is_quoted(const char *str);
+char *expand_string1(const char *str, t_env *env_list);
+size_t get_var_length(const char **str_ptr, t_env *env_list);
+size_t get_quoted_length(const char **str_ptr, t_env *env_list);
 void	extract_variable_name(const char **str, char **var_name_ptr);
 void	handle_variable_expansion(const char **str, char **result_ptr, t_env *env_list);
 char    **process_cmd_and_args(char *cmd, char **args, t_env *env_list);
@@ -419,6 +429,13 @@ void    handle_input_redirections(t_redir *input, t_redir *og_input, t_env *env,
 void reset_fd(int in, int out);
 void exec_error(char *cmd, char *cmd_path);
 char	*ft_itoa_no_malloc(int n);
+void execute_pipe(t_token *node, t_exec *exec);
+int execute_command(t_token *token, t_exec *exec);
+void cleanup_exec(t_exec *exec, char **args, int in, int out);
+int    is_dir(char *path);
+void cleanup_exec(t_exec *exec, char **args, int in, int out);
+char **expander(t_token *token, t_exec *exec, char *cmd);
+char **initialize_args_if_null(char *cmd, char **args);
 
 
 
