@@ -51,7 +51,7 @@ static size_t get_quoted_length(const char **str_ptr, t_env *env_list)
     return (length);
 }
 
-static size_t get_expanded_length(const char *str, t_env *env_list) {
+static size_t get_expanded_length1(const char *str, t_env *env_list) {
     size_t length = 0;
 
     while (*str)
@@ -69,7 +69,7 @@ static size_t get_expanded_length(const char *str, t_env *env_list) {
     return (length);
 }
 
-static void append_var_value(char **result_ptr, const char **str_ptr, t_env *env_list)
+static void append_var_value(char **res_ptr, const char **str_ptr, t_env *env)
 {
     const char  *var_start;
     size_t      var_len;
@@ -82,26 +82,26 @@ static void append_var_value(char **result_ptr, const char **str_ptr, t_env *env
         (*str_ptr)++;
     var_len = *str_ptr - var_start;
     var_name = strndup(var_start, var_len);
-    var_value = find_env_value(var_name, env_list);
+    var_value = find_env_value(var_name, env);
     free(var_name);
     if (var_value)
     {
-        ft_strcpy(*result_ptr, var_value);
-        *result_ptr += strlen(var_value);
+        ft_strcpy(*res_ptr, var_value);
+        *res_ptr += strlen(var_value);
     }
 }
 
-static void append_quoted_value(char **result_ptr, const char **str_ptr, t_env *env_list)
+void append_quoted_value(char **res_ptr, const char **str_ptr, t_env *env_list)
 {
     (*str_ptr)++;
     while (**str_ptr && **str_ptr != '"')
     {
         if (**str_ptr == '$')
-            append_var_value(result_ptr, str_ptr, env_list);
+            append_var_value(res_ptr, str_ptr, env_list);
         else
         {
-            **result_ptr = **str_ptr;
-            (*result_ptr)++;
+            **res_ptr = **str_ptr;
+            (*res_ptr)++;
             (*str_ptr)++;
         }
     }
@@ -115,7 +115,7 @@ static char *expand_string1(const char *str, t_env *env_list)
     char   *result;
     char   *result_ptr;
 
-    result_size = get_expanded_length(str, env_list) + 1;
+    result_size = get_expanded_length1(str, env_list) + 1;
     result = (char *)malloc(result_size);
     if (!result)
     {
@@ -207,7 +207,7 @@ char **expander(t_token *token, t_exec *exec, char *cmd)
     char **expanded_wildcards;
 
     args = initialize_args_if_null(cmd, token->cmd->args);
-    processed_args = process_args(args, token->cmd->og_tokens->og_args, token->cmd->og_tokens->og_cmd, cmd, exec->env);
+    processed_args = process_args(args, token, cmd, exec->env);
     expanded_wildcards = expand_wildcards(processed_args);
     free_strs(processed_args);
     // free_strs(args);
@@ -232,7 +232,12 @@ int    is_dir(char *path)
     return (0);
 }
 
-static int handle_fork_execution(t_token *token, t_exec *exec, char *cmd, char **args, int flag)
+void free_2_strs(char **str1, char **str2)
+{
+    free_strs(str1);
+    free_strs(str2);
+}
+int handle_fork_execution(t_token *token, t_exec *exec, char *cmd, char **args, int flag)
 {
     char *cmd_path;
     int ex;
@@ -255,8 +260,7 @@ static int handle_fork_execution(t_token *token, t_exec *exec, char *cmd, char *
         ex = 126;
     exec_error(cmd, cmd_path);
     free(cmd_path);
-    free_strs(args);
-    free_strs(exec->envp);
+    free_2_strs(args, exec->envp);
     exit(ex);
 }
 

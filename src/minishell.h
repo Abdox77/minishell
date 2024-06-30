@@ -6,7 +6,7 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/30 01:48:48 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/06/30 04:54:25 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -351,7 +351,8 @@ char	*search_for_value(const char *p);
 void	handle_existing_variable(t_env *existing_node, const char *arg);
 t_env	*sort_export(t_env *env);
 void	print_export(t_env *env);
-
+char	*ft_itoa_no_malloc(int n);
+void append_quoted_value(char **res_ptr, const char **str_ptr, t_env *env_list);
 
 
 /*=======================EXECUTION=======================*/
@@ -392,7 +393,23 @@ void handle_output_redirections(t_redir *output, t_redir *og_output, t_env *env)
 char    **expand_arg_if_needed(char *arg, char *og_arg, t_env *env_list);
 // int is_inside_quotes(const char *str, const char *pos)
 char    *expand_string(const char *str, t_env *env_list);
-char    **process_args(char **args, char **og_args, char *og_cmd, char *cmd, t_env *env_list);
+size_t	get_expanded_length(const char *str, t_env *env_list);
+void	*malloc_with_error(size_t size);
+void	expand_variable(const char **str, char **result_ptr, t_env *env_list, int *in_single_quotes);
+char    **process_args(char **args, t_token *token, char *cmd, t_env *env_list);
+int	get_args_length(char **args);
+char	**expand_arg_if_needed(char *arg, char *og_arg, t_env *env_list);
+char	**single_arg(char *arg);
+int	is_inside_quotes(const char *str, const char *pos);
+void	copy_variable_value(const char *var_value, char **result_ptr);
+size_t	handle_quotes_and_length(const char **str, int *in_single_quotes, int *in_double_quotes);
+void	handle_special_variable2(const char **str, char **result_ptr, t_env *env_list);
+size_t	handle_dollar_sign(const char **str, t_env *env_list, size_t length);
+char	*get_var_value(int var_len, const char *var_start, t_env *env_list);
+void	handle_special_variable(const char **str, t_env *env_list, size_t *length);
+char	**concat_args(char **args1, char **args2);
+void	extract_variable_name(const char **str, char **var_name_ptr);
+void	handle_variable_expansion(const char **str, char **result_ptr, t_env *env_list);
 char    **process_cmd_and_args(char *cmd, char **args, t_env *env_list);
 int     check_to_expand(char *cmd, t_env *env_list);
 void	ft_exit(char **cmd);
