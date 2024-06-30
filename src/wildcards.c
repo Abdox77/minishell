@@ -1,31 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   wildcards.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/06/30 17:56:11 by aabou-ib          #+#    #+#             */
+/*   Updated: 2024/06/30 18:22:28 by aabou-ib         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
-#include <dirent.h>
-#include <stdbool.h>
 
-bool	is_match(const char *s, const char *p)
-{
-	const char	*ws = 0;
-	const char	*wp = 0;
-
-	while (*s)
-	{
-		if (*p == '*')
-			wp = ++p, ws = s;
-		else if (wp)
-			p = wp, s = ++ws;
-		else
-			return (false);
-	}
-	while (*p)
-	{
-		if (*p != '*')
-			return (false);
-		p++;
-	}
-	return (true);
-}
-
-static size_t	count_matches(const char *pattern)
+size_t	count_matches(const char *pattern)
 {
 	DIR				*dir;
 	struct dirent	*entry;
@@ -38,66 +25,15 @@ static size_t	count_matches(const char *pattern)
 		return (0);
 	}
 	count = 0;
-	while ((entry = readdir(dir)) != NULL)
+	entry = readdir(dir);
+	while (entry != NULL)
 	{
 		if (is_match(entry->d_name, pattern))
 			count++;
+		entry = readdir(dir);
 	}
 	closedir(dir);
 	return (count);
-}
-
-static char	**allocate_matches(size_t count)
-{
-	char	**matches;
-
-	matches = (char **)malloc((count + 1) * sizeof(char *));
-	if (!matches)
-	{
-		perror("malloc failed");
-		return (NULL);
-	}
-	return (matches);
-}
-
-static char	**list_matching_files(const char *pattern)
-{
-	DIR				*dir;
-	struct dirent	*entry;
-	char			**matches;
-	size_t			count;
-	size_t			idx;
-
-	count = count_matches(pattern);
-	matches = allocate_matches(count);
-	if (!matches)
-		return (NULL);
-	dir = opendir(".");
-	if (dir == NULL)
-	{
-		perror("opendir failed");
-		return (free(matches), NULL);
-	}
-	idx = 0;
-	while ((entry = readdir(dir)) != NULL)
-	{
-		if (is_match(entry->d_name, pattern))
-			matches[idx++] = strdup(entry->d_name);
-	}
-	matches[idx] = NULL;
-	closedir(dir);
-	return (matches);
-}
-
-static int	has_space_or_tab(const char *str)
-{
-	while (*str)
-	{
-		if (*str == ' ' || *str == '\t')
-			return (1);
-		str++;
-	}
-	return (0);
 }
 
 static size_t	calculate_total_size(char **args)
@@ -109,8 +45,7 @@ static size_t	calculate_total_size(char **args)
 	i = 0;
 	while (args[i] != NULL)
 	{
-		if ((strchr(args[i], '*')) &&
-			!has_space_or_tab(args[i]))
+		if ((strchr(args[i], '*')) && !has_space_or_tab(args[i]))
 			total_size += count_matches(args[i]);
 		else
 			total_size++;
@@ -119,7 +54,8 @@ static size_t	calculate_total_size(char **args)
 	return (total_size);
 }
 
-static void	add_matches_to_expanded_args(char **expanded_args, char **matches, int *count)
+static void	add_matches_to_expanded_args(char **expanded_args, char **matches,
+		int *count)
 {
 	int	j;
 
@@ -137,15 +73,15 @@ static char	**expand_args_with_matches(char **args, char **expanded_args)
 {
 	int		i;
 	int		count;
+	char	**matches;
 
 	i = 0;
 	count = 0;
 	while (args[i] != NULL)
 	{
-		if ((strchr(args[i], '*')) &&
-			!has_space_or_tab(args[i]))
+		if ((strchr(args[i], '*')) && !has_space_or_tab(args[i]))
 		{
-			char	**matches = list_matching_files(args[i]);
+			matches = list_matching_files(args[i]);
 			if (matches)
 				add_matches_to_expanded_args(expanded_args, matches, &count);
 		}
@@ -169,17 +105,17 @@ char	**expand_wildcards(char **args)
 	return (expand_args_with_matches(args, expanded_args));
 }
 
-void	free_expanded_args(char **args)
-{
-	int	i;
+// void	free_expanded_args(char **args)
+// {
+// 	int	i;
 
-	if (!args)
-		return ;
-	i = 0;
-	while (args[i] != NULL)
-	{
-		free(args[i]);
-		i++;
-	}
-	free(args);
-}
+// 	if (!args)
+// 		return ;
+// 	i = 0;
+// 	while (args[i] != NULL)
+// 	{
+// 		free(args[i]);
+// 		i++;
+// 	}
+// 	free(args);
+// }

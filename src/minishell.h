@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/30 13:54:10 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/30 18:04:54 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@
 # include <sys/wait.h>
 # include <termios.h>
 # include <unistd.h>
+# include <dirent.h>
+# include <stdbool.h>
 # ifdef __linux__
 #  include <linux/limits.h>
 # endif
@@ -480,6 +482,11 @@ void						cleanup_exec(t_exec *exec, char **args, int in,
 								int out);
 char						**expander(t_token *token, t_exec *exec, char *cmd);
 char						**initialize_args_if_null(char *cmd, char **args);
+int	has_space_or_tab(const char *str);
+bool is_match(const char *s, const char *p);
+char	**list_matching_files(const char *pattern);
+char	**allocate_matches(size_t count);
+size_t	count_matches(const char *pattern);
 
 /*=====================MINISHELL=====================*/
 void						minishell_loop(char **env);

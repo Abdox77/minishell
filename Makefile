@@ -63,6 +63,7 @@ SRC = 	src/minishell.c \
 		src/execute_pipe.c \
 		src/append_var_value.c \
 		src/wildcards.c \
+		src/wildcards_helper.c \
 		src/get_next_line.c \
 		src/get_next_line_utils.c \
 
