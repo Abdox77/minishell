@@ -15,9 +15,11 @@ static char *handle_wildcards(char *arg)
 
     tmp = initialize_args_if_null(arg, NULL);
     tmp2 = expand_wildcards(tmp);
+    if (!tmp2 || !*tmp2)
+        return (ft_strdup(tmp[0]));
     if (tmp2[1])
         ambiguous();
-    free(tmp);
+    // free(tmp);
     expanded = ft_strdup(tmp2[0]);
     free(tmp2);
     return (expanded);

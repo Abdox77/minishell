@@ -6,7 +6,7 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 08:13:26 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/27 18:51:39 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/06/30 20:15:10 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static void	free_env_node(t_env **env, char *arg)
 	tmp = *env;
 	while (tmp)
 	{
-		if (!ft_strncmp(tmp->key, arg, ft_strlen(tmp->key)))
+		if (!ft_strcmp(tmp->key, arg))
 		{
 			if (prev == NULL)
 				*env = tmp->next;
