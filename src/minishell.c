@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/30 06:17:06 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/30 06:28:44 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -255,6 +255,11 @@ void minishell_loop(char **env) {
         singal_handler();
         og_line = readline("minishell$ " );
         line = og_line;
+        if (!line)
+        {
+            printf("exit\n");
+            break;
+        }
         if (line)
             add_history(line);
         special_trim(&line);
