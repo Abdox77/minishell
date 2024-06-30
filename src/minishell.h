@@ -6,7 +6,7 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/30 18:04:54 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/06/30 23:59:15 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,9 +109,16 @@ typedef struct s_exec		t_exec;
 typedef struct s_expands	t_expands;
 typedef struct s_lvars		t_lvars;
 typedef struct s_iter_vars	t_iter_vars;
+typedef struct s_cmd_args	t_cmd_args;
 
 /*=======================STRUCTS============================*/
 
+struct						s_cmd_args
+{
+	int						flag;
+	char					*cmd;
+	char					**args;
+};
 struct						s_iter_vars
 {
 	int						i;
@@ -487,6 +494,13 @@ bool is_match(const char *s, const char *p);
 char	**list_matching_files(const char *pattern);
 char	**allocate_matches(size_t count);
 size_t	count_matches(const char *pattern);
+void	ambiguous(void);
+char	*handle_wildcards(char *arg);
+void	handle_infile(t_redir *input, t_redir *og_input, t_env *env);
+void	handle_heredoc(t_redir *input, t_redir *og_input, t_exec *exec);
+void	handle_input_redirections(t_redir *input, t_redir *og_input, t_env *env, t_exec *exec);
+void	open_output_file(t_redir *output, char *expanded_filename);
+void	handle_heredoc_expansion(t_redir *input, t_exec *exec);
 
 /*=====================MINISHELL=====================*/
 void						minishell_loop(char **env);

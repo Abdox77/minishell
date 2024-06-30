@@ -6,7 +6,7 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 02:25:05 by aabou-ib          #+#    #+#             */
-/*   Updated: 2024/06/30 04:33:09 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/06/30 23:30:14 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ char	*get_cmd(char *cmd, char **envp)
 
 void	*malloc_with_error(size_t size)
 {
-	void *ptr;
+	void	*ptr;
 
 	ptr = malloc(size + 2);
 	if (ptr == NULL)

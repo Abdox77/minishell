@@ -12,10 +12,10 @@
 
 #include "minishell.h"
 
-void    special_trim(char **line)
+void	special_trim(char **line)
 {
-    if (!*line || !**line)
-        return ;
-    while (**line && is_space(**line) == TRUE)
-        ++(*line);
+	if (!*line || !**line)
+		return ;
+	while (**line && is_space(**line) == TRUE)
+		++(*line);
 }

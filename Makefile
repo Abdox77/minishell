@@ -27,6 +27,7 @@ SRC = 	src/minishell.c \
 		src/cleanup.c \
 		src/cleanup_2.c \
 		src/get_env.c \
+		src/get_env_help.c \
 		src/signals.c \
 		src/signals_2.c \
 		src/linked_list_helper.c \
@@ -41,6 +42,7 @@ SRC = 	src/minishell.c \
 		src/status.c \
 		src/expander.c \
 		src/redirection.c \
+		src/redirection_helper.c \
 		src/syntax_evaluation.c \
 		builtins/check_builtin.c \
 		builtins/echo.c \
