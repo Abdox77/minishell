@@ -6,7 +6,7 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 00:58:11 by aabou-ib          #+#    #+#             */
-/*   Updated: 2024/06/30 00:58:12 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/06/30 22:21:28 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,8 @@ int	cd(char **arg, t_exec *exec)
 	else
 	{
 		if (chdir(arg[1]) == -1)
-			return (stat_handler(1, 1), perror("cd"), 0);
+			return (stat_handler(1, 1), ft_write("cd: ", 2, 0),
+				perror(arg[1]), 0);
 		update_pwd_and_oldpwd(exec, old_pwd);
 	}
 	stat_handler(0, 1);
