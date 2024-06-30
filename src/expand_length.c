@@ -6,7 +6,7 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 04:47:08 by aabou-ib          #+#    #+#             */
-/*   Updated: 2024/06/30 04:52:52 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/06/30 04:58:21 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,6 @@ size_t	get_expanded_length(const char *str, t_env *env_list)
 	}
 	return (length);
 }
-
 
 void	handle_special_variable(const char **str, t_env *env_list,
 		size_t *length)

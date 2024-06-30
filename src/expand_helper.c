@@ -6,12 +6,11 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 04:44:14 by aabou-ib          #+#    #+#             */
-/*   Updated: 2024/06/30 04:45:14 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/06/30 04:59:38 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
 
 void	copy_variable_value(const char *var_value, char **result_ptr)
 {

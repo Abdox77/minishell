@@ -6,7 +6,7 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 03:36:04 by aabou-ib          #+#    #+#             */
-/*   Updated: 2024/06/30 04:55:30 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/06/30 04:57:46 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,5 +67,3 @@ char	**process_args(char **args, t_token *token, char *cmd, t_env *env_list)
 			processed_args);
 	return (processed_args);
 }
-
-
