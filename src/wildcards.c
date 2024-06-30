@@ -9,9 +9,7 @@ bool	is_match(const char *s, const char *p)
 
 	while (*s)
 	{
-		if (*p == *s || *p == '?')
-			s++, p++;
-		else if (*p == '*')
+		if (*p == '*')
 			wp = ++p, ws = s;
 		else if (wp)
 			p = wp, s = ++ws;
@@ -111,7 +109,7 @@ static size_t	calculate_total_size(char **args)
 	i = 0;
 	while (args[i] != NULL)
 	{
-		if ((strchr(args[i], '*') || strchr(args[i], '?')) &&
+		if ((strchr(args[i], '*')) &&
 			!has_space_or_tab(args[i]))
 			total_size += count_matches(args[i]);
 		else
@@ -144,7 +142,7 @@ static char	**expand_args_with_matches(char **args, char **expanded_args)
 	count = 0;
 	while (args[i] != NULL)
 	{
-		if ((strchr(args[i], '*') || strchr(args[i], '?')) &&
+		if ((strchr(args[i], '*')) &&
 			!has_space_or_tab(args[i]))
 		{
 			char	**matches = list_matching_files(args[i]);

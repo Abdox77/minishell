@@ -12,41 +12,41 @@
 
 #include "../src/minishell.h"
 
-static void free_env_node(t_env **env, char *arg)
+static void	free_env_node(t_env **env, char *arg)
 {
-    t_env   *tmp;
-    t_env   *prev;
+	t_env	*tmp;
+	t_env	*prev;
 
-    prev = NULL;
-    tmp = *env;
-    while (tmp)
-    {
-        if (!ft_strncmp(tmp->key, arg, ft_strlen(tmp->key)))
-        {
-            if (prev == NULL)
-                *env = tmp->next;
-            else
-                prev->next = tmp->next;
-            free(tmp->key);
-            free(tmp->value);
-            free(tmp);
-            break;
-        }
-        prev = tmp;
-        tmp = tmp->next;
-    }
+	prev = NULL;
+	tmp = *env;
+	while (tmp)
+	{
+		if (!ft_strncmp(tmp->key, arg, ft_strlen(tmp->key)))
+		{
+			if (prev == NULL)
+				*env = tmp->next;
+			else
+				prev->next = tmp->next;
+			free(tmp->key);
+			free(tmp->value);
+			free(tmp);
+			break ;
+		}
+		prev = tmp;
+		tmp = tmp->next;
+	}
 }
 
-int unset(t_env **env, char **cmd)
+int	unset(t_env **env, char **cmd)
 {
-    int     i;
+	int	i;
 
-    i = 1;
-    while (cmd[i])
-    {
-        free_env_node(env, cmd[i]);
-        i++;
-    }
-    stat_handler(0, 1);
-    return 1;
+	i = 1;
+	while (cmd[i])
+	{
+		free_env_node(env, cmd[i]);
+		i++;
+	}
+	stat_handler(0, 1);
+	return (1);
 }

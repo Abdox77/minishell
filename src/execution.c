@@ -1,196 +1,9 @@
-
 #include "minishell.h"
 
-// static char *find_env_value(const char *var_name, t_env *env_list) {
-//     while (env_list != NULL) {
-//         if (strcmp(var_name, env_list->key) == 0)
-//             return env_list->value;
-//         env_list = env_list->next;
-//     }
-//     return NULL;
-// }
-
-// static size_t get_expanded_length(const char *str, t_env *env_list)
-// {
-//     size_t length = 0;
-//     while (*str)
-//     {
-//         if (*str == '$')
-//         {
-//             str++;
-//             const char *var_start = str;
-//             while (*str && (ft_isalnum(*str) || *str == '_'))
-//                 str++;
-//             size_t var_len = str - var_start;
-//             char *var_name = ft_strndup(var_start, var_len);
-//             char *var_value = find_env_value(var_name, env_list);
-//             free(var_name);
-//             if (var_value)
-//                 length += strlen(var_value);
-//         }
-//         else if (*str == '"')
-//         {
-//             str++;
-//             while (*str && *str != '"')
-//             {
-//                 if (*str == '$')
-//                 {
-//                     str++;
-//                     const char *var_start = str;
-//                     while (*str && (isalnum(*str) || *str == '_'))
-//                         str++;
-//                     size_t var_len = str - var_start;
-//                     char *var_name = strndup(var_start, var_len);
-//                     char *var_value = find_env_value(var_name, env_list);
-//                     free(var_name);
-//                     if (var_value)
-//                         length += strlen(var_value);
-//                 }
-//                 else
-//                 {
-//                     length++;
-//                     str++;
-//                 }
-//             }
-//             if (*str == '"')
-//                 str++;
-//         }
-//         else
-//         {
-//             length++;
-//             str++;
-//         }
-//     }
-//     return length;
-// }
-// static char *expand_string1(const char *str, t_env *env_list) {
-//     size_t result_size = get_expanded_length(str, env_list) + 1;
-//     char *result = (char *)malloc(result_size);
-//     if (!result)
-//     {
-//         perror("malloc failed");
-//         exit(EXIT_FAILURE);
-//     }
-//     result[0] = '\0';
-//     char *result_ptr = result;
-
-//     while (*str)
-//     {
-//         if (*str == '$')
-//         {
-//             str++;
-//             const char *var_start = str;
-//             while (*str && (isalnum(*str) || *str == '_'))
-//                 str++;
-//             size_t var_len = str - var_start;
-//             char *var_name = strndup(var_start, var_len);
-//             char *var_value = find_env_value(var_name, env_list);
-//             free(var_name);
-//             if (var_value)
-//             {   
-//                 strcpy(result_ptr, var_value);
-//                 result_ptr += strlen(var_value);
-//             }
-//         }
-//         else if (*str == '"')
-//         {
-//             str++;
-//             while (*str && *str != '"')
-//             {
-//                 if (*str == '$')
-//                 {
-//                     str++;
-//                     const char *var_start = str;
-//                     while (*str && (isalnum(*str) || *str == '_'))
-//                         str++;
-//                     size_t var_len = str - var_start;
-//                     char *var_name = strndup(var_start, var_len);
-//                     char *var_value = find_env_value(var_name, env_list);
-//                     free(var_name);
-//                     if (var_value)
-//                     {   
-//                         strcpy(result_ptr, var_value);
-//                         result_ptr += strlen(var_value);
-//                     }
-//                 }
-//                 else
-//                     *result_ptr++ = *str++;
-//             }
-//             if (*str == '"')
-//                 str++;
-//         }
-//         else
-//             *result_ptr++ = *str++;
-//     }
-//     *result_ptr = '\0';
-//     return result;
-// }
-
-// static int is_expandable_char(char c)
-// {
-//     return (isalnum(c) || c == '_' || c== '$');
-// }
-
-// static int is_quoted(const char *str)
-// {
-//     int i = 0;
-//     while (str[i])
-//     {
-//         if (str[i] == '"' || str[i] == '\'')
-//             return 1;
-//         i++;
-//     }
-//     return 0;
-// }
-
-//  int check_to_expand(char *cmd, t_env *env_list)
-// {
-//     (void)env_list;
-//     int i = 0;
-//     if (!cmd || cmd[i] != '$')
-//         return (printf("because of 0; \n"),1);
-    
-//     if (is_quoted(cmd))
-//         return (printf("ghsdldsbfldsbfljdsbflsdjbfs"),1);
-
-//     i++; // Skip the initial $
-
-//     if (!is_expandable_char(cmd[i]))
-//         return (printf("because of 1; \n"),1);
-    
-//     while (cmd[i])
-//     {
-//         if (!is_expandable_char(cmd[i]))
-//         return (printf("because of 2; \n"),1);
-//         cmd++;
-//     }
-//     if(expand_string1(cmd, env_list)){
-
-//             printf("ghsdldsbfldsbfljdsbflsdjbfs");
-//            return (printf("because of 3; \n"),1);}
-//     return 0;
-// }
-
-// static char **initialize_args_if_null(char *cmd, char **args)
-// {
-//     if (args == NULL)
-//     {
-//         args = malloc(2 * sizeof(char*));
-//         if (args == NULL)
-//         {
-//             perror("Failed to allocate memory for args");
-//             exit(EXIT_FAILURE);
-//         }
-//         args[0] = ft_strdup(cmd);
-//         args[1] = NULL;
-//     }
-//     return args;
-// }
-
-#include "minishell.h"
-
-static char *find_env_value(const char *var_name, t_env *env_list) {
-    while (env_list != NULL) {
+static char *find_env_value(const char *var_name, t_env *env_list)
+{
+    while (env_list != NULL)
+    {
         if (strcmp(var_name, env_list->key) == 0)
             return (env_list->value);
         env_list = env_list->next;
@@ -198,7 +11,8 @@ static char *find_env_value(const char *var_name, t_env *env_list) {
     return (NULL);
 }
 
-static size_t get_var_length(const char **str_ptr, t_env *env_list) {
+static size_t get_var_length(const char **str_ptr, t_env *env_list)
+{
     const char  *var_start;
     size_t      var_len;
     char        *var_name;
@@ -222,10 +36,12 @@ static size_t get_quoted_length(const char **str_ptr, t_env *env_list)
     size_t length = 0;
 
     (*str_ptr)++;
-    while (**str_ptr && **str_ptr != '"') {
-        if (**str_ptr == '$') {
+    while (**str_ptr && **str_ptr != '"')
+    {
+        if (**str_ptr == '$')
             length += get_var_length(str_ptr, env_list);
-        } else {
+        else
+        {
             length++;
             (*str_ptr)++;
         }
@@ -238,12 +54,14 @@ static size_t get_quoted_length(const char **str_ptr, t_env *env_list)
 static size_t get_expanded_length(const char *str, t_env *env_list) {
     size_t length = 0;
 
-    while (*str) {
-        if (*str == '$') {
+    while (*str)
+    {
+        if (*str == '$')
             length += get_var_length(&str, env_list);
-        } else if (*str == '"') {
+        else if (*str == '"')
             length += get_quoted_length(&str, env_list);
-        } else {
+        else
+        {
             length++;
             str++;
         }
@@ -266,7 +84,8 @@ static void append_var_value(char **result_ptr, const char **str_ptr, t_env *env
     var_name = strndup(var_start, var_len);
     var_value = find_env_value(var_name, env_list);
     free(var_name);
-    if (var_value) {
+    if (var_value)
+    {
         ft_strcpy(*result_ptr, var_value);
         *result_ptr += strlen(var_value);
     }
@@ -275,10 +94,12 @@ static void append_var_value(char **result_ptr, const char **str_ptr, t_env *env
 static void append_quoted_value(char **result_ptr, const char **str_ptr, t_env *env_list)
 {
     (*str_ptr)++;
-    while (**str_ptr && **str_ptr != '"') {
-        if (**str_ptr == '$') {
+    while (**str_ptr && **str_ptr != '"')
+    {
+        if (**str_ptr == '$')
             append_var_value(result_ptr, str_ptr, env_list);
-        } else {
+        else
+        {
             **result_ptr = **str_ptr;
             (*result_ptr)++;
             (*str_ptr)++;
@@ -340,10 +161,8 @@ int check_to_expand(char *cmd, t_env *env_list)
     if (!cmd || cmd[i] != '$')
         return (1);
     if (is_quoted(cmd))
-        return (printf("ghsdldsbfldsbfljdsbflsdjbfs"), 1);
-
+        return (1);
     i++; // Skip the initial $
-
     if (!is_expandable_char(cmd[i]))
         return ( 1);
     while (cmd[i]) {
@@ -356,22 +175,6 @@ int check_to_expand(char *cmd, t_env *env_list)
         return (free(xp), 1);
     return (free(xp), 0);
 }
-
-// char **initialize_args_if_null(char *cmd, char **args)
-// {
-//     if (args == NULL)
-//     {
-//         args = malloc(2 * sizeof(char *));
-//         if (args == NULL)
-//         {
-//             perror("Failed to allocate memory for args");
-//             exit(EXIT_FAILURE);
-//         }
-//         args[0] = ft_strdup(cmd);
-//         args[1] = NULL;
-//     }
-//     return (args);
-// }
 
 char **initialize_args_if_null(char *cmd, char **args)
 {
@@ -410,66 +213,6 @@ char **expander(t_token *token, t_exec *exec, char *cmd)
     // free_strs(args);
     return expanded_wildcards;
 }
-
-// int execute_command(t_token *token, t_exec *exec) {
-//     exec->envp = env_to_envp(exec);
-//     int in = dup(STDIN_FILENO);
-//     int out = dup(STDOUT_FILENO);
-
-//     char *cmd = token->cmd->cmd;
-//     char **args = expander(token, exec, cmd);
-//     int flag = check_to_expand(token->cmd->og_tokens->og_cmd, exec->env);
-
-//     if (args[0])
-//         cmd = args[0];
-//     else
-//         cmd = "\0";
-
-//     if (check_builtins(cmd, token->cmd, exec, args)) {
-//         free_strs(exec->envp);
-//         exec->envp = NULL;
-//         free_strs(args);
-//         args = NULL;
-//         reset_fd(in, out);
-//         return 0;
-//     }
-
-//     // handle_here_doc(); // TODO
-//     if (fork() == 0) {
-//         handle_signals();
-//         handle_redirections(token->cmd, exec->env, exec);
-
-//         if (!flag || !token->cmd->og_tokens->og_cmd) {
-//             stat_handler(0, 1);
-//             exit(0);
-//         }
-
-//         char *cmd_path = get_cmd(cmd, exec->envp);
-//         execve(cmd_path, args, exec->envp);
-//         perror("execve failed");
-//         free(cmd_path);
-//         free_strs(args);
-//         args = NULL;
-//         free_strs(exec->envp);
-//         exec->envp = NULL;
-//         exit(127);
-//     }
-
-//     int status;
-//     wait(&status);
-//     free_strs(args);
-//     args = NULL;
-//     free_strs(exec->envp);
-//     exec->envp = NULL;
-//     reset_fd(in, out);
-//     return (stat_handler(WEXITSTATUS(status), 1), WEXITSTATUS(status));
-// }
-// static int check_to_exec(char *cmd_path)
-// {
-//     if ((access(cmd_path, F_OK) == -1) || (access(cmd_path, X_OK) == -1))
-//         return (0);
-//     return (1);
-// }
 
 static void cleanup_exec(t_exec *exec, char **args, int in, int out)
 {
@@ -540,24 +283,6 @@ void exec_error(char *cmd, char *cmd_path)
         else if (access(cmd_path, X_OK) == -1)
             ft_write("Permission denied\n", 2, 0);
     }
-    }
-
-void	reset_terminal(void)
-{
-	// struct termios	term;
-
-	// if (tcgetattr(STDIN_FILENO, &term) == -1)
-	// {
-	// 	perror("tcgetattr");
-	// 	exit(1);
-	// }
-	// term.c_oflag = OPOST | ONLCR;
-	// term.c_lflag = ICANON | ECHO | ECHOE | ECHOK | ISIG;
-	// if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &term) == -1)
-	// {
-	// 	perror("tcsetattr");
-	// 	exit(1);
-	// }
 }
 
 static int handle_builtin_or_fork(t_token *token, t_exec *exec, char *cmd, char **args, int flag)
@@ -576,10 +301,7 @@ static int handle_builtin_or_fork(t_token *token, t_exec *exec, char *cmd, char 
             if (WTERMSIG(status) == SIGINT)
                 write(1, "\n", 1);
             else if (WTERMSIG(status) == SIGQUIT)
-            {
                 write(1, "Quit (core dumped)\n", 20);
-                reset_terminal();
-            }
             return 128 + WTERMSIG(status);
         }
         return WEXITSTATUS(status);
@@ -669,8 +391,6 @@ void execute_subtree(t_token *root, t_exec *exec)
     int original_stdout = dup(STDOUT_FILENO);
     if (root)
         handle_redirections(root->redir,root->og_redir, exec->env, exec);
-    // if (root->output)
-    //     handle_output_redirections(root->output, root->og_output, exec->env);
     if (root->type == CMD)
         execute_command(root, exec);
     else if (root->type == PIPE)
@@ -710,19 +430,22 @@ int execute(t_token *token, t_exec *exec)
     return (status);
 }
 
-void execute_and(t_token *node, t_exec *exec) {
+void execute_and(t_token *node, t_exec *exec)
+{
     execute(node->l_token, exec);
     if (stat_handler(0, 0) == 0)
         execute(node->r_token, exec);
 }
 
-void execute_or(t_token *node, t_exec *exec) {
+void execute_or(t_token *node, t_exec *exec)
+{
     execute(node->l_token, exec);
     if (stat_handler(0, 0) != 0)
         execute(node->r_token, exec);
 }
 
-void reset_fd(int in, int out) {
+void reset_fd(int in, int out)
+{
     dup2(in, STDIN_FILENO);
     dup2(out, STDOUT_FILENO);
     close(in);

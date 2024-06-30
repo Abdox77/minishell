@@ -43,6 +43,8 @@ SRC = 	src/minishell.c \
 		builtins/echo.c \
 		src/expandv2.c \
 		builtins/export.c \
+		builtins/export_utils.c \
+		builtins/print_export.c \
 		src/ambiguous_redirect.c \
 		src/wildcards.c \
 		src/get_next_line.c \

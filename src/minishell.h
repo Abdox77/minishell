@@ -6,7 +6,7 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/29 18:53:34 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/06/30 01:48:48 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -326,6 +326,8 @@ t_bool      is_an_operator(char **line, int len);
 void        special_trim(char **line);
 char	    *ft_tolowerr(char *c);
 char        *ft_strcpy(char *dest, char *src);
+char	    *ft_strncpy(char *dest, const char *src, unsigned int n);
+void        print_error(char *str);
 
 /*=====================ENV=====================*/
 char	   **env_to_envp(t_exec *exec);
@@ -344,6 +346,12 @@ void        ft_env(t_env *env);
 int         cd(char **arg, t_exec *exec);
 int         ft_export(t_env *env, char **args);
 void handle_redirections(t_redir *red, t_redir *og_red, t_env *env, t_exec *exec);
+int	handle_new_variable(t_env **env, const char *arg, char *key);
+char	*search_for_value(const char *p);
+void	handle_existing_variable(t_env *existing_node, const char *arg);
+t_env	*sort_export(t_env *env);
+void	print_export(t_env *env);
+
 
 
 /*=======================EXECUTION=======================*/

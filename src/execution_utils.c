@@ -83,8 +83,6 @@ char *get_cmd(char *cmd, char **envp)
     return (free_strs(tab), NULL);
 }
 
-#include <stdlib.h>
-
 static int	ft_nb_len(long n)
 {
 	int	len;
