@@ -6,13 +6,13 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 13:47:35 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/29 18:24:08 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/30 13:03:37 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_bool	arg_len_condition(char **line, int len)
+enum e_bool	arg_len_condition(char **line, int len)
 {
 	if ((*line)[len] && (*line)[len] != '|' && is_space((*line)[len]) == FALSE
 		&& is_redirection_char((*line)[len]) == FALSE && is_an_operator(line,
@@ -23,14 +23,14 @@ t_bool	arg_len_condition(char **line, int len)
 	return (FALSE);
 }
 
-t_bool	process_line_condition(char **line)
+enum e_bool	process_line_condition(char **line)
 {
 	if (**line != '\0' && is_an_operator(line, 0) == FALSE && **line != '|')
 		return (TRUE);
 	return (FALSE);
 }
 
-t_bool	handle_parenthesis_error(char **line, int len)
+enum e_bool	handle_parenthesis_error(char **line, int len)
 {
 	if ((*line)[len] == '(')
 		return (ft_print_error("Syntax Error unexpected token '('\n", line,
@@ -38,7 +38,7 @@ t_bool	handle_parenthesis_error(char **line, int len)
 	return (FALSE);
 }
 
-t_bool	check_for_quotes_condition(char **line, t_lvars *vars)
+enum e_bool	check_for_quotes_condition(char **line, t_lvars *vars)
 {
 	if ((*line)[vars->len] && (*line)[vars->len] != '|'
 		&& is_space((*line)[vars->len]) == FALSE
@@ -51,7 +51,7 @@ t_bool	check_for_quotes_condition(char **line, t_lvars *vars)
 	return (FALSE);
 }
 
-t_bool	check_for_quotes(char **line, t_lvars *vars)
+enum e_bool	check_for_quotes(char **line, t_lvars *vars)
 {
 	while (check_for_quotes_condition(line, vars) == TRUE)
 	{

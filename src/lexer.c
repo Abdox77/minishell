@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:22:59 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/29 19:04:06 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/30 13:02:28 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static void	place_cmd_node(t_token **root, t_token **to_put)
 	}
 }
 
-void	place_node(t_token **root, t_token **to_put, TOKEN type)
+void	place_node(t_token **root, t_token **to_put, enum e_token type)
 {
 	if (type == CMD)
 		place_cmd_node(root, to_put);

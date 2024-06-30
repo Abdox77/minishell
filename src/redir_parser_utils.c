@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 20:47:10 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/29 18:26:53 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/30 13:04:42 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ void	get_file_name(char **line, char **file_name, t_lvars *vars)
 	(*line) += vars->len;
 }
 
-void	check_for_expansion_in_heredoc(t_token **token, t_bool is_root,
-		REDIR_MODE mode)
+void	check_for_expansion_in_heredoc(t_token **token, enum e_bool is_root,
+		enum e_redir_mode mode)
 {
 	if (is_root == FALSE)
 	{
@@ -43,7 +43,7 @@ void	check_for_expansion_in_heredoc(t_token **token, t_bool is_root,
 	}
 }
 
-t_bool	is_valid_filename(char c)
+enum e_bool	is_valid_filename(char c)
 {
 	if (c != '\0' && is_space(c) == FALSE && is_special_char(c) == FALSE
 		&& c != ')' && c != '(')
@@ -72,7 +72,7 @@ int	calculate_file_name_len(char **line, t_lvars *vars)
 	return (0);
 }
 
-void	add_redirection(t_redir **redir, REDIR_MODE mode, char *file_name)
+void	add_redirection(t_redir **redir, enum e_redir_mode mode, char *file_name)
 {
 	t_redir	*tmp;
 

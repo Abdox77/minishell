@@ -6,13 +6,13 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 18:32:18 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/29 18:33:57 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/30 13:02:56 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_eval  check_operator_syntax(char **line)
+enum e_eval  check_operator_syntax(char **line)
 {
 	char	operator;
 
@@ -49,7 +49,7 @@ void	place_operator_node(t_token **root, t_token **to_put)
 	}
 }
 
-t_bool	handle_error_if_not_valid_op(char **line, char operator, int len)
+enum e_bool	handle_error_if_not_valid_op(char **line, char operator, int len)
 {
 	while ((*line)[len + 1] && is_space((*line)[len + 1]))
 		len++;
@@ -66,7 +66,7 @@ t_bool	handle_error_if_not_valid_op(char **line, char operator, int len)
 	return (FALSE);
 }
 
-t_bool	is_an_operator(char **line, int len)
+enum e_bool	is_an_operator(char **line, int len)
 {
 	char	operator;
 

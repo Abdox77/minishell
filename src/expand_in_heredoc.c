@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_in_heredoc.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 21:02:13 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/30 05:44:03 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/06/30 13:05:53 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static void handle_consecutive_dollarsign(char *line, char **expanded_line, t_it
     }
 }
 
-static t_bool is_valid_consecutive_dollarsign(char *s)
+static enum e_bool is_valid_consecutive_dollarsign(char *s)
 {
     if (*s == '$' && (*(s + 1) == '$'|| (ft_isalpha(*(s + 1)) == 0 && *(s + 1) != '_')))
         return (TRUE);

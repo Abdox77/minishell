@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/30 06:28:44 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/30 13:01:52 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,11 +38,8 @@ void display_cmd(t_token *token)
             {
                 if (redir->mode == INFILE)
                     printf("\t\t\tINFILE : %s\n", redir->file_name);
-               
                 else if (redir->mode == HEREDOC)
                     printf("\t\t\tHEREDOC : %s\n", redir->file_name);
-                else if (redir->mode == STD_OUT)
-                    printf("\t\t\tSTD_OUT : %s\n", redir->file_name);
                 redir = redir->next;
             }
         }
@@ -53,8 +50,6 @@ void display_cmd(t_token *token)
             {
                 if (redir->mode == TRUNC)
                     printf("\t\t\tTRUNC : %s\n", redir->file_name);
-                else if (redir->mode == OUTFILE)
-                    printf("\t\t\tOUTFILE : %s\n", redir->file_name);
                 else if (redir->mode == APPEND)
                     printf("\t\t\tAPPEND : %s\n", redir->file_name);
                 redir = redir->next;
@@ -122,7 +117,7 @@ static void child_singal_handler()
     signal(SIGTSTP, SIG_IGN);
 }
 
-t_sigstate sig_state(t_sigstate state, t_sigops operation)
+enum e_sigstate sig_state(enum e_sigstate state, enum e_sigops operation)
 {
     static int sig_state;
     
@@ -133,7 +128,7 @@ t_sigstate sig_state(t_sigstate state, t_sigops operation)
     return SET_SIGS;
 }
 
-void heredoc_to_fd_to_infiles(t_token **root, t_bool error_flag)
+void heredoc_to_fd_to_infiles(t_token **root, enum e_bool error_flag)
 {
     int     status;
     t_redir *tmp;

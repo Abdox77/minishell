@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/24 03:18:41 by aabou-ib          #+#    #+#             */
-/*   Updated: 2024/03/07 16:48:51 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/06/30 13:12:19 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,6 @@ static char	*add_to_line(char *buffer)
 	i = 0;
 	while (buffer[i] && buffer[i] != '\n')
 		i++;
-	// if (buffer[i] == '\n')
-	// 	i++;
 	line = malloc(sizeof(char) * (i + 1));
 	if (!line)
 		return (NULL);

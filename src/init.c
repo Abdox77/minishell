@@ -6,13 +6,13 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 01:45:18 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/28 15:38:08 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/30 13:02:12 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_token *new_token(TOKEN type)
+t_token *new_token(enum e_token type)
 {
     t_token *token;
 
@@ -32,7 +32,7 @@ t_token *new_token(TOKEN type)
     return (token);
 }
 
-t_redir *new_cmd_redir(REDIR_MODE mode, char *file_name)
+t_redir *new_cmd_redir(enum e_redir_mode mode, char *file_name)
 {
     t_redir *new;
 

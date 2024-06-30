@@ -6,13 +6,13 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 13:46:55 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/30 06:15:27 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/30 13:03:10 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_bool	is_valid_char_to_be_processed(char c)
+enum e_bool	is_valid_char_to_be_processed(char c)
 {
 	if (c != '\0' && c != '&' && c != '(' && c != ')' && c != '|'
 		&& is_space(c) == FALSE && is_redirection_char(c) == FALSE)

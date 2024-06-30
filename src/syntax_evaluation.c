@@ -6,13 +6,13 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/05 05:43:18 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/29 18:21:03 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/30 13:09:14 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// static t_eval  check_args(char **args)
+// static e_eval  check_args(char **args)
 // {
 //     // int i;
 //     // int len;
@@ -30,8 +30,8 @@
 //     (void)args;
 //     return (PASSED);
 // }
-static void	reset_error_message(t_bool *is_saved, t_bool *is_printed,
-		t_bool *err_here_doc, char **message)
+static void	reset_error_message(enum e_bool *is_saved, enum e_bool *is_printed,
+		enum e_bool *err_here_doc, char **message)
 {
 	*is_saved = FALSE;
 	*is_printed = FALSE;
@@ -40,7 +40,7 @@ static void	reset_error_message(t_bool *is_saved, t_bool *is_printed,
 	*message = NULL;
 }
 
-static void	print_error_message(char *error_message, t_bool *is_printed)
+static void	print_error_message(char *error_message, enum e_bool *is_printed)
 {
 	if (error_message != NULL)
 	{
@@ -49,11 +49,11 @@ static void	print_error_message(char *error_message, t_bool *is_printed)
 	}
 }
 
-t_bool	ft_print_error(char *message, char **line, t_error indicator)
+enum e_bool	ft_print_error(char *message, char **line, enum e_error indicator)
 {
-	static t_bool	is_saved;
-	static t_bool	is_printed;
-	static t_bool	err_here_doc;
+	static enum e_bool	is_saved;
+	static enum e_bool	is_printed;
+	static enum e_bool	err_here_doc;
 	static char		*error_message;
 
 	if (indicator == RESET)
@@ -78,7 +78,7 @@ t_bool	ft_print_error(char *message, char **line, t_error indicator)
 	return (TRUE);
 }
 
-static t_eval	check_command(t_token *root)
+static enum e_eval	check_command(t_token *root)
 {
 	if (!root->cmd)
 		return (FAILED);

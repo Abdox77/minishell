@@ -141,7 +141,7 @@ void open_output_file(t_redir *output, char *expanded_filename)
     int fd;
 
     fd = -1;
-    if (output->mode == OUTFILE || output->mode == TRUNC)
+    if (output->mode == TRUNC)
         fd = open(expanded_filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
     else if (output->mode == APPEND)
         fd = open(expanded_filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
@@ -194,7 +194,7 @@ void handle_redirections(t_redir *red, t_redir *og_red, t_env *env, t_exec *exec
             handle_infile(redir, og_redir, env);
         else if (redir->mode == HEREDOC)
             handle_heredoc(redir, og_redir, exec);
-        else if (redir->mode == OUTFILE || redir->mode == TRUNC || redir->mode == APPEND)
+        else if (redir->mode == TRUNC || redir->mode == APPEND)
         {
             char *expanded_filename = expand_arg_if_needed1(redir->file_name, og_redir->file_name, env);
             open_output_file(redir, expanded_filename);

@@ -17,13 +17,13 @@
 #  define BUFFER_SIZE 1000000
 # endif
 
+# include <limits.h>
 # include <stdlib.h>
 # include <unistd.h>
-# include <limits.h>
 
-char		*get_next_line(int fd);
-int			get_len(char *str);
-char		*ft_join(char *s1, char *s2);
-int			n_search(char *s);
+char	*get_next_line(int fd);
+int		get_len(char *str);
+char	*ft_join(char *s1, char *s2);
+int		n_search(char *s);
 
 #endif

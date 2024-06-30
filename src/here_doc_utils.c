@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 20:56:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/28 21:08:21 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/30 13:06:10 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	heredoc_to_fd(t_redir **heredoc_redir)
 	unlink(FNAME);
 }
 
-t_bool	is_delimiter(char *buffer, char *delimiter)
+enum e_bool	is_delimiter(char *buffer, char *delimiter)
 {
 	int	i;
 
@@ -36,7 +36,7 @@ t_bool	is_delimiter(char *buffer, char *delimiter)
 	return (TRUE);
 }
 
-t_bool	ft_check_for_quotes(char *og_delimiter)
+enum e_bool	ft_check_for_quotes(char *og_delimiter)
 {
 	int	i;
 

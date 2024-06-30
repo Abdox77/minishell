@@ -6,17 +6,17 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 11:12:42 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/29 18:24:52 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/30 13:04:24 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	handle_input(t_token **token, char **line, t_bool is_root)
+void	handle_input(t_token **token, char **line, enum e_bool is_root)
 {
 	char		*file_name;
 	t_lvars		vars;
-	REDIR_MODE	mode;
+	enum e_redir_mode	mode;
 
 	init_lvars(&vars);
 	file_name = NULL;
@@ -40,11 +40,11 @@ void	handle_input(t_token **token, char **line, t_bool is_root)
 	}
 }
 
-void	handle_output(t_token **token, char **line, t_bool is_root)
+void	handle_output(t_token **token, char **line, enum e_bool is_root)
 {
 	char		*file_name;
 	t_lvars		vars;
-	REDIR_MODE	mode;
+	enum e_redir_mode	mode;
 
 	init_lvars(&vars);
 	file_name = NULL;
@@ -66,7 +66,7 @@ void	handle_output(t_token **token, char **line, t_bool is_root)
 	}
 }
 
-void	handle_redirection(t_token **token, char **line, t_bool is_root)
+void	handle_redirection(t_token **token, char **line, enum e_bool is_root)
 {
 	if (!*line || !**line)
 		return ;

@@ -6,15 +6,15 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 20:46:17 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/29 18:09:55 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/30 13:04:57 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-REDIR_MODE	get_redir_mode(char **line)
+enum e_redir_mode	get_redir_mode(char **line)
 {
-	REDIR_MODE	mode;
+	enum e_redir_mode	mode;
 
 	if (**line == '<')
 	{

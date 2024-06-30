@@ -6,13 +6,13 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 10:06:01 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/28 21:03:29 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/30 13:05:40 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_bool	is_valid_char_for_expansion(char c)
+enum e_bool	is_valid_char_for_expansion(char c)
 {
 	if (c != '\0' && c != '$' && is_quote(c) == FALSE)
 		return (TRUE);
@@ -47,7 +47,7 @@ void	here_doc_helper(int w_heredoc, char *delimiter)
 	close(w_heredoc);
 }
 
-void	here_doc(t_redir *here_doc, t_bool error_flag)
+void	here_doc(t_redir *here_doc, enum e_bool error_flag)
 {
 	here_doc_helper(here_doc->here_doc_fd[W_HEREDOC], here_doc->file_name);
 	if (error_flag == TRUE)

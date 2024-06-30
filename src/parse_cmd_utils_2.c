@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 13:51:25 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/29 18:23:47 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/30 13:03:57 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	init_lvars(t_lvars *vars)
 	vars->og_len = 0;
 }
 
-t_bool	is_parenthesis(char c)
+enum e_bool	is_parenthesis(char c)
 {
 	if (c == '(' || c == ')')
 		return (TRUE);
@@ -44,7 +44,7 @@ void	skip_spaces(char **line)
 		++(*line);
 }
 
-t_bool	check_char_validation_for_cmd(char **line, char *tmp, int len)
+enum e_bool	check_char_validation_for_cmd(char **line, char *tmp, int len)
 {
 	if (tmp[len] && is_special_char(tmp[len]) == FALSE && is_an_operator(line,
 			len) == FALSE && is_parenthesis(tmp[len]) == FALSE)
