@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 13:46:55 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/29 16:16:08 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/30 06:10:06 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,13 +46,15 @@ void	process_line_when_parenthesis(char **line, t_token **token, int len)
 	if (len)
 	{
 		if (!*token)
+		{
 			*token = new_token(CMD);
-		(*token)->cmd->cmd = ft_substr(*line, 0, len);
-		(*token)->cmd->og_tokens->og_cmd = ft_substr(*line, 0, len);
-		(*line) += len;
+			(*token)->cmd->cmd = ft_substr(*line, 0, len);
+			(*token)->cmd->og_tokens->og_cmd = ft_substr(*line, 0, len);
+			(*line) += len;
+		}
 	}
 	else
-		ft_print_error("Syntax error unexpected token ')'\n", line, SAVE);
+		(ft_print_error("Syntax error unexpected token ')'\n", line, SAVE));
 }
 
 void	process_simple_cmd(t_token **token, char **line, int len)
