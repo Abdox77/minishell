@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/30 12:34:15 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/30 13:54:10 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,6 +231,7 @@ void						handle_commands(t_token **root, char **line);
 void						place_node(t_token **root, t_token **to_put,
 								enum e_token type);
 void						lexer(t_token **token, char **line);
+t_token						*lexer_manager(char **line);
 
 /*=====================CMD_PARSER=====================*/
 t_token						*handle_command(char **line);
@@ -261,8 +262,6 @@ void						process_line_when_parenthesis(char **line,
 /*=====================CMD_PARSER_UTILS=====================*/
 
 t_cmd						*new_cmd(void);
-
-void						skip_spaces(char **line);
 enum e_bool					arg_len_condition(char **line, int len);
 enum e_bool					process_line_condition(char **line);
 enum e_bool					handle_parenthesis_error(char **line, int len);
@@ -292,7 +291,7 @@ void						handle_output(t_token **token, char **line,
 								enum e_bool is_root);
 
 /*=====================LEXER_UTILS=====================*/
-void						skip_spaces(char **line);
+void    					special_trim(char **line);
 char						**split(char *str, char *charset);
 char						**add_arg(char **args, char *arg);
 void						add_redirection(t_redir **redir,
@@ -308,7 +307,7 @@ t_redir						*ft_dup_redir(t_redir *redir);
 enum e_sigstate				sig_state(enum e_sigstate state,
 								enum e_sigops operation);
 void						singal_handler(void);
-void						handle_sig(int sig);
+void						child_singal_handler();
 void						handle_signals(void);
 void						handle_signals_before(void);
 
@@ -325,7 +324,9 @@ char						*get_value_in_between_quotes(char *line,
 char						*ft_get_value(t_exec *exec, char *key);
 enum e_bool					ft_check_for_quotes(char *og_delimiter);
 enum e_bool					is_delimiter(char *buffer, char *delimiter);
+void						heredoc_to_fds(t_token **root);
 void						heredoc_to_fd(t_redir **heredoc_redir);
+void						heredoc_to_fd_to_infiles(t_token **root, enum e_bool error_flag);
 enum e_bool					is_valid_char_for_expansion(char c);
 void						init_iter_vars(t_iter_vars *vars);
 

@@ -6,13 +6,13 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 18:32:18 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/30 13:02:56 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/30 13:40:07 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-enum e_eval  check_operator_syntax(char **line)
+enum e_eval	check_operator_syntax(char **line)
 {
 	char	operator;
 
@@ -79,7 +79,7 @@ enum e_bool	is_an_operator(char **line, int len)
 			return (ft_print_error("Syntax error unexpected token near '&'\n",
 					line, SAVE), TRUE);
 		else
-			return(handle_error_if_not_valid_op(line, operator, len));
+			return (handle_error_if_not_valid_op(line, operator, len));
 	}
 	return (FALSE);
 }

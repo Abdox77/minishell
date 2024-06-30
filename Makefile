@@ -18,6 +18,7 @@ SRC = 	src/minishell.c \
 		src/utils_3.c \
 		src/split.c \
 		src/utils.c \
+		src/utils_4.c \
 		src/utils_2.c \
 		src/here_doc.c \
 		src/expand_in_heredoc.c\
@@ -27,6 +28,7 @@ SRC = 	src/minishell.c \
 		src/cleanup_2.c \
 		src/get_env.c \
 		src/signals.c \
+		src/signals_2.c \
 		src/linked_list_helper.c \
 		builtins/env.c \
 		builtins/pwd.c \

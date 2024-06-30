@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/15 11:12:42 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/30 13:04:24 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/30 13:23:53 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void	handle_input(t_token **token, char **line, enum e_bool is_root)
 {
-	char		*file_name;
-	t_lvars		vars;
+	char				*file_name;
+	t_lvars				vars;
 	enum e_redir_mode	mode;
 
 	init_lvars(&vars);
@@ -42,8 +42,8 @@ void	handle_input(t_token **token, char **line, enum e_bool is_root)
 
 void	handle_output(t_token **token, char **line, enum e_bool is_root)
 {
-	char		*file_name;
-	t_lvars		vars;
+	char				*file_name;
+	t_lvars				vars;
 	enum e_redir_mode	mode;
 
 	init_lvars(&vars);

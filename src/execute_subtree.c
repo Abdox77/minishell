@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_subtree.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 05:35:51 by aabou-ib          #+#    #+#             */
-/*   Updated: 2024/06/30 05:38:03 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/06/30 13:19:08 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,12 @@ void	execute_or_sub(t_token *node, t_exec *exec)
 		execute_subtree(node->r_token, exec);
 }
 
-void dup_and_close(int stdin_fd, int stdout_fd)
+void	dup_and_close(int stdin_fd, int stdout_fd)
 {
-    dup2(stdin_fd, STDIN_FILENO);
-    dup2(stdout_fd, STDOUT_FILENO);
-    close(stdin_fd);
-    close(stdout_fd);
+	dup2(stdin_fd, STDIN_FILENO);
+	dup2(stdout_fd, STDOUT_FILENO);
+	close(stdin_fd);
+	close(stdout_fd);
 }
 
 void	execute_subtree(t_token *root, t_exec *exec)
@@ -51,11 +51,11 @@ void	execute_subtree(t_token *root, t_exec *exec)
 		execute_pipe(root, exec);
 	else if (root->type == AND)
 	{
-        execute_and_sub(root, exec);
+		execute_and_sub(root, exec);
 	}
 	else if (root->type == OR)
 	{
-        execute_or_sub(root, exec);
+		execute_or_sub(root, exec);
 	}
-    dup_and_close(original_stdin, original_stdout);
+	dup_and_close(original_stdin, original_stdout);
 }

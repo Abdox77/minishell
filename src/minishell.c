@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/30 13:01:52 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/30 13:53:39 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,84 +81,13 @@ void display(t_token *token)
         display_cmd(token);
 }
 
-void special_trim(char **line)
-{
-    if (!*line || !**line)
-        return ;
-    while (**line && is_space(**line) == TRUE)
-        ++(*line);
-}
 
-static t_token *lexer_manager(char **line)
-{
-	if (!*line || !**line)
-		return NULL; 
-    t_token *head;
 
-    head = NULL;
-    lexer(&head, line);
-    if (!head)
-        ft_print_error("Syntax Error\n", line, SAVE);
-    return head;
-}
 
-static void _exit_child(int sign)
-{
-    (void)sign;
-    printf("\n");
-    rl_replace_line("", 1);
-    exit(120);
-}
 
-static void child_singal_handler()
-{
-    signal(SIGINT, _exit_child);
-    signal(SIGQUIT, SIG_IGN);
-    signal(SIGTSTP, SIG_IGN);
-}
 
-enum e_sigstate sig_state(enum e_sigstate state, enum e_sigops operation)
-{
-    static int sig_state;
-    
-    if (operation == _SAVE)
-        sig_state = state;
-    else if (operation == _RETRIEVE)
-        return (sig_state);
-    return SET_SIGS;
-}
 
-void heredoc_to_fd_to_infiles(t_token **root, enum e_bool error_flag)
-{
-    int     status;
-    t_redir *tmp;
 
-    if (!*root)
-        return;
-    sig_state(UNSET_SIGS, _SAVE);
-    pid_t pid = fork();
-    if (pid == 0)
-    {
-        child_singal_handler();
-        if ((*root)->type == CMD && (*root)->cmd->redir) // removed the check for (*root)->cmd if it exists
-        {
-            tmp = (*root)->cmd->redir;
-            while(tmp)
-            {
-                if (tmp->mode == HEREDOC && tmp->file_name)
-                        here_doc(tmp, error_flag);
-                tmp = tmp->next;
-            }
-        }
-        exit (0);
-    }
-    waitpid(pid, &status, WUNTRACED);
-    sig_state(SET_SIGS, _SAVE);
-    if (WEXITSTATUS(status) == 120)
-        ft_print_error(NULL, NULL, RESET_HEREDOC);
-    heredoc_to_fd_to_infiles(&(*root)->l_token, error_flag);
-    heredoc_to_fd_to_infiles(&(*root)->r_token, error_flag);
-}
 
 // void    open_heredoc(t_exec *exec, int w_heredoc, char *og_delimiter, char *delimiter)
 // {
@@ -176,24 +105,7 @@ void heredoc_to_fd_to_infiles(t_token **root, enum e_bool error_flag)
 //     }
 // }
 
-static void heredoc_to_fds(t_token **root)
-{
-    t_redir *tmp;
-    if (!*root)
-        return;
-    if((*root)->type == CMD && (*root)->cmd->redir)
-    {
-        tmp =  (*root)->cmd->redir;
-        while(tmp)
-        {
-            if (tmp->mode == HEREDOC)
-                heredoc_to_fd(&tmp);
-            tmp = tmp->next;
-        }
-    }
-    heredoc_to_fds(&((*root)->l_token));
-    heredoc_to_fds(&((*root)->r_token));
-}
+
 
 // void    minishell_loop(char **env)
 // {

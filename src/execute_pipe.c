@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_pipe.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 05:22:45 by aabou-ib          #+#    #+#             */
-/*   Updated: 2024/06/30 05:32:26 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/06/30 13:18:12 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,14 @@ static void	execute_right(t_token *node, int *fd, t_exec *exec)
 
 void	execute_pipe(t_token *node, t_exec *exec)
 {
-	int status1;
-	int status2;
-	pid_t pid[2];
-	int fd[2];
+	int		status1;
+	int		status2;
+	pid_t	pid[2];
+	int		fd[2];
+
 	if (pipe(fd) == -1)
 		return (perror("Pipe failed"), exit(EXIT_FAILURE),
-                (void)0);
+			(void)0);
 	pid[0] = fork();
 	if (pid[0] == 0)
 	{

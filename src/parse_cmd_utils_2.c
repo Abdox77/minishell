@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 13:51:25 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/30 13:03:57 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/30 13:52:42 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,14 +34,6 @@ t_cmd	*new_cmd(void)
 		return (NULL);
 	memset(cmd, 0, sizeof(t_cmd));
 	return (cmd);
-}
-
-void	skip_spaces(char **line)
-{
-	if (!*line || !**line)
-		return ;
-	while (**line && is_space(**line) == TRUE)
-		++(*line);
 }
 
 enum e_bool	check_char_validation_for_cmd(char **line, char *tmp, int len)

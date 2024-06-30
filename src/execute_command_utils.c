@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 05:27:22 by aabou-ib          #+#    #+#             */
-/*   Updated: 2024/06/30 13:13:27 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/30 13:16:55 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ char	**expander(t_token *token, t_exec *exec, char *cmd)
 	processed_args = process_args(args, token, cmd, exec->env);
 	expanded_wildcards = expand_wildcards(processed_args);
 	free_strs(processed_args);
-	// free_strs(args);
 	return (expanded_wildcards);
 }
 
@@ -46,9 +45,10 @@ void	cleanup_exec(t_exec *exec, char **args, int in, int out)
 	free_strs(args);
 	reset_fd(in, out);
 }
+
 int	is_dir(char *path)
 {
-	struct stat buf;
+	struct stat	buf;
 
 	if (stat(path, &buf) == -1)
 		return (0);
