@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 13:46:55 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/30 06:10:06 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/30 06:15:27 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ char	*get_token_with_quotes(char **line, int len, int *og_len)
 
 	arg = ft_substr(*line, 0, len);
 	if (!arg)
-		printf("allocation failed in get_token_with_quotes\n");
+		ft_error("allocation failed in get_token_with_quotes\n", EXIT_FAILURE);
 	(*line) += len;
 	(*og_len) += len;
 	while (is_valid_char_to_be_processed(**line) == TRUE)

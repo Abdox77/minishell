@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/30 05:28:01 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/06/30 06:18:45 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,6 @@ struct s_expands {
     char        **og_args;
     char        *og_cmd;
     t_redir     *og_redir;
-    // t_redir     *og_output;
 };
 
 struct s_token {
@@ -143,8 +142,6 @@ struct s_token {
     t_token     *l_token;
     t_redir     *redir;
     t_redir     *og_redir;
-    t_redir     *input;
-    // t_redir     *og_input;
     t_cmd       *cmd;
 } ;
 
@@ -153,7 +150,7 @@ struct s_redir {
     int         here_doc_fd[3];
     t_bool      to_be_expanded;
     char        *file_name;
-    t_redir     *next; // later
+    t_redir     *next;
     REDIR_MODE  mode;
 };
 
@@ -162,9 +159,8 @@ struct s_cmd
     char        *cmd;
     char        **args;
     char        *cmd_to_be_expanded;
-    t_expands   *og_tokens; // og stands for original
+    t_expands   *og_tokens;
     t_redir     *redir;
-    // t_redir     *output;
 };
 
 
@@ -436,11 +432,6 @@ int    is_dir(char *path);
 void cleanup_exec(t_exec *exec, char **args, int in, int out);
 char **expander(t_token *token, t_exec *exec, char *cmd);
 char **initialize_args_if_null(char *cmd, char **args);
-
-
-
-//=====================DEBUG=====================//
-void    display_cmd(t_token *token);
 
 
 /*=====================MINISHELL=====================*/

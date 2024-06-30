@@ -24,6 +24,7 @@ SRC = 	src/minishell.c \
 		src/here_doc_utils.c\
 		src/here_doc_utils_2.c\
 		src/cleanup.c \
+		src/cleanup_2.c \
 		src/get_env.c \
 		src/signals.c \
 		src/linked_list_helper.c \

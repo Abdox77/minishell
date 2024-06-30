@@ -6,16 +6,15 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/29 18:59:16 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/06/30 06:17:06 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int i = 0;
-
 void display_cmd(t_token *token)
 {
+    int i = 0;
     if (token && token->cmd)
     {   
         if (token->redir && token->redir->file_name)
@@ -252,16 +251,10 @@ void minishell_loop(char **env) {
     exec.envp = NULL;
     exec.env = parse_env(env);
     head_tokens = NULL;
-    while (42) { 
-        // exec.envp = env_to_envp(&exec);
+    while (42) {
         singal_handler();
         og_line = readline("minishell$ " );
         line = og_line;
-        if (!line)
-        {
-            printf("\nexit\n");
-            break;
-        }
         if (line)
             add_history(line);
         special_trim(&line);
@@ -277,16 +270,12 @@ void minishell_loop(char **env) {
         else
             heredoc_to_fd_to_infiles(&head_tokens, FALSE);
         if (ft_print_error(NULL, NULL, RETRIEVE) == FALSE)
-        {
             execute(head_tokens, &exec);
-        }
         // free_strs(exec.to_free); //////////////////////////need to fix this
         // free_strs(exec.envp);
         // exec.envp = NULL;  // Ensure envp is set to NULL after freeing
         cleanup(head_tokens);
         ft_print_error(NULL, NULL, RESET);
-        if (*line)
-            printf("WTF LINE ISN'T EMPTY: line is %s\n", line);
         free(og_line);
         head_tokens = NULL;
     }
