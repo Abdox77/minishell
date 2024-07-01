@@ -62,7 +62,7 @@ void	process_line_with_quotes(char **line, t_token **token, t_lvars *vars)
 
 void	process_line_without_quotes(char **line, t_token **token, t_lvars *vars)
 {
-	if (!*line )
+	if (!*line || (*line && !**line))
 		return;
 	if ((*token) && !(*token)->cmd->args && vars->len)
 	{
@@ -107,7 +107,9 @@ void	process_line(char **line, t_token **token)
 		else if (**line && handle_parenthesis_error(line, vars.len) == TRUE)
 			break ;
 		else
-			process_line_without_quotes(line, token, &vars);
+			{
+				printf("got on the else\n");
+				process_line_without_quotes(line, token, &vars);}
 		if (is_redirection_char(**line) == TRUE)
 			handle_redirection(token, line, FALSE);
 		if (!**line || (*line && **line && **line == ')'))
