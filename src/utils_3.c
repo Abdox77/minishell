@@ -22,8 +22,6 @@ char	**ft_dup_args(char **args)
 		return (NULL);
 	i = -1;
 	len = strs_len(args);
-	if (len == 0)
-		printf("len is 0 in dup_args\n");
 	new = malloc(sizeof(char *) * (len + 1));
 	if (!new)
 		ft_error("malloc failed in dup args\n", EXIT_FAILURE);

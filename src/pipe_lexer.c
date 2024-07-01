@@ -44,11 +44,9 @@ void	place_pipe_node(t_token **root, t_token **to_put)
 
 void	handle_pipe(t_token **token, char **line)
 {
-	if (*token && (*token)->r_token)
-		printf("token is not null\n");
 	*token = set_pipe_head();
 	if (!*token)
-		printf("failed to create token");
+		ft_error("failed to create token\n", EXIT_FAILURE);
 	++(*line);
 	lexer(token, line);
 }

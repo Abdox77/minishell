@@ -101,15 +101,12 @@ void	process_line(char **line, t_token **token)
 		special_trim(line);
 		if ((*token) && !(*token)->cmd->cmd)
 			get_command(token, line);
-		printf("line is after get_command %s\n", *line);
 		if (**line && check_for_quotes(line, &vars) == TRUE)
 			process_line_with_quotes(line, token, &vars);
 		else if (**line && handle_parenthesis_error(line, vars.len) == TRUE)
 			break ;
 		else
-			{
-				printf("got on the else\n");
-				process_line_without_quotes(line, token, &vars);}
+				process_line_without_quotes(line, token, &vars);
 		if (is_redirection_char(**line) == TRUE)
 			handle_redirection(token, line, FALSE);
 		if (!**line || (*line && **line && **line == ')'))
