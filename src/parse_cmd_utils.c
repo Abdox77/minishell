@@ -32,6 +32,7 @@ enum e_bool	process_line_condition(char **line)
 
 enum e_bool	handle_parenthesis_error(char **line, int len)
 {
+	printf("line is %s and len %d\n", *line - 2, len);
 	if ((*line)[len] == '(')
 		return (ft_print_error("Syntax Error unexpected token '('\n", line,
 				SAVE), TRUE);

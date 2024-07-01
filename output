@@ -1,0 +1,16 @@
+total 992
+drwxrwxrwx+ 8 codespace root        4096 Jul  1 05:06 .
+drwxr-xrwx+ 5 codespace root        4096 Jun 30 05:23 ..
+drwxrwxrwx+ 9 codespace root        4096 Jul  1 04:15 .git
+-rw-rw-rw-  1 codespace root          46 Jun 30 05:23 .gitignore
+-rw-rw-rw-  1 codespace codespace   2044 Jul  1 04:15 Makefile
+drwxrwxrwx+ 2 codespace root        4096 Jun 30 05:23 _txt_files_
+drwxrwxrwx+ 2 codespace root        4096 Jul  1 05:05 builtins
+-rw-rw-rw-  1 codespace root         159 Jun 30 05:23 failed_test
+drwxrwxrwx+ 2 codespace root        4096 Jun 30 05:23 gcl
+drwxrwxrwx+ 2 codespace root        4096 Jul  1 04:15 libft
+-rwxrwxrwx  1 codespace codespace 848856 Jul  1 05:05 minishell
+-rw-r--r--  1 codespace codespace      0 Jul  1 05:06 output
+-rwxrwxrwx  1 codespace root          53 Jun 30 05:23 re
+drwxrwxrwx+ 2 codespace root        4096 Jul  1 05:05 src
+-rw-rw-rw-  1 codespace root      111894 Jun 30 05:23 v3.excalidraw

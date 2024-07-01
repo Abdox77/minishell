@@ -62,6 +62,8 @@ void	process_line_with_quotes(char **line, t_token **token, t_lvars *vars)
 
 void	process_line_without_quotes(char **line, t_token **token, t_lvars *vars)
 {
+	if (!*line )
+		return;
 	if ((*token) && !(*token)->cmd->args && vars->len)
 	{
 		(*token)->cmd->args = malloc(sizeof(char *) * 2);
@@ -89,22 +91,26 @@ void	process_line(char **line, t_token **token)
 {
 	t_lvars	vars;
 
+	if (!**line)
+		return;
 	init_lvars(&vars);
+	
 	while (process_line_condition(line) == TRUE)
 	{
 		vars.len = 0;
 		special_trim(line);
 		if ((*token) && !(*token)->cmd->cmd)
 			get_command(token, line);
-		if (check_for_quotes(line, &vars) == TRUE)
+		printf("line is after get_command %s\n", *line);
+		if (**line && check_for_quotes(line, &vars) == TRUE)
 			process_line_with_quotes(line, token, &vars);
-		else if (handle_parenthesis_error(line, vars.len) == TRUE)
+		else if (**line && handle_parenthesis_error(line, vars.len) == TRUE)
 			break ;
 		else
 			process_line_without_quotes(line, token, &vars);
 		if (is_redirection_char(**line) == TRUE)
 			handle_redirection(token, line, FALSE);
-		if (*line && **line && **line == ')')
+		if (!**line || (*line && **line && **line == ')'))
 			break ;
 	}
 }

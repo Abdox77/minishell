@@ -222,7 +222,6 @@ void						place_operator_node(t_token **root,
 								t_token **to_put);
 enum e_bool					handle_error_if_not_valid_op(char **line,
 								char operator, int len);
-enum e_bool					is_an_operator(char **line, int len);
 enum e_eval					check_operator_syntax(char **line);
 
 /* PARENTHESIS*/
