@@ -71,7 +71,7 @@ static char	*add_to_line(char *buffer)
 		line[i] = '\0';
 		i++;
 	}
-	else 
+	else
 		line[i] = '\0';
 	return (line);
 }

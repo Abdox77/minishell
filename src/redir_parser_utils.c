@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/28 20:47:10 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/30 13:04:42 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/07/01 22:33:12 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,8 @@ int	calculate_file_name_len(char **line, t_lvars *vars)
 	return (0);
 }
 
-void	add_redirection(t_redir **redir, enum e_redir_mode mode, char *file_name)
+void	add_redirection(t_redir **redir, enum e_redir_mode mode,
+		char *file_name)
 {
 	t_redir	*tmp;
 

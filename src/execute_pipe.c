@@ -43,10 +43,8 @@ void	execute_pipe(t_token *node, t_exec *exec)
 
 	handle_signals_before(1);
 	// handle_signals();
-
 	if (pipe(fd) == -1)
-		return (perror("Pipe failed"), exit(EXIT_FAILURE),
-			(void)0);
+		return (perror("Pipe failed"), exit(EXIT_FAILURE), (void)0);
 	pid[0] = fork();
 	if (pid[0] == 0)
 	{

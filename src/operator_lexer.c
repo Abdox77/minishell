@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 18:32:18 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/30 13:40:07 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/07/01 22:27:31 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,11 +56,11 @@ enum e_bool	handle_error_if_not_valid_op(char **line, char operator, int len)
 	if ((*line)[len + 1] == '|' || (*line)[len + 1] == '&')
 	{
 		if (operator == '|')
-			ft_print_error("Syntax error unexpected token near '|'\n",
-				line, SAVE);
+			ft_print_error("Syntax error unexpected token near '|'\n", line,
+				SAVE);
 		else
-			ft_print_error("Syntax error unexpected token near '&'\n",
-				line, SAVE);
+			ft_print_error("Syntax error unexpected token near '&'\n", line,
+				SAVE);
 		return (TRUE);
 	}
 	return (FALSE);

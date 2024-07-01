@@ -12,28 +12,28 @@
 
 #include "minishell.h"
 
-static void _exit_child(int sign)
+static void	_exit_child(int sign)
 {
-    (void)sign;
-    printf("\n");
-    rl_replace_line("", 1);
-    exit(120);
+	(void)sign;
+	printf("\n");
+	rl_replace_line("", 1);
+	exit(120);
 }
 
-void    child_singal_handler()
+void	child_singal_handler(void)
 {
-    signal(SIGINT, _exit_child);
-    signal(SIGQUIT, SIG_IGN);
-    signal(SIGTSTP, SIG_IGN);
+	signal(SIGINT, _exit_child);
+	signal(SIGQUIT, SIG_IGN);
+	signal(SIGTSTP, SIG_IGN);
 }
 
-enum e_sigstate sig_state(enum e_sigstate state, enum e_sigops operation)
+enum e_sigstate	sig_state(enum e_sigstate state, enum e_sigops operation)
 {
-    static int sig_state;
-    
-    if (operation == _SAVE)
-        sig_state = state;
-    else if (operation == _RETRIEVE)
-        return (sig_state);
-    return SET_SIGS;
+	static int	sig_state;
+
+	if (operation == _SAVE)
+		sig_state = state;
+	else if (operation == _RETRIEVE)
+		return (sig_state);
+	return (SET_SIGS);
 }

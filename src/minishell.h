@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/07/01 14:13:23 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/07/01 22:35:49 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,13 @@
 
 # include "../libft/libft.h"
 # include "get_next_line.h"
+# include <dirent.h>
 # include <errno.h>
 # include <fcntl.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
+# include <stdbool.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
@@ -28,8 +30,6 @@
 # include <sys/wait.h>
 # include <termios.h>
 # include <unistd.h>
-# include <dirent.h>
-# include <stdbool.h>
 # ifdef __linux__
 #  include <linux/limits.h>
 # endif
@@ -299,7 +299,7 @@ void						handle_output(t_token **token, char **line,
 								enum e_bool is_root);
 
 /*=====================LEXER_UTILS=====================*/
-void    					special_trim(char **line);
+void						special_trim(char **line);
 char						**split(char *str, char *charset);
 char						**add_arg(char **args, char *arg);
 void						add_redirection(t_redir **redir,
@@ -315,7 +315,7 @@ t_redir						*ft_dup_redir(t_redir *redir);
 enum e_sigstate				sig_state(enum e_sigstate state,
 								enum e_sigops operation);
 void						singal_handler(void);
-void						child_singal_handler();
+void						child_singal_handler(void);
 void						handle_signals(void);
 void						handle_signals_before(int flag);
 
@@ -334,9 +334,11 @@ enum e_bool					ft_check_for_quotes(char *og_delimiter);
 enum e_bool					is_delimiter(char *buffer, char *delimiter);
 void						heredoc_to_fds(t_token **root);
 void						heredoc_to_fd(t_redir **heredoc_redir);
-void						heredoc_to_fd_to_infiles(t_token **root, enum e_bool error_flag);
+void						heredoc_to_fd_to_infiles(t_token **root,
+								enum e_bool error_flag);
 enum e_bool					is_valid_char_for_expansion(char c);
-void						init_iter_vars(t_iter_vars *vars);
+void						init_iter_vars(t_iter_vars *vars,
+								char **expanded_line);
 
 /*=====================UTILS========================*/
 int							strs_len(char **args);
@@ -488,18 +490,23 @@ void						cleanup_exec(t_exec *exec, char **args, int in,
 								int out);
 char						**expander(t_token *token, t_exec *exec, char *cmd);
 char						**initialize_args_if_null(char *cmd, char **args);
-int	has_space_or_tab(const char *str);
-bool is_match(const char *s, const char *p);
-char	**list_matching_files(const char *pattern);
-char	**allocate_matches(size_t count);
-size_t	count_matches(const char *pattern);
-void	ambiguous(void);
-char	*handle_wildcards(char *arg);
-void	handle_infile(t_redir *input, t_redir *og_input, t_env *env);
-void	handle_heredoc(t_redir *input, t_redir *og_input, t_exec *exec);
-void	handle_input_redirections(t_redir *input, t_redir *og_input, t_env *env, t_exec *exec);
-void	open_output_file(t_redir *output, char *expanded_filename);
-void	handle_heredoc_expansion(t_redir *input, t_exec *exec);
+int							has_space_or_tab(const char *str);
+bool						is_match(const char *s, const char *p);
+char						**list_matching_files(const char *pattern);
+char						**allocate_matches(size_t count);
+size_t						count_matches(const char *pattern);
+void						ambiguous(void);
+char						*handle_wildcards(char *arg);
+void						handle_infile(t_redir *input, t_redir *og_input,
+								t_env *env);
+void						handle_heredoc(t_redir *input, t_redir *og_input,
+								t_exec *exec);
+void						handle_input_redirections(t_redir *input,
+								t_redir *og_input, t_env *env, t_exec *exec);
+void						open_output_file(t_redir *output,
+								char *expanded_filename);
+void						handle_heredoc_expansion(t_redir *input,
+								t_exec *exec);
 
 /*=====================MINISHELL=====================*/
 void						minishell_loop(char **env);

@@ -12,8 +12,8 @@
 
 #include "minishell.h"
 
-size_t	handle_quotes_and_length(const char **str,
-		int *in_single_quotes, int *in_double_quotes)
+size_t	handle_quotes_and_length(const char **str, int *in_single_quotes,
+		int *in_double_quotes)
 {
 	if (**str == '\'' && !*in_double_quotes)
 	{

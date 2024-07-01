@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:22:59 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/30 13:53:46 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/07/01 22:24:48 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,15 +64,16 @@ void	lexer(t_token **token, char **line)
 		handle_commands(token, line);
 	lexer(token, line);
 }
+
 t_token	*lexer_manager(char **line)
 {
-	if (!*line || !**line)
-		return NULL; 
-    t_token *head;
+	t_token	*head;
 
-    head = NULL;
-    lexer(&head, line);
-    if (!head)
-        ft_print_error("Syntax Error\n", line, SAVE);
-    return head;
+	if (!*line || !**line)
+		return (NULL);
+	head = NULL;
+	lexer(&head, line);
+	if (!head)
+		ft_print_error("Syntax Error\n", line, SAVE);
+	return (head);
 }

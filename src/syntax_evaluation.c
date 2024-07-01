@@ -54,7 +54,7 @@ enum e_bool	ft_print_error(char *message, char **line, enum e_error indicator)
 	static enum e_bool	is_saved;
 	static enum e_bool	is_printed;
 	static enum e_bool	err_here_doc;
-	static char		*error_message;
+	static char			*error_message;
 
 	if (indicator == RESET)
 		reset_error_message(&is_saved, &is_printed, &err_here_doc,

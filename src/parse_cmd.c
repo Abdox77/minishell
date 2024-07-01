@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 15:14:16 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/29 18:23:35 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/07/01 22:26:20 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	process_line_with_quotes(char **line, t_token **token, t_lvars *vars)
 void	process_line_without_quotes(char **line, t_token **token, t_lvars *vars)
 {
 	if (!*line || (*line && !**line))
-		return;
+		return ;
 	if ((*token) && !(*token)->cmd->args && vars->len)
 	{
 		(*token)->cmd->args = malloc(sizeof(char *) * 2);
@@ -92,9 +92,8 @@ void	process_line(char **line, t_token **token)
 	t_lvars	vars;
 
 	if (!*line || (*line && !**line))
-		return;
+		return ;
 	init_lvars(&vars);
-	
 	while (process_line_condition(line) == TRUE)
 	{
 		vars.len = 0;
@@ -106,7 +105,7 @@ void	process_line(char **line, t_token **token)
 		else if (**line && handle_parenthesis_error(line, vars.len) == TRUE)
 			break ;
 		else
-				process_line_without_quotes(line, token, &vars);
+			process_line_without_quotes(line, token, &vars);
 		if (is_redirection_char(**line) == TRUE)
 			handle_redirection(token, line, FALSE);
 		if (!**line || (*line && **line && **line == ')'))

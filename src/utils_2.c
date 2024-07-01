@@ -29,7 +29,7 @@ enum e_bool	is_quote(char c)
 enum e_bool	is_special_char(char c)
 {
 	if (c != '\0' && (is_redirection_char(c) == TRUE || is_space(c) == TRUE
-		|| is_quote(c) == TRUE || c == '|'))
+			|| is_quote(c) == TRUE || c == '|'))
 		return (TRUE);
 	return (FALSE);
 }
@@ -37,7 +37,7 @@ enum e_bool	is_special_char(char c)
 enum e_bool	is_redirection_char(char c)
 {
 	if (c == '\0')
-		return FALSE;
+		return (FALSE);
 	if (c == '>' || c == '<')
 		return (TRUE);
 	return (FALSE);
