@@ -6,13 +6,14 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/07/01 22:45:31 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/07/01 23:15:23 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void minishell(t_token **head_tokens, char **line, char **og_line, t_exec *exec)
+void	minishell(t_token **head_tokens, char **line,
+		char **og_line, t_exec *exec)
 {
 	special_trim(line);
 	(*head_tokens) = lexer_manager(line);
