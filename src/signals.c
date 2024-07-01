@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 22:40:30 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/30 13:21:29 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/07/01 14:16:44 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,12 @@ static void	ft_handle_sigint(int sig)
 	rl_redisplay();
 }
 
+static void	ft_sigint(int sig)
+{
+	(void)sig;
+	printf("\n");
+}
+
 void	singal_handler(void)
 {
 	signal(SIGQUIT, SIG_IGN);
@@ -36,8 +42,11 @@ void	handle_signals(void)
 	signal(SIGINT, SIG_DFL);
 }
 
-void	handle_signals_before(void)
+void	handle_signals_before(int flag)
 {
-	signal(SIGINT, SIG_IGN);
+	if (flag == 1)
+		signal(SIGINT, ft_sigint);
+	else
+		signal(SIGINT, SIG_IGN);
 	signal(SIGQUIT, SIG_IGN);
 }

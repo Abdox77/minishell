@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_pipe.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 05:22:45 by aabou-ib          #+#    #+#             */
-/*   Updated: 2024/06/30 13:18:12 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/07/01 14:13:14 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,9 @@ void	execute_pipe(t_token *node, t_exec *exec)
 	int		status2;
 	pid_t	pid[2];
 	int		fd[2];
+
+	handle_signals_before(1);
+	// handle_signals();
 
 	if (pipe(fd) == -1)
 		return (perror("Pipe failed"), exit(EXIT_FAILURE),

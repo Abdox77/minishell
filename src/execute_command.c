@@ -6,7 +6,7 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 05:25:05 by aabou-ib          #+#    #+#             */
-/*   Updated: 2024/06/30 23:28:48 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/07/01 14:13:17 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ int	execute_command(t_token *token, t_exec *exec)
 	t_cmd_args	cmd_args;
 
 	exec->envp = env_to_envp(exec);
-	handle_signals_before();
+	handle_signals_before(0);
 	in = dup(STDIN_FILENO);
 	out = dup(STDOUT_FILENO);
 	cmd_args.cmd = token->cmd->cmd;

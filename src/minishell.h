@@ -6,7 +6,7 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/30 23:59:15 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/07/01 14:13:23 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -317,7 +317,7 @@ enum e_sigstate				sig_state(enum e_sigstate state,
 void						singal_handler(void);
 void						child_singal_handler();
 void						handle_signals(void);
-void						handle_signals_before(void);
+void						handle_signals_before(int flag);
 
 /*=====================SYNTAX_EVALUATOR==================*/
 void						evaluate_syntax(t_token *root);
