@@ -91,7 +91,7 @@ void	process_line(char **line, t_token **token)
 {
 	t_lvars	vars;
 
-	if (!**line)
+	if (!*line || (*line && !**line))
 		return;
 	init_lvars(&vars);
 	

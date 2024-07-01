@@ -76,6 +76,8 @@ void	get_command(t_token **token, char **line)
 	special_trim(line);
 	while (check_char_validation_for_cmd(line, tmp, vars.len))
 		++vars.len;
+	if(ft_print_error(NULL, NULL, RETRIEVE) == TRUE)
+		return;
 	if (is_quote(tmp[vars.len]) == TRUE)
 	{
 		if (!*token)

@@ -167,7 +167,7 @@ void minishell_loop(char **env) {
             printf("exit\n");
             break;
         }
-        if (line)
+        if (line && *line)
             add_history(line);
         special_trim(&line);
         head_tokens = lexer_manager(&line);
