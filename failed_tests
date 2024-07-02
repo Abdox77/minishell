@@ -1,0 +1,28 @@
+export a="ls -la"
+export t=$a
+
+env -i ./minishell => - PATH
+declare -x OLDPWD
+declare -x PWD="/nfs/homes/amohdi/Desktop/minishell"
+declare -x SHLVL="1"
+$_ should execute the last argument
+
+unset PATH ...... _ && env should diplsay _
+ctrC == 130 exit status
+minishell$ exit 12 213
+exit
+minishell: exit: too many arguments
+
+exit status on error amohdi@c4r4p5:~/Desktop/minishell$ echo $?
+2
+
+bash: warning: here-document at line 1 delimited by end-of-file (wanted `l')
+amohdi@c4r4p5:~/Desktop/minishell$ echo $?
+0
+amohdi@c4r4p5:~/Desktop/minishell$ 
+exit
+minishell$ cat <<l''
+'Heredoc>
+
+
+
