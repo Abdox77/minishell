@@ -6,7 +6,7 @@
 #    By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/11/03 21:54:42 by amohdi            #+#    #+#              #
-#    Updated: 2024/04/10 23:09:00 by amohdi           ###   ########.fr        #
+#    Updated: 2024/07/02 13:42:30 by amohdi           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,20 +23,22 @@ LIBC	= ar -rc
 RM	= rm -rf
 
 .c.o :
-	@${CC} ${CFLAGS} -c $< -o $@ -I ${INCS}
+	${CC} ${CFLAGS} -c $< -o $@ -I ${INCS}
 
 ${NAME}: ${OBJS}
-	@${LIBC} ${NAME} ${OBJS}
-	@${RM} ${OBJS}
+	${LIBC} ${NAME} ${OBJS}
+	${RM} ${OBJS}
 
 all: ${NAME}
 
 clean:
-	@${RM} ${OBJS} ${OBJS_B}
+	${RM} ${OBJS} ${OBJS_B}
 
 fclean: clean
-	@${RM} ${NAME} ${OBJS_B}
+	${RM} ${NAME} ${OBJS_B}
 
 re: fclean all
 
 .PHONY : all re fclean clean
+
+.SECONDARY : $(OBJS)
