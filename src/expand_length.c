@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_length.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 04:47:08 by aabou-ib          #+#    #+#             */
-/*   Updated: 2024/07/02 22:03:35 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/07/02 23:25:03 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ size_t	handle_dollar_sign(const char **str, t_env *env_list, size_t length)
 		handle_special_variable(str, env_list, &length);
 	else
 	{
-		while (**str && (isalnum((unsigned char)**str) || **str == '_'))
+		while (**str && (ft_isalnum((unsigned char)**str) || **str == '_'))
 			(*str)++;
 		if (*str == var_start)
 			length++;

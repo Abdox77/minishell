@@ -6,7 +6,7 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 05:11:59 by aabou-ib          #+#    #+#             */
-/*   Updated: 2024/06/30 23:42:46 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/07/02 23:24:56 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ size_t	get_expanded_length1(const char *str, t_env *env_list)
 
 int	is_expandable_char(char c)
 {
-	return (isalnum(c) || c == '_' || c == '$');
+	return (ft_isalnum(c) || c == '_' || c == '$');
 }
 
 int	is_quoted(const char *str)

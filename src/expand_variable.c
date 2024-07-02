@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_variable.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 04:36:13 by aabou-ib          #+#    #+#             */
-/*   Updated: 2024/07/02 22:03:57 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/07/02 23:25:09 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	extract_variable_name(const char **str, char **var_name_ptr)
 	const char	*var_start = *str;
 	size_t		var_len;
 
-	while (**str && (isalnum((unsigned char)**str) || **str == '_'))
+	while (**str && (ft_isalnum((unsigned char)**str) || **str == '_'))
 		(*str)++;
 	var_len = *str - var_start;
 	if (var_len > 0)

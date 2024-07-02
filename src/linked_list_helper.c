@@ -6,7 +6,7 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/14 15:27:24 by aabou-ib          #+#    #+#             */
-/*   Updated: 2024/06/30 23:46:46 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/07/02 23:34:22 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ t_env	*create_node(char *key, char *value)
 	t_env	*env;
 
 	env = (t_env *)malloc(sizeof(t_env));
-	memset(env, 0, sizeof(t_env));
+	ft_memset(env, 0, sizeof(t_env));
 	if (!env)
 		write_and_exit("Malloc error");
 	env->key = ft_strdup(key);

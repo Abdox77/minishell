@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   append_var_value.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 05:17:54 by aabou-ib          #+#    #+#             */
-/*   Updated: 2024/07/02 22:09:14 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/07/02 23:24:34 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	append_var_value(char **res_ptr, const char **str_ptr, t_env *env)
 
 	(*str_ptr)++;
 	var_start = *str_ptr;
-	while (**str_ptr && (isalnum(**str_ptr) || **str_ptr == '_'))
+	while (**str_ptr && (ft_isalnum(**str_ptr) || **str_ptr == '_'))
 		(*str_ptr)++;
 	var_len = *str_ptr - var_start;
 	var_name = ft_strndup(var_start, var_len);
