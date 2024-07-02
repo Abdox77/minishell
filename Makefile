@@ -1,5 +1,5 @@
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -g3 -fsanitize=address 
+CFLAGS = -Wall -Wextra -Werror -g3 
 SRC = 	src/minishell.c \
 		src/init.c \
 		src/lexer.c 	 \
@@ -74,6 +74,10 @@ RM = rm -rf
 LIBFT = ./libft/libft.a
 LIBFT_DIR = libft
 NAME = minishell
+
+ifeq ($(DEBUG), 1)
+	CFLAGS += -fsanitize=address
+endif
 
 all : $(NAME)
 
