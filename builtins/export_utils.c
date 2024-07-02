@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 01:19:41 by aabou-ib          #+#    #+#             */
-/*   Updated: 2024/06/30 02:01:44 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/07/02 22:20:21 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void	handle_existing_variable(t_env *existing_node, const char *arg)
 	char	*new_value;
 	char	*concatenated_value;
 
-	if (strstr(arg, "+="))
+	if (arg && ft_strnstr(arg, "+=", ft_strlen(arg)))
 	{
 		new_value = search_for_value(arg);
 		if (new_value)

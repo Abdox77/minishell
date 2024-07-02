@@ -6,30 +6,12 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/05 05:43:18 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/30 13:09:14 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/07/02 22:00:04 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-// static e_eval  check_args(char **args)
-// {
-//     // int i;
-//     // int len;
-
-//     // if (args)
-//     // {
-//     //     i = -1;
-//     //     len = strs_len(args);
-//     //     while(++i < len)
-//     //     {
-//     //         if(args[i] && !args[i][0])
-//     //             return (FAILED);
-//     //     }
-//     // }
-//     (void)args;
-//     return (PASSED);
-// }
 static void	reset_error_message(enum e_bool *is_saved, enum e_bool *is_printed,
 		enum e_bool *err_here_doc, char **message)
 {
@@ -46,6 +28,7 @@ static void	print_error_message(char *error_message, enum e_bool *is_printed)
 	{
 		*is_printed = TRUE;
 		write(STDERR_FILENO, error_message, ft_strlen(error_message));
+		stat_handler(2, 1);
 	}
 }
 

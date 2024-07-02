@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_helper.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 04:44:14 by aabou-ib          #+#    #+#             */
-/*   Updated: 2024/06/30 04:59:38 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/07/02 22:21:11 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@ void	copy_variable_value(const char *var_value, char **result_ptr)
 {
 	if (var_value)
 	{
-		strcpy(*result_ptr, var_value);
-		*result_ptr += strlen(var_value);
+		ft_strcpy(*result_ptr, (char *)var_value);
+		*result_ptr += ft_strlen(var_value);
 	}
 }
 
@@ -59,7 +59,7 @@ char	**expand_arg_if_needed(char *arg, char *og_arg, t_env *env_list)
 		if (ft_strchr(arg, '$'))
 		{
 			expanded = expand_string(og_arg, env_list);
-			if (is_inside_quotes(og_arg, strchr(og_arg, '$')))
+			if (is_inside_quotes(og_arg, ft_strchr(og_arg, '$')))
 			{
 				split_expanded = malloc_with_error(2 * sizeof(char *));
 				split_expanded[0] = expanded;

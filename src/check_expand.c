@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_expand.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 05:08:04 by aabou-ib          #+#    #+#             */
-/*   Updated: 2024/06/30 23:47:39 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/07/02 22:02:09 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static char	*find_env_value(const char *var_name, t_env *env_list)
 {
 	while (env_list != NULL)
 	{
-		if (strcmp(var_name, env_list->key) == 0)
+		if (ft_strcmp(var_name, env_list->key) == 0)
 			return (env_list->value);
 		env_list = env_list->next;
 	}
@@ -39,7 +39,7 @@ size_t	get_var_length(const char **str_ptr, t_env *env_list)
 	var_value = find_env_value(var_name, env_list);
 	free(var_name);
 	if (var_value)
-		return (strlen(var_value));
+		return (ft_strlen(var_value));
 	return (0);
 }
 

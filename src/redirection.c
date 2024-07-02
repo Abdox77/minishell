@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirection.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 23:48:13 by aabou-ib          #+#    #+#             */
-/*   Updated: 2024/06/30 23:58:13 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/07/02 22:05:01 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static char	*expand_arg_if_needed1(char *arg, char *og_arg, t_env *env_list)
 		ambiguous();
 	if (ft_strchr(arg, '*'))
 		return (handle_wildcards(arg));
-	if (strchr(arg, '$'))
+	if (ft_strchr(arg, '$'))
 	{
 		exp = expand_arg_if_needed(arg, og_arg, env_list);
 		expanded = ft_strdup(exp[0]);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_length.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 04:47:08 by aabou-ib          #+#    #+#             */
-/*   Updated: 2024/06/30 04:58:21 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/07/02 22:03:35 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ size_t	handle_dollar_sign(const char **str, t_env *env_list, size_t length)
 			var_len = *str - var_start;
 			var_value = get_var_value(var_len, var_start, env_list);
 			if (var_value)
-				length += strlen(var_value);
+				length += ft_strlen(var_value);
 		}
 	}
 	return (length);
@@ -63,7 +63,7 @@ static char	*find_env_value(const char *var_name, t_env *env_list)
 		return (ft_itoa_no_malloc(stat_handler(0, 0)));
 	while (env_list != NULL)
 	{
-		if (strcmp(var_name, env_list->key) == 0)
+		if (ft_strcmp(var_name, env_list->key) == 0)
 			return (env_list->value);
 		env_list = env_list->next;
 	}

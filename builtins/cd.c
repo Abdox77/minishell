@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 00:58:11 by aabou-ib          #+#    #+#             */
-/*   Updated: 2024/06/30 22:21:28 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/07/02 22:00:28 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ static int	check_key(t_env *env, char *key)
 	return (0);
 }
 
-// Helper function to check the key in the environment list and return its value
 static char	*get_value(t_env *env, const char *key)
 {
 	t_env	*tmp;
@@ -41,7 +40,6 @@ static char	*get_value(t_env *env, const char *key)
 	return (NULL);
 }
 
-// Helper function to update the value of a key in the environment list
 static void	set_value(t_env *env, const char *key, const char *value)
 {
 	t_env	*tmp;
@@ -70,7 +68,6 @@ static void	set_value(t_env *env, const char *key, const char *value)
 	return ;
 }
 
-// Function to update PWD and OLDPWD after changing the directory
 static void	update_pwd_and_oldpwd(t_exec *exec, char *old_pwd)
 {
 	char	new_pwd[1024];

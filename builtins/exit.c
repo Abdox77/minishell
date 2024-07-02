@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 08:14:00 by amohdi            #+#    #+#             */
-/*   Updated: 2024/07/02 18:52:58 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/07/02 21:34:20 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	isanumvalue(char *str)
 	return (1);
 }
 
-void initialize_i(int i[2])
+void	initialize_i(int i[2])
 {
 	i[0] = 0;
 	i[1] = 0;
@@ -66,10 +66,10 @@ void	ft_exit(char **cmd)
 	{
 		ft_write("minishell: exit: too many arguments", 2, 1);
 		i[1] = 1;
-		stat_handler(1,1);
+		stat_handler(1, 1);
 	}
 	else if (cmd[1] && i[0] <= 2)
 		exit_st = ft_atoi(cmd[1]);
-	if(!i[1])
+	if (!i[1])
 		exit(exit_st);
 }

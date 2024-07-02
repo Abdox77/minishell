@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/07/02 20:49:12 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/07/02 22:26:41 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define MINISHELL_H
 
 # include "../libft/libft.h"
-# include "get_next_line.h"
+# include "../gcl/get_next_line.h"
 # include <dirent.h>
 # include <errno.h>
 # include <fcntl.h>
@@ -469,6 +469,7 @@ char						**allocate_matches(size_t count);
 size_t						count_matches(const char *pattern);
 void						ambiguous(void);
 char						*handle_wildcards(char *arg);
+enum e_bool					cmp_condition(char *dir_name, const char *pattern);
 void						handle_infile(t_redir *input, t_redir *og_input,
 								t_env *env);
 void						handle_heredoc(t_redir *input, t_redir *og_input,

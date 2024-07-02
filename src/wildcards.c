@@ -3,40 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   wildcards.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 17:56:11 by aabou-ib          #+#    #+#             */
-/*   Updated: 2024/06/30 22:17:30 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/07/02 22:10:31 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// size_t	count_matches(const char *pattern)
-// {
-// 	DIR				*dir;
-// 	struct dirent	*entry;
-// 	size_t			count;
-
-// 	dir = opendir(".");
-// 	if (dir == NULL)
-// 	{
-// 		perror("opendir failed");
-// 		return (0);
-// 	}
-// 	count = 0;
-// 	entry = readdir(dir);
-// 	while (entry != NULL)
-// 	{
-// 		if (is_match(entry->d_name, pattern))
-// 			count++;
-// 		entry = readdir(dir);
-// 	}
-// 	closedir(dir);
-// 	if (count == 0)
-// 		return (1);
-// 	return (count);
-// }
 
 size_t	count_matches(const char *pattern)
 {
@@ -54,8 +28,9 @@ size_t	count_matches(const char *pattern)
 	entry = readdir(dir);
 	while (entry != NULL)
 	{
-		if (is_match(entry->d_name, pattern) && strcmp(entry->d_name, ".") != 0
-			&& strcmp(entry->d_name, "..") != 0)
+		if (is_match(entry->d_name, pattern)
+			&& ft_strcmp(entry->d_name, ".") != 0
+			&& ft_strcmp(entry->d_name, "..") != 0)
 			count++;
 		entry = readdir(dir);
 	}
@@ -113,14 +88,14 @@ static char	**expand_args_with_matches(char **args, char **expanded_args)
 	count = 0;
 	while (args[i] != NULL)
 	{
-		if ((strchr(args[i], '*')) && !has_space_or_tab(args[i]))
+		if ((ft_strchr(args[i], '*')) && !has_space_or_tab(args[i]))
 		{
 			matches = list_matching_files(args[i]);
 			add_matches_to_expanded_args(expanded_args, matches, &count,
 				args[i]);
 		}
 		else
-			expanded_args[count++] = strdup(args[i]);
+			expanded_args[count++] = ft_strdup(args[i]);
 		i++;
 	}
 	expanded_args[count] = NULL;

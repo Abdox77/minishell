@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expandv2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 03:36:04 by aabou-ib          #+#    #+#             */
-/*   Updated: 2024/06/30 04:57:46 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/07/02 22:04:13 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ char	**initialize_processed_args(char *cmd, char *og_cmd, t_env *env_list)
 	i = 0;
 	while (for_cmd && for_cmd[i])
 	{
-		processed_args[i] = strdup(for_cmd[i]);
+		processed_args[i] = ft_strdup(for_cmd[i]);
 		i++;
 	}
 	processed_args[i] = NULL;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_variable.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
+/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 04:36:13 by aabou-ib          #+#    #+#             */
-/*   Updated: 2024/06/30 04:39:39 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/07/02 22:03:57 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static char	*find_env_value(const char *var_name, t_env *env_list)
 		return (ft_itoa_no_malloc(stat_handler(0, 0)));
 	while (env_list != NULL)
 	{
-		if (strcmp(var_name, env_list->key) == 0)
+		if (ft_strcmp(var_name, env_list->key) == 0)
 			return (env_list->value);
 		env_list = env_list->next;
 	}

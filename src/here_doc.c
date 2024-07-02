@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 10:06:01 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/30 13:05:40 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/07/02 21:48:48 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,15 @@ enum e_bool	is_valid_char_for_expansion(char c)
 	if (c != '\0' && c != '$' && is_quote(c) == FALSE)
 		return (TRUE);
 	return (FALSE);
+}
+
+void	ft_print_eof_error(char *delimiter)
+{
+	ft_putstr_fd(
+		"warning: here-document delimited by end-of-file (wanted `",
+		STDERR_FILENO);
+	ft_putstr_fd(delimiter, STDERR_FILENO);
+	ft_putstr_fd("\')\n", STDERR_FILENO);
 }
 
 void	here_doc_helper(int w_heredoc, char *delimiter)
@@ -30,7 +39,7 @@ void	here_doc_helper(int w_heredoc, char *delimiter)
 		line = readline(YELLOW "Heredoc>" RESET_COLORS);
 		if (!line)
 		{
-			printf("\n");
+			ft_print_eof_error(delimiter);
 			break ;
 		}
 		if (is_delimiter(line, delimiter) == FALSE)

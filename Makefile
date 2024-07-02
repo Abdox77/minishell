@@ -60,14 +60,16 @@ SRC = 	src/minishell.c \
 		src/check_expand.c \
 		src/execute_command.c \
 		src/execute_command_utils.c \
+		src/execute_command_utils_2.c \
 		src/execute_subtree.c \
 		src/check_expand_utils.c \
 		src/execute_pipe.c \
 		src/append_var_value.c \
 		src/wildcards.c \
 		src/wildcards_helper.c \
-		src/get_next_line.c \
-		src/get_next_line_utils.c \
+		src/wildcards_helper_2.c \
+		gcl/get_next_line.c \
+		gcl/get_next_line_utils.c \
 
 OBJ = $(SRC:.c=.o)
 RM = rm -rf
