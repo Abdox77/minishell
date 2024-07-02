@@ -6,7 +6,7 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 22:40:30 by amohdi            #+#    #+#             */
-/*   Updated: 2024/07/01 14:16:44 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/07/02 19:18:57 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ static void	ft_handle_sigint(int sig)
 	if (sig_state(_NO_STATE_, _RETRIEVE) == UNSET_SIGS)
 		return ;
 	printf("\n");
+	stat_handler(130, 1);
 	rl_replace_line("", 1);
 	rl_on_new_line();
 	rl_redisplay();

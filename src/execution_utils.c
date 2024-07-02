@@ -6,7 +6,7 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 02:25:05 by aabou-ib          #+#    #+#             */
-/*   Updated: 2024/06/30 23:30:14 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/07/02 18:12:15 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ char	*get_cmd(char *cmd, char **envp)
 	}
 	tab = find_path(envp);
 	if (!tab)
-		return (printf("path not found\n"), exit(EXIT_FAILURE), NULL);
+		return (NULL);
 	while (tab[j] && tab)
 	{
 		tmp_pathcmd = ft_strjoin("/", cmd);

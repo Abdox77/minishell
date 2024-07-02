@@ -6,7 +6,7 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 01:02:19 by aabou-ib          #+#    #+#             */
-/*   Updated: 2024/06/30 01:04:03 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/07/02 21:14:03 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ int	check_builtins(char *cmd, t_cmd *cc, t_exec *exc, char **args)
 {
 	if (is_builtin(cmd))
 	{
+		// set_envvalue(exc->env, args);
 		handle_redirections(cc->redir, cc->og_tokens->og_redir, exc->env, exc);
 		if (!ft_strcmp(cmd, "echo"))
 			return (ft_echo(args), 1);

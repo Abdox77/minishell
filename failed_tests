@@ -1,16 +1,16 @@
 export a="ls -la"
 export t=$a
 
-env -i ./minishell => - PATH
+env -i ./minishell => - PATH       ///////this normal for me because when you run env -i bash bash save PATH you need to specifically unset it you can run env -i bash then echo $PATH you'll see your path
 declare -x OLDPWD
 declare -x PWD="/nfs/homes/amohdi/Desktop/minishell"
 declare -x SHLVL="1"
 $_ should execute the last argument
 
 unset PATH ...... _ && env should diplsay _
-ctrC == 130 exit status
+ctrC == 130 exit status                          /////////FIXED
 minishell$ exit 12 213
-exit
+exit                                            ////////FIXED
 minishell: exit: too many arguments
 
 exit status on error amohdi@c4r4p5:~/Desktop/minishell$ echo $?

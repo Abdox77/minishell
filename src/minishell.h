@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/07/02 13:17:02 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/07/02 20:49:12 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -384,13 +384,7 @@ void						append_quoted_value(char **res_ptr,
 								const char **str_ptr, t_env *env_list);
 
 /*=======================EXECUTION=======================*/
-// void        execute_commands(t_token *token);
-// void        open_pipe_and_redirect(void);
-// void        execute_command(t_token *token);
-// void        execute_manager(t_token *head);
-// int execute(t_token *token, char **envp);
-// int execute_command(t_token *token, char **envp);
-// void execute_command(t_token *token, char **envp);
+
 char						**find_path(char **envp);
 void						free_2d(char **arr);
 char						*get_cmd(char *cmd, char **envp);
@@ -398,35 +392,16 @@ void						execute_or(t_token *node, t_exec *exec);
 void						execute_and(t_token *node, t_exec *exec);
 int							execute(t_token *token, t_exec *exec);
 int							stat_handler(int code, int flag);
-char						*expand_env_variable(char *input, t_env *env);
-void						handle_input_redirection(t_redir *input,
-								t_env *env);
-void						handle_output_redirection(t_redir *output,
-								t_env *env);
 void						execute_subtree(t_token *root, t_exec *exec);
-// void        handle_redirections(t_cmd *cmd, t_env *env, t_exec *exec);
-// int				check_builtins(t_token *node, t_exec *exec, char **args);
 int							check_builtins(char *cmd, t_cmd *cc, t_exec *exec,
 								char **args);
 char						**expander(t_token *token, t_exec *exec, char *cmd);
 char						**initialize_args_if_null(char *cmd, char **args);
 void						handle_output_redirections(t_redir *output,
 								t_redir *og_output, t_env *env);
-// void        expand_variables(t_cmd *cmd, t_env *env_list, int *flag);
-// char        *expand_token(const char *token, t_env *env_list);
-// char        **expand_args(char **args, t_env *env_list);
-// char **process_args(char **args, char **og_args, char *cmd, t_env *env_list);
-// char **process_args(char **args, char **og_args, char *cmd,
-// t_env *env_list) ;
-// char *expand_string(const char *str, t_env *env_list);
-// char *expand_string(const char *str, t_env *env_list, int in_quotes);
-// char *expand_arg_if_needed(char *arg, char *og_arg, t_env *env_list);
-// char **expand_arg_if_needed(char *arg, char *og_arg, t_env *env_list);
-// char **expand_arg_if_needed(char *arg, char *og_arg, t_env *env_list,
-// int in_quotes);
+void						set_envvalue(t_env *env, char **args);
 char						**expand_arg_if_needed(char *arg, char *og_arg,
 								t_env *env_list);
-// int is_inside_quotes(const char *str, const char *pos)
 char						*expand_string(const char *str, t_env *env_list);
 size_t						get_expanded_length(const char *str,
 								t_env *env_list);
@@ -469,8 +444,6 @@ void						extract_variable_name(const char **str,
 								char **var_name_ptr);
 void						handle_variable_expansion(const char **str,
 								char **result_ptr, t_env *env_list);
-char						**process_cmd_and_args(char *cmd, char **args,
-								t_env *env_list);
 int							check_to_expand(char *cmd, t_env *env_list);
 void						ft_exit(char **cmd);
 char						*ft_strndup(const char *s1, size_t n);
@@ -522,6 +495,5 @@ enum e_bool					ft_print_error(char *message, char **line,
 void						ft_error(char *error_message, int exit_code);
 void						free_env_list(t_env *head);
 void						safe_free(void *ptr);
-// void reset_fd(int in, int out);
 
 #endif

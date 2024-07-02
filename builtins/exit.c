@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 08:14:00 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/28 22:44:50 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/07/02 18:52:58 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,15 +39,21 @@ int	isanumvalue(char *str)
 	return (1);
 }
 
+void initialize_i(int i[2])
+{
+	i[0] = 0;
+	i[1] = 0;
+}
+
 void	ft_exit(char **cmd)
 {
 	int	exit_st;
-	int	i;
+	int	i[2];
 
 	exit_st = stat_handler(0, 0);
-	i = 0;
-	while (cmd[i])
-		i++;
+	initialize_i(i);
+	while (cmd[i[0]])
+		i[0]++;
 	ft_write("exit", 2, 1);
 	if (cmd[1] && !isanumvalue(cmd[1]))
 	{
@@ -56,12 +62,14 @@ void	ft_exit(char **cmd)
 		ft_write(": numeric argument required", 2, 1);
 		exit_st = 2;
 	}
-	else if (i > 2)
+	else if (i[0] > 2)
 	{
 		ft_write("minishell: exit: too many arguments", 2, 1);
-		exit_st = 1;
+		i[1] = 1;
+		stat_handler(1,1);
 	}
-	else if (cmd[1] && i <= 2)
+	else if (cmd[1] && i[0] <= 2)
 		exit_st = ft_atoi(cmd[1]);
-	exit(exit_st);
+	if(!i[1])
+		exit(exit_st);
 }

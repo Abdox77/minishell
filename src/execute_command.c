@@ -6,7 +6,7 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 05:25:05 by aabou-ib          #+#    #+#             */
-/*   Updated: 2024/07/01 14:13:17 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/07/02 21:14:56 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,18 +71,19 @@ void	exec_error(char *cmd, char *cmd_path)
 	}
 }
 
-// static int	handle_builtin_or_fork(t_token *token, t_exec *exec, char *cmd,
-// 		char **args, int flag)
 static int	handle_builtin_or_fork(t_token *token, t_exec *exec, t_cmd_args *st)
 {
 	int	status;
 
+	set_envvalue(exec->env, st->args);
 	if (check_builtins(st->cmd, token->cmd, exec, st->args))
 		return (stat_handler(0, 0));
 	else
 	{
 		if (fork() == 0)
+		{
 			handle_fork_execution(token, exec, st);
+		}
 		wait(&status);
 		if (WIFSIGNALED(status))
 		{
