@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 01:45:18 by amohdi            #+#    #+#             */
-/*   Updated: 2024/06/30 13:02:12 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/07/02 13:17:22 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ t_token	*new_token(enum e_token type)
 		return (NULL);
 	memset(token, 0, sizeof(t_token));
 	token->type = type;
+	token->was_in_parenthesis = FALSE;
 	if (type == CMD)
 	{
 		token->cmd = new_cmd();

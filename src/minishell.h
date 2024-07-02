@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/07/01 22:35:49 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/07/02 13:17:02 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,12 +140,13 @@ struct						s_expands
 
 struct						s_token
 {
-	enum e_token			type;
-	t_token					*r_token;
-	t_token					*l_token;
+	t_cmd					*cmd;
 	t_redir					*redir;
 	t_redir					*og_redir;
-	t_cmd					*cmd;
+	t_token					*r_token;
+	t_token					*l_token;
+	enum e_token			type;
+	enum e_bool				was_in_parenthesis;
 };
 
 struct						s_redir
@@ -183,7 +184,6 @@ struct						s_env
 {
 	char					*key;
 	char					*value;
-	// char            *oper;
 	t_env					*next;
 };
 
@@ -211,7 +211,6 @@ t_token						*set_pipe_head(void);
 t_token						*new_token(enum e_token type);
 t_redir						*new_cmd_redir(enum e_redir_mode mode,
 								char *file_name);
-t_token						*new_token(enum e_token type);
 void						init_lvars(t_lvars *vars);
 
 /*=====================LEXERS=====================*/

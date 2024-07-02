@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/29 18:31:41 by amohdi            #+#    #+#             */
-/*   Updated: 2024/07/01 22:28:18 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/07/02 13:22:51 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,13 @@ void	place_pipe_node(t_token **root, t_token **to_put)
 
 	if (!*root)
 		*root = *to_put;
+	else if (*root && ((*root)->type == AND || (*root)->type == OR)
+		&& (*root)->was_in_parenthesis == FALSE)
+	{
+		tmp = (*root)->r_token;
+		(*root)->r_token = *to_put;
+		(*root)->r_token->l_token = tmp;
+	}
 	else
 	{
 		tmp = *root;
