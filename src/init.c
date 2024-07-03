@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 01:45:18 by amohdi            #+#    #+#             */
-/*   Updated: 2024/07/02 13:17:22 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/07/03 13:46:48 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,14 @@ t_token	*new_token(enum e_token type)
 	token = malloc(sizeof(t_token));
 	if (!token)
 		return (NULL);
-	memset(token, 0, sizeof(t_token));
+	ft_memset(token, 0, sizeof(t_token));
 	token->type = type;
 	token->was_in_parenthesis = FALSE;
 	if (type == CMD)
 	{
 		token->cmd = new_cmd();
 		token->cmd->og_tokens = malloc(sizeof(t_expands));
-		memset(token->cmd->og_tokens, 0, sizeof(t_expands));
+		ft_memset(token->cmd->og_tokens, 0, sizeof(t_expands));
 		if (!token->cmd)
 			printf("failed to create new cmd\n");
 	}
@@ -63,7 +63,7 @@ t_token	*set_pipe_head(void)
 	head = new_token(PIPE);
 	if (!head)
 		return (NULL);
-	memset(head, 0, sizeof(t_token));
+	ft_memset(head, 0, sizeof(t_token));
 	head->type = PIPE;
 	return (head);
 }

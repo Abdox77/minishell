@@ -40,18 +40,16 @@ SRC = 	src/minishell.c \
 		src/execution.c \
 		src/execution_utils.c \
 		src/status.c \
-		src/expander.c \
 		src/redirection.c \
 		src/redirection_helper.c \
 		src/syntax_evaluation.c \
 		builtins/check_builtin.c \
 		builtins/echo.c \
-		src/expandv2.c \
+		src/expander.c \
 		builtins/export.c \
 		builtins/export_utils.c \
 		builtins/print_export.c \
 		src/execution_itoa.c \
-		src/ambiguous_redirect.c \
 		src/expand_string.c \
 		src/expand_variable.c \
 		src/expand_helper.c \
