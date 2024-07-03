@@ -6,7 +6,7 @@
 /*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 15:22:09 by aabou-ib          #+#    #+#             */
-/*   Updated: 2024/07/02 19:22:58 by aabou-ib         ###   ########.fr       */
+/*   Updated: 2024/07/03 11:01:36 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@ static void	set_empty_env(t_env **head)
 	append_node(head, "PWD", getcwd(NULL, 0));
 	str = ft_strjoin(getcwd(NULL, 0), "/minishell");
 	append_node(head, "_", str);
-	append_node(head, "PATH",
-		"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin");
 }
 
 static void	split_key_value(char **env, t_var *var)

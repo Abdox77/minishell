@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_helper.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
+/*   By: aabou-ib <aabou-ib@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/30 04:44:14 by aabou-ib          #+#    #+#             */
-/*   Updated: 2024/07/02 22:21:11 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/07/03 11:07:52 by aabou-ib         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ char	**expand_arg_if_needed(char *arg, char *og_arg, t_env *env_list)
 			}
 			else
 			{
-				split_expanded = ft_split(expanded, ' ');
+				split_expanded = split(expanded, " \t");
 				free(expanded);
 			}
 			return (split_expanded);
