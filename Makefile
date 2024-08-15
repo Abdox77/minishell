@@ -66,8 +66,8 @@ SRC = 	src/minishell.c \
 		src/wildcards.c \
 		src/wildcards_helper.c \
 		src/wildcards_helper_2.c \
-		gcl/get_next_line.c \
-		gcl/get_next_line_utils.c \
+		gnl/gnl.c \
+		gnl/gnl_utils.c \
 
 OBJ = $(SRC:.c=.o)
 RM = rm -rf

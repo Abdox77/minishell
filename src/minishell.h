@@ -6,7 +6,7 @@
 /*   By: amohdi <amohdi@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 22:21:45 by amohdi            #+#    #+#             */
-/*   Updated: 2024/07/02 22:26:41 by amohdi           ###   ########.fr       */
+/*   Updated: 2024/08/15 04:51:02 by amohdi           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define MINISHELL_H
 
 # include "../libft/libft.h"
-# include "../gcl/get_next_line.h"
+# include "../gnl/gnl.h"
 # include <dirent.h>
 # include <errno.h>
 # include <fcntl.h>
