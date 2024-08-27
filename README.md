@@ -1,7 +1,7 @@
 # Minishell Project
 
 ## Overview
-Minishell is a minimalistic shell program implemented in C, designed to mimic some of the basic functionalities of traditional Unix shells taking bash as reference. This project serves as an educational tool to understand the workings of a shell, including process creation and management, environment variable handling, and command parsing and execution.
+Minishell is a minimalistic interactive shell implemented in C, designed to mimic some of the basic functionalities of traditional Unix shells taking bash as reference. This project serves as an educational tool to understand the workings of a shell, including process creation and management, environment variable handling, and command parsing and execution.
 We got to explore some of the famous parsing algorithms (RDP : recursive decent parser), as well as implementing (AST : the abstract syntax tree)
 
 ## Features
